@@ -25,12 +25,12 @@ public class PlayerLimb : MonoBehaviour
     private void Update()
     {
 
-        arm_01_L.RotateLimb_2();
-        arm_02_L.RotateLimb_2();
+        //arm_01_L.RotateLimb_2();
+        //arm_02_L.RotateLimb_2();
         //leg_01_L.RotateLimb_2();
         //leg_02_L.RotateLimb_2();
-        arm_01_R.RotateLimb_2();
-        arm_02_R.RotateLimb_2();
+        //arm_01_R.RotateLimb_2();
+        //arm_02_R.RotateLimb_2();
         //leg_01_R.RotateLimb_2();
         //leg_02_R.RotateLimb_2();
     }

@@ -7,11 +7,24 @@ public class GamePlayManager : MonoBehaviour
 
     public float scrollSpeed = 100f;
 
-    public float curentTime { get; private set; }
-    public float currentDistance {  get; private set; }
-    public float checkPoint {  get; private set; }
-    public int totalCoin { get; private set; }
-    public bool isPlaying { get; private set; }
+    [Header("Scale")]
+    [SerializeField] private float scaleDistance = 1;
+    
+
+    [Header("Core")]
+    [SerializeField] private float currentTime;
+    [SerializeField] private float currentDistance;
+    //[SerializeField] private float checkPoint;
+    [SerializeField] private int totalCoin;
+    [SerializeField] private bool isPlaying;
+
+    [SerializeField] private int lastDistance;
+
+    public float CurentTime => Mathf.FloorToInt(currentTime);
+    public float LastDistance => lastDistance;
+    //public float CheckPoint => checkPoint;
+    public int TotalCoin => totalCoin;
+    public bool IsPlaying => isPlaying;
 
     private void Awake()
     {
@@ -24,11 +37,48 @@ public class GamePlayManager : MonoBehaviour
         StartIndex();
     }
 
+    private void Update()
+    {
+        UpdateDistance();
+        UpdateTime();
+
+        if (Input.GetKeyDown(KeyCode.V)) UpdateCoin(1);
+    }
+
+    private void UpdateDistance()
+    {
+        if (!isPlaying) return;
+
+        currentDistance += scrollSpeed * scaleDistance * Time.deltaTime;
+
+        int currentIntDistance = (int)currentDistance;
+
+        if (currentIntDistance > lastDistance)
+        {
+            lastDistance = currentIntDistance;
+        }
+
+        Ingame_UiManager.instance.UpdateDistanceUI(lastDistance);
+    }
+    private void UpdateTime()
+    {
+        if (!isPlaying) return;
+
+        currentTime += Time.deltaTime;
+    }
+
+    public void UpdateCoin(int _i)
+    {
+        totalCoin += _i;
+
+        Ingame_UiManager.instance.UpdateCoinUI(totalCoin);
+    }
+
     private void StartIndex()
     {
-        curentTime = 0;
+        currentTime = 0;
         currentDistance = 0;
-        isPlaying = false;
+        //isPlaying = false;
     }
 
     public bool SetIsPlay(bool isPlay) => isPlaying = isPlay;
