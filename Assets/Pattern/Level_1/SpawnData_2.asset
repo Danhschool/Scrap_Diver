@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30b37d89a399a534cbfeba571e308d99, type: 3}
+  m_Name: SpawnData_2
+  m_EditorClassIdentifier: 
+  items:
+  - name: I pipe horizontal
+    prefab: {fileID: 5105695337106091235, guid: 94511b863b81810418ff049b4d8d1e4e, type: 3}
+    pattern: {fileID: 11400000, guid: 92803614d0e59fa4382bdc34689b6882, type: 2}
+    timeToNextSpawn: 1
+  - name: I pipe vertical
+    prefab: {fileID: 5105695337106091235, guid: 94511b863b81810418ff049b4d8d1e4e, type: 3}
+    pattern: {fileID: 11400000, guid: 43f34dea53487ae42bf67db961452a7a, type: 2}
+    timeToNextSpawn: 1
+  - name: OnWall_Right
+    prefab: {fileID: 1237749503794440374, guid: a64727a757e7e224a8776b8ba1ecf257, type: 3}
+    pattern: {fileID: 11400000, guid: c64c3f8977a0fa14f83383425ec445e8, type: 2}
+    timeToNextSpawn: 1
+  - name: OnWall_Lefft
+    prefab: {fileID: 1237749503794440374, guid: a64727a757e7e224a8776b8ba1ecf257, type: 3}
+    pattern: {fileID: 11400000, guid: 92e6b71566ca917418e36f7cc87ba530, type: 2}
+    timeToNextSpawn: 1

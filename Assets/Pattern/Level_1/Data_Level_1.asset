@@ -1,0 +1,135 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30b37d89a399a534cbfeba571e308d99, type: 3}
+  m_Name: Data_Level_1
+  m_EditorClassIdentifier: 
+  items:
+  - name: I pipe horizontal
+    prefab: {fileID: 5105695337106091235, guid: 94511b863b81810418ff049b4d8d1e4e, type: 3}
+    pattern: {fileID: 11400000, guid: 92803614d0e59fa4382bdc34689b6882, type: 2}
+    weight: 50
+    gapSize: 0
+  - name: I pipe vertical
+    prefab: {fileID: 5105695337106091235, guid: 94511b863b81810418ff049b4d8d1e4e, type: 3}
+    pattern: {fileID: 11400000, guid: 43f34dea53487ae42bf67db961452a7a, type: 2}
+    weight: 50
+    gapSize: 0
+  - name: OnWall_Right
+    prefab: {fileID: 1237749503794440374, guid: a64727a757e7e224a8776b8ba1ecf257, type: 3}
+    pattern: {fileID: 11400000, guid: c64c3f8977a0fa14f83383425ec445e8, type: 2}
+    weight: 50
+    gapSize: 0
+  - name: OnWall_Lefft
+    prefab: {fileID: 1237749503794440374, guid: a64727a757e7e224a8776b8ba1ecf257, type: 3}
+    pattern: {fileID: 11400000, guid: 92e6b71566ca917418e36f7cc87ba530, type: 2}
+    weight: 50
+    gapSize: 0
+  - name: OnWall_Up
+    prefab: {fileID: 1237749503794440374, guid: a64727a757e7e224a8776b8ba1ecf257, type: 3}
+    pattern: {fileID: 11400000, guid: 249e6f12717f99f4ab95e8f8d778a2fc, type: 2}
+    weight: 50
+    gapSize: 0
+  - name: OnWall_Down
+    prefab: {fileID: 1237749503794440374, guid: a64727a757e7e224a8776b8ba1ecf257, type: 3}
+    pattern: {fileID: 11400000, guid: e84746406be39d0489b352c70056b500, type: 2}
+    weight: 50
+    gapSize: 0
+  - name: Random_Z
+    prefab: {fileID: 5456738374900361722, guid: 29288e687b72bb444a1436c294cafc72, type: 3}
+    pattern: {fileID: 11400000, guid: 7c6b867373ecf4145bd844d86c895e8b, type: 2}
+    weight: 50
+    gapSize: 0
+  - name: L_Down_Right
+    prefab: {fileID: 7238960570590156394, guid: 26ed0f2d269c5dc499381ce3d41e6a68, type: 3}
+    pattern: {fileID: 11400000, guid: 12df653cca6b28a4fa2905522f8e26b8, type: 2}
+    weight: 50
+    gapSize: 0
+  - name: L_Down_Left
+    prefab: {fileID: 7238960570590156394, guid: 26ed0f2d269c5dc499381ce3d41e6a68, type: 3}
+    pattern: {fileID: 11400000, guid: 7811182f3ec4e7141bfae7f87d7cd3d7, type: 2}
+    weight: 50
+    gapSize: 0
+  - name: L_Up_Right
+    prefab: {fileID: 7238960570590156394, guid: 26ed0f2d269c5dc499381ce3d41e6a68, type: 3}
+    pattern: {fileID: 11400000, guid: 94125027a5140cc4e84cb125f5c3eb5e, type: 2}
+    weight: 50
+    gapSize: 0
+  - name: L_Up_Left
+    prefab: {fileID: 7238960570590156394, guid: 26ed0f2d269c5dc499381ce3d41e6a68, type: 3}
+    pattern: {fileID: 11400000, guid: 7e4ff7ae38a024f4fa23461703a2c3a5, type: 2}
+    weight: 50
+    gapSize: 0
+  - name: L_Up_Left
+    prefab: {fileID: 7238960570590156394, guid: 26ed0f2d269c5dc499381ce3d41e6a68, type: 3}
+    pattern: {fileID: 11400000, guid: 7e4ff7ae38a024f4fa23461703a2c3a5, type: 2}
+    weight: 50
+    gapSize: 0
+  - name: Wall_U_Left
+    prefab: {fileID: 5501013297157690676, guid: 0300a2c935f3d2f458e5ef0308d1e234, type: 3}
+    pattern: {fileID: 11400000, guid: ff62a3840dbd4b4499bf1c036e9c9dcb, type: 2}
+    weight: 50
+    gapSize: 0
+  - name: Wall_U_Right
+    prefab: {fileID: 5501013297157690676, guid: 0300a2c935f3d2f458e5ef0308d1e234, type: 3}
+    pattern: {fileID: 11400000, guid: 801937677e4e87347a66fb29f6765b2e, type: 2}
+    weight: 50
+    gapSize: 0
+  - name: Wall_U_Down
+    prefab: {fileID: 5501013297157690676, guid: 0300a2c935f3d2f458e5ef0308d1e234, type: 3}
+    pattern: {fileID: 11400000, guid: 0904086ba343a804a8b1339e2c1c09e4, type: 2}
+    weight: 50
+    gapSize: 0
+  - name: Wall_T_Up
+    prefab: {fileID: 563847244349023263, guid: 863c2f99c92c1bb4ebb6fe6570299448, type: 3}
+    pattern: {fileID: 11400000, guid: 97cdf946825d21c47aca50991ef19dac, type: 2}
+    weight: 50
+    gapSize: 0
+  - name: Wall_T_Down
+    prefab: {fileID: 563847244349023263, guid: 863c2f99c92c1bb4ebb6fe6570299448, type: 3}
+    pattern: {fileID: 11400000, guid: 0904086ba343a804a8b1339e2c1c09e4, type: 2}
+    weight: 50
+    gapSize: 0
+  - name: Wall_T_Left
+    prefab: {fileID: 563847244349023263, guid: 863c2f99c92c1bb4ebb6fe6570299448, type: 3}
+    pattern: {fileID: 11400000, guid: ff62a3840dbd4b4499bf1c036e9c9dcb, type: 2}
+    weight: 50
+    gapSize: 0
+  - name: Wall_T_Right
+    prefab: {fileID: 563847244349023263, guid: 863c2f99c92c1bb4ebb6fe6570299448, type: 3}
+    pattern: {fileID: 11400000, guid: 801937677e4e87347a66fb29f6765b2e, type: 2}
+    weight: 50
+    gapSize: 0
+  - name: Wall_L_Right
+    prefab: {fileID: 5189410653813443924, guid: cd7e07134fd2e954d8aee567bdc66f2c, type: 3}
+    pattern: {fileID: 11400000, guid: 801937677e4e87347a66fb29f6765b2e, type: 2}
+    weight: 50
+    gapSize: 0
+  - name: Wall_L_Left
+    prefab: {fileID: 5189410653813443924, guid: cd7e07134fd2e954d8aee567bdc66f2c, type: 3}
+    pattern: {fileID: 11400000, guid: ff62a3840dbd4b4499bf1c036e9c9dcb, type: 2}
+    weight: 50
+    gapSize: 0
+  - name: Wall_L_Up
+    prefab: {fileID: 5189410653813443924, guid: cd7e07134fd2e954d8aee567bdc66f2c, type: 3}
+    pattern: {fileID: 11400000, guid: 97cdf946825d21c47aca50991ef19dac, type: 2}
+    weight: 50
+    gapSize: 0
+  - name: Wall_L_Down
+    prefab: {fileID: 5189410653813443924, guid: cd7e07134fd2e954d8aee567bdc66f2c, type: 3}
+    pattern: {fileID: 11400000, guid: 0904086ba343a804a8b1339e2c1c09e4, type: 2}
+    weight: 50
+    gapSize: 0
+  - name: Coin
+    prefab: {fileID: 3912198360249641969, guid: d12984a2f1d7d9643966d4053eea21dc, type: 3}
+    pattern: {fileID: 11400000, guid: 2cc8c632bfe47254c8dda008189fb0f5, type: 2}
+    weight: 100
+    gapSize: 0

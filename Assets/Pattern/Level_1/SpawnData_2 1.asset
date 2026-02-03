@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30b37d89a399a534cbfeba571e308d99, type: 3}
+  m_Name: SpawnData_2 1
+  m_EditorClassIdentifier: 
+  items:
+  - name: Wall_L_Right
+    prefab: {fileID: 5189410653813443924, guid: cd7e07134fd2e954d8aee567bdc66f2c, type: 3}
+    pattern: {fileID: 11400000, guid: 801937677e4e87347a66fb29f6765b2e, type: 2}
+    timeToNextSpawn: 2
+  - name: Wall_L_Left
+    prefab: {fileID: 5189410653813443924, guid: cd7e07134fd2e954d8aee567bdc66f2c, type: 3}
+    pattern: {fileID: 11400000, guid: ff62a3840dbd4b4499bf1c036e9c9dcb, type: 2}
+    timeToNextSpawn: 2
+  - name: Wall_L_Up
+    prefab: {fileID: 5189410653813443924, guid: cd7e07134fd2e954d8aee567bdc66f2c, type: 3}
+    pattern: {fileID: 11400000, guid: 97cdf946825d21c47aca50991ef19dac, type: 2}
+    timeToNextSpawn: 2
+  - name: Wall_L_Down
+    prefab: {fileID: 5189410653813443924, guid: cd7e07134fd2e954d8aee567bdc66f2c, type: 3}
+    pattern: {fileID: 11400000, guid: 0904086ba343a804a8b1339e2c1c09e4, type: 2}
+    timeToNextSpawn: 2
+  - name: Coin
+    prefab: {fileID: 3912198360249641969, guid: d12984a2f1d7d9643966d4053eea21dc, type: 3}
+    pattern: {fileID: 11400000, guid: 2cc8c632bfe47254c8dda008189fb0f5, type: 2}
+    timeToNextSpawn: 0
