@@ -4,5 +4,10 @@ using UnityEngine;
 
 public class PrefConst
 {
-    
+    public const string BEST_DISTANCE_KEY = "best_Distance";
+    public const string BEST_TIME_KEY = "best_Time";
+    public const string BEST_TOTAL_COIN_KEY = "best_Total_Coin";
+
+    public const string TOTAL_COIN_KEY = "total_coin";
+
 }

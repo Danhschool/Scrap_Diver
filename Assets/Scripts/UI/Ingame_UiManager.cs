@@ -22,11 +22,25 @@ public class Ingame_UiManager : MonoBehaviour
     [SerializeField] private RectTransform mark_Container;
     [SerializeField] private GameObject mark;
 
+    [Header("Start Panel")]
+    [SerializeField] private GameObject start_Panel;
+    [SerializeField] private TMP_Text countDown_Txt;
 
     private void Awake()
     {
         if (instance == null) instance = this;
         else Destroy(gameObject);
+    }
+
+    public void SetActiveStart_Panel(bool _isActive)  => start_Panel.SetActive(_isActive);
+    public void UpdateCountdown(string _text, bool _isActive)
+    {
+        countDown_Txt.gameObject.SetActive(_isActive);
+        countDown_Txt.text = _text;
+    }
+    public void OnStartClick()
+    {   
+        StartCoroutine(GamePlayManager.instance.Countdown());
     }
 
     public void UpdateDistanceUI(int _distance) => distance_Txt.text = _distance.ToString() + " m"; 

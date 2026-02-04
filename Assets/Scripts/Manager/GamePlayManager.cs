@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
 
 public class GamePlayManager : MonoBehaviour
@@ -45,6 +46,8 @@ public class GamePlayManager : MonoBehaviour
         StartIndex();
 
         Ingame_UiManager.instance.CreateMark(indexOfLevel);
+
+        Time.timeScale = 0;
     }
 
     private void Update()
@@ -91,6 +94,44 @@ public class GamePlayManager : MonoBehaviour
         currentTime = 0;
         currentDistance = 0;
         //isPlaying = false;
+    }
+
+    public void StartGame()
+    {
+        Time.timeScale = 1;
+    }
+
+    public void GameOver()
+    {
+        if(DataManager.BestDistance > lastDistance)
+            DataManager.BestDistance = lastDistance;
+        if(DataManager.BestTime > (int)currentTime)
+            DataManager.BestTime = (int)currentTime;
+        if(DataManager.BestTotalCoin > totalCoin)
+            DataManager.BestTotalCoin = totalCoin;
+
+        DataManager.TotalCoin += totalCoin;
+    }
+    public IEnumerator Countdown()
+    {
+        int count = 3;
+        while (count > 0)
+        {
+            Ingame_UiManager.instance.UpdateCountdown(count.ToString(), true);
+
+            yield return new WaitForSecondsRealtime(1f);
+            count--;
+        }
+
+        Ingame_UiManager.instance.UpdateCountdown("GO!", true);
+        yield return new WaitForSecondsRealtime(0.5f);
+
+        Ingame_UiManager.instance.UpdateCountdown("", false);
+
+        //Ingame_UiManager.instance.SetActiveStart_Panel(false);
+
+        Time.timeScale = 1f;    
+        isPlaying = true;       
     }
 
     public bool SetIsPlay(bool isPlay) => isPlaying = isPlay;

@@ -1833,7 +1833,7 @@ MonoBehaviour:
   totalCoin: 0
   isPlaying: 1
   lastDistance: 0
-  indexOfLevel: 1
+  indexOfLevel: 5
   distanceOfLevel: 1000
 --- !u!4 &315117644
 Transform:
@@ -2472,7 +2472,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 20
-  efectType: 0
+  effectType: 0
+  range: 15
 --- !u!114 &426072781
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2582,7 +2583,7 @@ GameObject:
   - component: {fileID: 429867490}
   - component: {fileID: 429867489}
   m_Layer: 5
-  m_Name: 321
+  m_Name: CountDown_Txt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3372,7 +3373,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 0}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1502773132}
+        m_TargetAssemblyTypeName: Ingame_UiManager, Assembly-CSharp
+        m_MethodName: OnStartClick
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!222 &567031864
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -6617,7 +6630,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 20
-  efectType: 0
+  effectType: 0
+  range: 15
 --- !u!114 &1125804709
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8033,7 +8047,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 20
-  efectType: 0
+  effectType: 0
+  range: 15
 --- !u!114 &1417420124
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8298,7 +8313,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1463725818
 RectTransform:
   m_ObjectHideFlags: 0
@@ -8697,6 +8712,8 @@ MonoBehaviour:
   arrowRect: {fileID: 755579493}
   mark_Container: {fileID: 1785236010}
   mark: {fileID: 1649200520448688005, guid: 3e6fc8eb79de7d544ba90935aeec8a1e, type: 3}
+  start_Panel: {fileID: 1463725817}
+  countDown_Txt: {fileID: 429867489}
 --- !u!1 &1504014660
 GameObject:
   m_ObjectHideFlags: 0
@@ -9611,8 +9628,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23295ef4b74f1324fac589ef3f6d12f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 20
-  efectType: 0
+  speed: 10
+  effectType: 0
+  range: 15
 --- !u!114 &1760563169
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9815,10 +9833,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 304583791}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1791641912 stripped
 GameObject:
@@ -10808,7 +10826,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 20
-  efectType: 0
+  effectType: 0
+  range: 15
 --- !u!114 &1958189507
 MonoBehaviour:
   m_ObjectHideFlags: 0
