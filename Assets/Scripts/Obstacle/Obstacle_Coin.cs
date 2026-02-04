@@ -6,6 +6,9 @@ public class Obstacle_Coin : Obstacles
 {
     [SerializeField] private float rotateSpeed = 5f;
 
+    [Header("Coin Value")]
+    [SerializeField] private int coinValue = 1;
+
     protected override void OnEnable()
     {
         base.OnEnable();
@@ -24,6 +27,8 @@ public class Obstacle_Coin : Obstacles
 
     public void Collected()
     {
+        GamePlayManager.instance.UpdateCoin(coinValue);
+
         ObjectPool.instance.ReturnObject(gameObject);
         //Destroy(gameObject);
     }
