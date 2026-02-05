@@ -15,15 +15,16 @@ public class Ingame_UiManager : MonoBehaviour
     [SerializeField] private TMP_Text distance_Txt;
     [SerializeField] private TMP_Text time_Txt;
     [SerializeField] private TMP_Text coin_Txt;
+    [SerializeField] private GameObject pause_Btn;
 
     [Header("Progress Bar")]
     [SerializeField] Image fillProgressBar;
     [SerializeField] RectTransform arrowRect;
 
-
     [Header("Mark")]
     [SerializeField] private RectTransform mark_Container;
     [SerializeField] private GameObject mark;
+    [SerializeField] private GameObject cup;
 
     [Header("Start Panel")]
     [SerializeField] private GameObject start_Panel;
@@ -35,7 +36,13 @@ public class Ingame_UiManager : MonoBehaviour
     [SerializeField] private Image fillContinueBar;
 
     [Header("Game Over Panel 2")]
-    [SerializeField] private GameObject gameOver_Panel_2;    
+    [SerializeField] private GameObject gameOver_Panel_2;
+    [SerializeField] private TMP_Text progress_Coin_Txt;
+    [SerializeField] private TMP_Text explain_Coin_Txt;
+    [SerializeField] private TMP_Text progress_Time_Txt;
+    [SerializeField] private TMP_Text explain_Time_Txt;
+    
+    
 
     private void Awake()
     {
@@ -51,8 +58,9 @@ public class Ingame_UiManager : MonoBehaviour
 
         GamePlayManager.instance.StartCountdown();
     }
-    public void OnPauseClick()
+    public void OnPauseClick(Image _img)
     {
+        Ui_Effect.OnClickExit(_img, this, ref isDown);
         if (GamePlayManager.instance.IsPlaying)
         {
             GamePlayManager.instance.GamePause();
@@ -64,15 +72,22 @@ public class Ingame_UiManager : MonoBehaviour
             StartCoroutine(GamePlayManager.instance.Countdown(() =>
             {
                 GamePlayManager.instance.GameResume();
+                pause_Btn.SetActive(true);
             }));
             gameOver_Panel_2.SetActive(false);
+            pause_Btn.SetActive(false);
         }
-
     }
 
-    public void OnSettingClick()
+    public void OnSettingClick(Image _img)
     {
         Debug.Log("qqq");
+        Ui_Effect.OnClickExit(_img, this, ref isDown);
+    }
+    public void OnMainClick(Image _img)
+    {
+        Debug.Log("main");
+        Ui_Effect.OnClickExit(_img, this, ref isDown);
     }
 
     public void OnClickDown(Image _img)
@@ -92,10 +107,20 @@ public class Ingame_UiManager : MonoBehaviour
 
     #endregion
 
+    #region Update UI
+    public void UpdateProgressCoinText(float _currentValue, float _maxValue)
+    {
+        progress_Coin_Txt.text = _currentValue.ToString() + "/" + _maxValue.ToString();
+        explain_Coin_Txt.text = "EARN " + _maxValue + " COIN IN A SINGLE RUN";
+
+    } 
+    public void UpdateProgressTimeText(float _currentValue, float _maxValue)
+    {
+        progress_Time_Txt.text = _currentValue.ToString() + "/" + _maxValue.ToString() ;
+        explain_Time_Txt.text = "FLY FOR " + _maxValue + " IN A SINGLE RUN";
+    }
     public void UpdateFillContinueBar(float _currentValue,float _maxValue) => fillContinueBar.fillAmount = _currentValue / _maxValue;
     public void UpdateFillProgressBar(float _currentValue , float _maxValue) => fillProgressBar.fillAmount = _currentValue / _maxValue;
-
-
     public void UpdateCountdown(string _text, bool _isActive)
     {
         countDown_Txt.gameObject.SetActive(_isActive);
@@ -111,6 +136,20 @@ public class Ingame_UiManager : MonoBehaviour
         AnchoedPosition(arrowRect, ratio);
     }
 
+    public void UpdateProgressBar(float _currentValue, float _maxValue, int _level)
+    {
+        CreateCup(_currentValue, _maxValue);
+        CreateMark(_level);
+    }
+    public void CreateCup(float _currentValue, float _maxValue)
+    {
+        float ratio = Mathf.Clamp01(_currentValue / _maxValue);
+
+        GameObject gameObject = Instantiate(cup,mark_Container);
+        RectTransform rect = gameObject.GetComponent<RectTransform>();
+
+        AnchoedPosition(rect, ratio);
+    }
     public void CreateMark(int _level)
     {
         if(_level < 1) return;
@@ -133,4 +172,5 @@ public class Ingame_UiManager : MonoBehaviour
 
         _rect.anchoredPosition = new Vector2(0, _rect.anchoredPosition.y);
     }
+    #endregion
 }

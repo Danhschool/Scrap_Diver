@@ -10,4 +10,7 @@ public class PrefConst
 
     public const string TOTAL_COIN_KEY = "total_coin";
 
+    public const string CHALLENGE_COIN = "challenge_Coin";
+    public const string CHALLENGE_TIME = "challenge_Time";
+
 }

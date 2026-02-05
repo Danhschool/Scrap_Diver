@@ -45,13 +45,13 @@ public static class Ui_Effect
             originalPositions.Add(rect, rect.anchoredPosition);
         }
     }
-    public static void ImageDown(Image _img, MonoBehaviour _host, ref bool _isDown)
-    {
-        _host.StartCoroutine(MoveImgRoutine(_img, -1));
-        _isDown = true;
+    //public static void OnClickExit(Image _img, MonoBehaviour _host, ref bool _isDown)
+    //{
+    //    _host.StartCoroutine(MoveImgRoutine(_img, 1));
+    //    _isDown = true;
 
-        _img.color = Color.white;
-    }
+    //    _img.color = Color.white;
+    //}
 
     private static IEnumerator MoveImgRoutine(Image _img, int _i)
     {
@@ -71,8 +71,7 @@ public static class Ui_Effect
         while (elapsed < safeDuration)
         {
             if (_img == null) yield break;
-            elapsed += Time.deltaTime;
-
+            elapsed += Time.unscaledDeltaTime;
             rect.anchoredPosition = Vector2.Lerp(currentPos, targetPos, elapsed / safeDuration);
             yield return null;
         }

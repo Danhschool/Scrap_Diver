@@ -39,7 +39,7 @@ public class Main_UiManager : MonoBehaviour
     public void OnSettingClick(Image img)
     {
         //Debug.Log("OnSettingClick");
-        Ui_Effect.ImageDown(img,this,ref isDown);
+        Ui_Effect.OnClickExit(img,this,ref isDown);
         
         GameObject setting_Panel = panels.Find(x => x.name == ("Setting_Panel"));
         Debug.Log(setting_Panel.name);
@@ -50,7 +50,7 @@ public class Main_UiManager : MonoBehaviour
 
     public void OnRobotShopClick(Image img)
     {
-        Ui_Effect.ImageDown(img, this,ref isDown);
+        Ui_Effect.OnClickExit(img, this,ref isDown);
 
         GameObject robotShop_Panel = panels.Find(x => x.name == ("ShopRobot_Panel"));
         Debug.Log(robotShop_Panel.name);
@@ -59,7 +59,7 @@ public class Main_UiManager : MonoBehaviour
     }
     public void OnMapClick(Image img)
     {
-        Ui_Effect.ImageDown(img, this,ref isDown);
+        Ui_Effect.OnClickExit(img, this,ref isDown);
 
         GameObject map_Panel = panels.Find(x => x.name == ("Map_Panel"));
         Debug.Log(map_Panel.name);
@@ -68,7 +68,7 @@ public class Main_UiManager : MonoBehaviour
     }
     public void OnChallengeClick(Image img)
     {
-        Ui_Effect.ImageDown(img, this, ref isDown);
+        Ui_Effect.OnClickExit(img, this, ref isDown);
 
         GameObject challenge_Panel = panels.Find(x => x.name == ("Challenge_Panel"));
         Debug.Log(challenge_Panel.name);
@@ -81,22 +81,22 @@ public class Main_UiManager : MonoBehaviour
 
     public void OnSoundClick(Image img)
     {
-        Ui_Effect.ImageDown(img, this, ref isDown);
+        Ui_Effect.OnClickExit(img, this, ref isDown);
         Debug.Log("OnSoundClick");
     }
     public void OnMusicClick(Image img)
     {
-        Ui_Effect.ImageDown(img, this,   ref isDown);
+        Ui_Effect.OnClickExit(img, this,   ref isDown);
         Debug.Log("OnMusicClick");
     }
     public void OnCreditClick(Image img)
     {
-        Ui_Effect.ImageDown(img, this, ref isDown);
+        Ui_Effect.OnClickExit(img, this, ref isDown);
         Debug.Log("OnCreditClick");
     }
     public void OnLanguageClick(Image img)
     {
-        Ui_Effect.ImageDown(img, this, ref isDown);
+        Ui_Effect.OnClickExit(img, this, ref isDown);
         Debug.Log("OnLanguageClick");
     }
 
@@ -106,7 +106,7 @@ public class Main_UiManager : MonoBehaviour
 
     public void OnBackClick(Image img)
     {
-        Ui_Effect.ImageDown(img, this, ref isDown);
+        Ui_Effect.OnClickExit(img, this, ref isDown);
 
         GameObject main_Panel = panels.Find(x => x.name == ("Main_Panel"));
         Debug.Log(main_Panel.name);

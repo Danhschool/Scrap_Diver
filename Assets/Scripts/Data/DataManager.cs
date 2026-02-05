@@ -51,4 +51,24 @@ public static class DataManager
             PlayerPrefs.Save();
         }
     }
+    public static int ChallengeCoin
+    {
+        get => PlayerPrefs.GetInt(PrefConst.CHALLENGE_COIN, 0);
+
+        set
+        {
+            PlayerPrefs.SetInt(PrefConst.CHALLENGE_COIN, value);
+            PlayerPrefs.Save();
+        }
+    }
+    public static int ChallengeTime
+    {
+        get => PlayerPrefs.GetInt(PrefConst.CHALLENGE_TIME, 0);
+
+        set
+        {
+            PlayerPrefs.SetInt(PrefConst.CHALLENGE_TIME, value);
+            PlayerPrefs.Save();
+        }
+    }
 }

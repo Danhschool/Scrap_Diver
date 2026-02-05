@@ -6,7 +6,9 @@ public class GamePlayManager : MonoBehaviour
 {
     public static GamePlayManager instance { get; private set; }
 
-
+    private int bestCoin;
+    private int bestTime;
+    private int bestDistance;
 
     [Header("Scale")]
     [SerializeField] private float scaleDistance = 1;
@@ -48,7 +50,12 @@ public class GamePlayManager : MonoBehaviour
     {
         StartIndex();
 
-        Ingame_UiManager.instance.CreateMark(indexOfLevel);
+        bestCoin = DataManager.BestTotalCoin;
+        bestTime = DataManager.BestTime;
+
+        Ingame_UiManager.instance.UpdateProgressBar(bestDistance, distanceOfLevel * indexOfLevel, indexOfLevel);
+        //Ingame_UiManager.instance.CreateMark(indexOfLevel);
+        //Ingame_UiManager.instance.CreateCup(bestDistance, distanceOfLevel * indexOfLevel);
 
         Time.timeScale = 0;
     }
@@ -87,6 +94,9 @@ public class GamePlayManager : MonoBehaviour
         savedSpeed = gameSpeed;
         gameSpeed = 0;
         Time.timeScale = 0;
+
+        Ingame_UiManager.instance.UpdateProgressCoinText(totalCoin, DataManager.ChallengeCoin);
+        Ingame_UiManager.instance.UpdateProgressTimeText(CurentTime, DataManager.ChallengeTime);
     }
 
     public void GameOver()
@@ -112,7 +122,8 @@ public class GamePlayManager : MonoBehaviour
         }
 
         Ingame_UiManager.instance.UpdateDistanceUI(lastDistance);
-        //Ingame_UiManager.instance.UpdateFillProgressBar(currentDistance, indexOfLevel * distanceOfLevel);
+        if(currentDistance > bestDistance)
+            Ingame_UiManager.instance.UpdateFillProgressBar(currentDistance, indexOfLevel * distanceOfLevel);
         Ingame_UiManager.instance.UpdateArrowPosition(currentIntDistance, indexOfLevel * distanceOfLevel);
     }
     private void UpdateTime()
