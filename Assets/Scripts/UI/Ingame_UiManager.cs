@@ -12,8 +12,9 @@ public class Ingame_UiManager : MonoBehaviour
     private bool isDown = false;
 
     [Header("In game UI")]
+    [SerializeField] private GameObject ingame_Panel;
     [SerializeField] private TMP_Text distance_Txt;
-    [SerializeField] private TMP_Text time_Txt;
+    //[SerializeField] private TMP_Text time_Txt;
     [SerializeField] private TMP_Text coin_Txt;
     [SerializeField] private GameObject pause_Btn;
 
@@ -34,6 +35,7 @@ public class Ingame_UiManager : MonoBehaviour
     [Header("Continue Panel")]
     [SerializeField] private GameObject continue_Panel;
     [SerializeField] private Image fillContinueBar;
+    [SerializeField] private Image continueWithCoin;
 
     [Header("Game Over Panel 2")]
     [SerializeField] private GameObject gameOver_Panel_2;
@@ -41,6 +43,9 @@ public class Ingame_UiManager : MonoBehaviour
     [SerializeField] private TMP_Text explain_Coin_Txt;
     [SerializeField] private TMP_Text progress_Time_Txt;
     [SerializeField] private TMP_Text explain_Time_Txt;
+
+    [Header("Game Over Panel 1")]
+    [SerializeField] private GameObject gameOver_Panel;
     
     
 
@@ -78,6 +83,12 @@ public class Ingame_UiManager : MonoBehaviour
             pause_Btn.SetActive(false);
         }
     }
+    public void OnEndClick(Image _img)
+    {
+        Ui_Effect.OnClickExit(_img, this, ref isDown);
+
+        Debug.Log("End");
+    }
 
     public void OnSettingClick(Image _img)
     {
@@ -99,15 +110,37 @@ public class Ingame_UiManager : MonoBehaviour
         Ui_Effect.OnClickExit(_img, this, ref isDown);
     }
 
+    public void OnResumeWithCoinClick(Image _img)
+    {
+        Ui_Effect.OnClickExit(_img, this, ref isDown);
+        Debug.Log("Coin");
+    }
+    public void OnResumeWithAdClick(Image _img)
+    {
+        Ui_Effect.OnClickExit(_img, this, ref isDown);
+        Debug.Log("ad");
+    }
+
     #endregion
 
-    #region Set Active Panel
-    public void SetActiveContinue_Panel(bool _isActive) => continue_Panel.SetActive(_isActive);
+    #region Set Active
+    public void SetActiveIngame_Panel(bool _isActive) => ingame_Panel.SetActive(_isActive);
+    public void SetActiveContinue_Panel(bool _isActive)
+    {
+        pause_Btn.SetActive(!_isActive);
+        continue_Panel.SetActive(_isActive);
+    }
     public void SetActiveStart_Panel(bool _isActive)  => start_Panel.SetActive(_isActive);
+    public void SetActiveGameOver_Panel(bool _isActive) => gameOver_Panel.SetActive(_isActive);
 
     #endregion
 
     #region Update UI
+    public void UpdateContinueWithCoin(bool _isOK)
+    {
+        if(_isOK) continueWithCoin.color = Color.yellow;
+        else continueWithCoin.color = Color.red;
+    }
     public void UpdateProgressCoinText(float _currentValue, float _maxValue)
     {
         progress_Coin_Txt.text = _currentValue.ToString() + "/" + _maxValue.ToString();

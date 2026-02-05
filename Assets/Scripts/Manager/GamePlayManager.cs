@@ -15,13 +15,14 @@ public class GamePlayManager : MonoBehaviour
     
 
     [Header("Core")]
-    [SerializeField] private float currentTime;
-    [SerializeField] private float currentDistance;
+    [SerializeField] private static float currentTime;
+    [SerializeField] private static float currentDistance;
     //[SerializeField] private float checkPoint;
-    [SerializeField] private int totalCoin;
+    [SerializeField] private static int totalCoin;
     [SerializeField] private bool isPlaying = true;
     [SerializeField] private float gameSpeed = 100f;
     private float savedSpeed;
+    private float coinToResume;
 
     [SerializeField] private int lastDistance;
 
@@ -98,14 +99,34 @@ public class GamePlayManager : MonoBehaviour
         Ingame_UiManager.instance.UpdateProgressCoinText(totalCoin, DataManager.ChallengeCoin);
         Ingame_UiManager.instance.UpdateProgressTimeText(CurentTime, DataManager.ChallengeTime);
     }
+    public void GameContinueToEnd()
+    {
+        if (!isPlaying) return;
+
+        isPlaying = false;
+        savedSpeed = gameSpeed;
+        gameSpeed = 0;
+        Time.timeScale = 0;
+
+        if (DataManager.TotalCoin > coinToResume) Ingame_UiManager.instance.UpdateContinueWithCoin(true);
+        else Ingame_UiManager.instance.UpdateContinueWithCoin(false);
+
+        Ingame_UiManager.instance.SetActiveContinue_Panel(true);
+        ClearAllObstacles();
+        StartCoroutine(CountDownToEnd(()=>{
+            GameOver();
+            
+            }));
+    }
 
     public void GameOver()
     {
         UpdateData();
 
-        gameSpeed = 0;
+        Ingame_UiManager.instance.SetActiveContinue_Panel(false);
+        Ingame_UiManager.instance.SetActiveIngame_Panel(false);
 
-        Ingame_UiManager.instance.SetActiveContinue_Panel(true);
+        Ingame_UiManager.instance.SetActiveGameOver_Panel(true);
     }
 
     private void UpdateDistance()
@@ -149,6 +170,12 @@ public class GamePlayManager : MonoBehaviour
 
         DataManager.TotalCoin += totalCoin;
     }
+    private void ResetData()
+    {
+        currentDistance = 0;
+        currentTime = 0;
+        totalCoin = 0;
+    }
 
     public void StartCountdown() => StartCoroutine(Countdown());
     public IEnumerator Countdown(Action _onComplete = null)
@@ -174,11 +201,30 @@ public class GamePlayManager : MonoBehaviour
 
         _onComplete?.Invoke();
     }
-
+    public IEnumerator CountDownToEnd(Action _onComplete = null)
+    {
+        float count = 5;
+        while (count > 0)
+        {
+            Ingame_UiManager.instance.UpdateFillContinueBar(count, 5);
+            count -= Time.unscaledDeltaTime;
+            yield return null;
+        }
+        _onComplete?.Invoke();
+    }
     public bool SetIsPlay(bool isPlay) => isPlaying = isPlay;
 
     //private float GetCheckPoint(int _point)
     //{
     //    currentDistance = _point;
     //}
+    public void ClearAllObstacles()
+    {
+        GameObject[] allObstacles = GameObject.FindGameObjectsWithTag("Obstacle");
+
+        foreach (GameObject obj in allObstacles)
+        {
+            Destroy(obj);
+        }
+    }
 }

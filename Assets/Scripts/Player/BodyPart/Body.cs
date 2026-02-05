@@ -12,11 +12,17 @@ public class Body : BodyPartSensor
     protected override void OnHit()
     {
         base.OnHit();
-        //GamePlayManager.instance.GameOver();
+
+        Invoke(nameof(RunGameContinueToEnd), 2f);
     }
 
     protected override void Start()
     {
         base.Start();
+    }
+
+    private void RunGameContinueToEnd()
+    {
+        GamePlayManager.instance.GameContinueToEnd();
     }
 }
