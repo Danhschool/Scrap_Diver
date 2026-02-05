@@ -48,7 +48,7 @@ public class EndlessManager : MonoBehaviour
     {
         foreach (TunnelSegment segment in segments)
         {
-            segment.transform.Translate(Vector3.up * GamePlayManager.instance.scrollSpeed * Time.deltaTime, Space.World);
+            segment.transform.Translate(Vector3.up * GamePlayManager.instance.GameSpeed * Time.deltaTime, Space.World);
 
             if (segment.transform.position.y > wallHeight + 10f)
             {

@@ -6,7 +6,7 @@ public class GamePlayManager : MonoBehaviour
 {
     public static GamePlayManager instance { get; private set; }
 
-    public float scrollSpeed = 100f;
+
 
     [Header("Scale")]
     [SerializeField] private float scaleDistance = 1;
@@ -17,7 +17,9 @@ public class GamePlayManager : MonoBehaviour
     [SerializeField] private float currentDistance;
     //[SerializeField] private float checkPoint;
     [SerializeField] private int totalCoin;
-    [SerializeField] private bool isPlaying;
+    [SerializeField] private bool isPlaying = true;
+    [SerializeField] private float gameSpeed = 100f;
+    private float savedSpeed;
 
     [SerializeField] private int lastDistance;
 
@@ -31,6 +33,7 @@ public class GamePlayManager : MonoBehaviour
     //public float CheckPoint => checkPoint;
     public int TotalCoin => totalCoin;
     public bool IsPlaying => isPlaying;
+    public float GameSpeed => gameSpeed;
     public int IndexOfLevel => indexOfLevel;
     public float DistanceOfLevel => distanceOfLevel;
 
@@ -57,12 +60,49 @@ public class GamePlayManager : MonoBehaviour
 
         //if (Input.GetKeyDown(KeyCode.V)) UpdateCoin(1);
     }
+    private void StartIndex()
+    {
+        currentTime = 0;
+        currentDistance = 0;
+        //isPlaying = false;
+    }
+
+    public void StartGame()
+    {
+        Time.timeScale = 1;
+    }
+
+    public void GameResume()
+    {
+        isPlaying = true;
+        gameSpeed = savedSpeed;
+        Time.timeScale = 1;
+    }
+
+    public void GamePause()
+    {
+        if(!isPlaying) return;
+
+        isPlaying = false;
+        savedSpeed = gameSpeed;
+        gameSpeed = 0;
+        Time.timeScale = 0;
+    }
+
+    public void GameOver()
+    {
+        UpdateData();
+
+        gameSpeed = 0;
+
+        Ingame_UiManager.instance.SetActiveContinue_Panel(true);
+    }
 
     private void UpdateDistance()
     {
         if (!isPlaying) return;
 
-        currentDistance += scrollSpeed * scaleDistance * Time.deltaTime;
+        currentDistance += gameSpeed * scaleDistance * Time.deltaTime;
 
         int currentIntDistance = (int)currentDistance;
 
@@ -81,38 +121,26 @@ public class GamePlayManager : MonoBehaviour
 
         currentTime += Time.deltaTime;
     }
-
     public void UpdateCoin(int _i)
     {
         totalCoin += _i;
 
         Ingame_UiManager.instance.UpdateCoinUI(totalCoin);
     }
-
-    private void StartIndex()
+    private void UpdateData()
     {
-        currentTime = 0;
-        currentDistance = 0;
-        //isPlaying = false;
-    }
-
-    public void StartGame()
-    {
-        Time.timeScale = 1;
-    }
-
-    public void GameOver()
-    {
-        if(DataManager.BestDistance > lastDistance)
+        if (DataManager.BestDistance > lastDistance)
             DataManager.BestDistance = lastDistance;
-        if(DataManager.BestTime > (int)currentTime)
+        if (DataManager.BestTime > (int)currentTime)
             DataManager.BestTime = (int)currentTime;
-        if(DataManager.BestTotalCoin > totalCoin)
+        if (DataManager.BestTotalCoin > totalCoin)
             DataManager.BestTotalCoin = totalCoin;
 
         DataManager.TotalCoin += totalCoin;
     }
-    public IEnumerator Countdown()
+
+    public void StartCountdown() => StartCoroutine(Countdown());
+    public IEnumerator Countdown(Action _onComplete = null)
     {
         int count = 3;
         while (count > 0)
@@ -128,10 +156,12 @@ public class GamePlayManager : MonoBehaviour
 
         Ingame_UiManager.instance.UpdateCountdown("", false);
 
-        //Ingame_UiManager.instance.SetActiveStart_Panel(false);
+        Ingame_UiManager.instance.SetActiveStart_Panel(false);
 
         Time.timeScale = 1f;    
-        isPlaying = true;       
+        isPlaying = true;
+
+        _onComplete?.Invoke();
     }
 
     public bool SetIsPlay(bool isPlay) => isPlaying = isPlay;

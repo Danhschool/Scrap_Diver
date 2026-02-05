@@ -23,10 +23,18 @@ public class SpawnController : MonoBehaviour
     {
         while (true)
         {
+            if (!GamePlayManager.instance.IsPlaying)
+            {
+                yield return null;
+                continue;
+            }
+
             Obstacle_Data data = GetData();
 
             for (int i = 0; i < data.items.Length; i++)
             {
+                if (!GamePlayManager.instance.IsPlaying) break;
+
                 Obstacle_Data.SpawnItem selectedItem = data.items[i];
                 Spawn(selectedItem);
 

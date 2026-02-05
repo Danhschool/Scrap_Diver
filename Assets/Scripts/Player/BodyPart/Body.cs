@@ -9,6 +9,12 @@ public class Body : BodyPartSensor
         base.OnTriggerEnter(other);
     }
 
+    protected override void OnHit()
+    {
+        base.OnHit();
+        //GamePlayManager.instance.GameOver();
+    }
+
     protected override void Start()
     {
         base.Start();

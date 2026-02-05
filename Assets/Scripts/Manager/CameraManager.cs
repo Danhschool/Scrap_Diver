@@ -19,6 +19,8 @@ public class CameraManager : MonoBehaviour
 
     [SerializeField] private float shakeTime = .2f;
 
+    private Coroutine coroutine;
+
     private void Awake()
     {
         if (instance == null)
@@ -46,7 +48,13 @@ public class CameraManager : MonoBehaviour
         //if(transform.rotation.y > limitAngle || transform.rotation.y < limitAngle )
         RotateCamera();
     }
+    public void Shake()
+    {
+        if (coroutine != null) 
+            StopCoroutine(coroutine);
 
+        coroutine = StartCoroutine(ShakeCoroutine());
+    }
     private IEnumerator ShakeCoroutine()
     {
         ShakeValue(2f);

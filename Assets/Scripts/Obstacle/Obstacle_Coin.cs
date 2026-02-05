@@ -9,6 +9,8 @@ public class Obstacle_Coin : Obstacles
     [Header("Coin Value")]
     [SerializeField] private int coinValue = 1;
 
+    private bool isCollected = false;
+
     protected override void OnEnable()
     {
         base.OnEnable();
@@ -23,18 +25,23 @@ public class Obstacle_Coin : Obstacles
     protected override void OnDisable()
     {
         base.OnDisable();
+
+        isCollected = false;
     }
 
     public void Collected()
     {
         GamePlayManager.instance.UpdateCoin(coinValue);
 
-        ObjectPool.instance.ReturnObject(gameObject);
+        isCollected = true;
+
+        ObjectPool.instance.ReturnObject(gameObject);  
         //Destroy(gameObject);
     }
 
     private void OnTriggerEnter(Collider other)
     {
+        if (isCollected) return;
         if (other.CompareTag("Player"))
         {
             Collected();

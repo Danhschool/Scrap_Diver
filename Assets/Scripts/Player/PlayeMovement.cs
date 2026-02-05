@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.Animations;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
+using UnityEngine.UI;
 // using UnityEngine.InputSystem; // Nếu cần thiết
 
 public enum Direction
@@ -18,6 +21,7 @@ public class PlayeMovement : MonoBehaviour
 {
     private Player player;
     private PlayerControls controls;
+    private DefaultInputActions inputActions;
     private CharacterController characterController;
     private Camera mainCamera;
 
@@ -60,11 +64,16 @@ public class PlayeMovement : MonoBehaviour
 
     private void Update()
     {
+        if (!GamePlayManager.instance.IsPlaying) return;
+        if (controls.Character.MousePress.WasPressedThisFrame())
+        {
+            if (EventSystem.current.IsPointerOverGameObject())
+            {
+                return;
+            }
+                isDragging = true;
+        }
 
-    }
-
-    private void FixedUpdate()
-    {
         if (isDragging)
         {
             Vector3 mouseWorldPos = GetMouseWorldPosition();
@@ -75,6 +84,11 @@ public class PlayeMovement : MonoBehaviour
 
         MoveAnimation();
         ApplyPositionClamping();
+    }
+
+    private void FixedUpdate()
+    {
+        
     }
     private void ApplyMovement(Vector2 Input)
     {
@@ -162,7 +176,10 @@ public class PlayeMovement : MonoBehaviour
 
         controls.Character.Mouse.performed += context => currentMousePos = context.ReadValue<Vector2>();
 
-        controls.Character.MousePress.performed += context => isDragging = true;
+        //controls.Character.MousePress.performed += context =>
+        //{
+        //    isDragging = true;
+        //};
 
         controls.Character.MousePress.canceled += context =>
         {

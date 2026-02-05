@@ -62,7 +62,7 @@ public class BodyPartSensor : MonoBehaviour
         //player.limb.GetHit(isLimb, mesh, skel);
     }
 
-    public void OnHit()
+    protected virtual void OnHit()
     {
         if(instanceMaterial == null) return;
 
@@ -75,6 +75,8 @@ public class BodyPartSensor : MonoBehaviour
     public IEnumerator HitEffect()
     {
         instanceMaterial.SetColor("_Emission", hitColor);
+
+        CameraManager.instance.Shake();
 
         yield return new WaitForSeconds(hitTime);
 

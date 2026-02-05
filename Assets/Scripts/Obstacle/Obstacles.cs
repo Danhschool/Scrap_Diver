@@ -15,7 +15,7 @@ public class Obstacles : MonoBehaviour
     // Start is called before the first frame update
     protected virtual void OnEnable()
     {
-        currentSpeed = GamePlayManager.instance.scrollSpeed;
+        currentSpeed = GamePlayManager.instance.GameSpeed;
         Invoke("Destroy", timeToDestroy);
     }
 
