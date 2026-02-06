@@ -12,6 +12,7 @@ public class Player : MonoBehaviour
     //public PlayerCollision collision { get; private set; }
     public PlayerLimb limb { get; private set; }
     public PlayerShadow shadow { get; private set; }
+    public PlayerHealth health { get; private set; }
 
     private void Awake()
     {
@@ -21,6 +22,7 @@ public class Player : MonoBehaviour
         //collision = GetComponent<PlayerCollision>();
         limb = GetComponent<PlayerLimb>();
         shadow = GetComponent<PlayerShadow>();
+        health = GetComponent<PlayerHealth>();
     }
 
     private void OnEnable()

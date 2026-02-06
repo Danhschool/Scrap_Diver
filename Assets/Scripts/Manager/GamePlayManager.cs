@@ -23,6 +23,7 @@ public class GamePlayManager : MonoBehaviour
     [SerializeField] private float gameSpeed = 100f;
     private float savedSpeed;
     private float coinToResume;
+    public float duration = 1f;
 
     [SerializeField] private int lastDistance;
 
@@ -30,6 +31,7 @@ public class GamePlayManager : MonoBehaviour
     [SerializeField] private int indexOfLevel;
     [SerializeField] private float distanceOfLevel;
 
+    private Coroutine coroutine;
 
     public float CurentTime => Mathf.FloorToInt(currentTime);
     public float LastDistance => lastDistance;
@@ -113,7 +115,7 @@ public class GamePlayManager : MonoBehaviour
 
         Ingame_UiManager.instance.SetActiveContinue_Panel(true);
         ClearAllObstacles();
-        StartCoroutine(CountDownToEnd(()=>{
+        coroutine = StartCoroutine(CountDownToEnd(()=>{
             GameOver();
             
             }));
@@ -121,7 +123,14 @@ public class GamePlayManager : MonoBehaviour
 
     public void GameOver()
     {
-        UpdateData();
+        if (coroutine != null)
+        {
+            StopCoroutine(coroutine);
+            coroutine = null; 
+        }
+        //UpdateData();
+
+        StartCoroutine(CountUpCoroutine(currentDistance, totalCoin, currentTime));
 
         Ingame_UiManager.instance.SetActiveContinue_Panel(false);
         Ingame_UiManager.instance.SetActiveIngame_Panel(false);
@@ -211,6 +220,47 @@ public class GamePlayManager : MonoBehaviour
             yield return null;
         }
         _onComplete?.Invoke();
+    }
+    public IEnumerator SpeedToZere()
+    {
+        savedSpeed = gameSpeed;
+        while(gameSpeed > 0)
+        {
+            gameSpeed -= 50 * Time.unscaledDeltaTime;
+            yield return null;
+        }
+        gameSpeed = 0;
+    }
+    private IEnumerator CountUpCoroutine(float _dirValue, float _coinValue, float _timeValue)
+    {
+        int startValue = 0;
+        float elapsed = 0f;
+        float dir;
+        float coin;
+        float time;
+        while (elapsed < duration)
+        {
+            elapsed += Time.unscaledDeltaTime;
+
+            float progress = elapsed / duration;
+
+            dir = (int)Mathf.Lerp(startValue, _dirValue, progress);
+            coin = (int)Mathf.Lerp(startValue, _coinValue, progress);
+            time = Mathf.Lerp(startValue, _timeValue, progress);
+
+            Ingame_UiManager.instance.UpdateDistance_EndTxt((int)dir);
+            Ingame_UiManager.instance.UpdateCoin_Endtxt((int)coin);
+            Ingame_UiManager.instance.UpdateTime_Endtxt((int)time);
+
+            yield return null;
+        }
+        dir = _dirValue;
+        coin = _coinValue;
+        time = _timeValue;
+        Ingame_UiManager.instance.UpdateDistance_EndTxt((int)dir);
+        Ingame_UiManager.instance.UpdateCoin_Endtxt((int)coin);
+        Ingame_UiManager.instance.UpdateTime_Endtxt((int)time);
+
     }
     public bool SetIsPlay(bool isPlay) => isPlaying = isPlay;
 

@@ -1,9 +1,10 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Body : BodyPartSensor
 {
+    [SerializeField] private bool isSpine = false;
     protected override void OnTriggerEnter(Collider other)
     {
         base.OnTriggerEnter(other);
@@ -13,16 +14,12 @@ public class Body : BodyPartSensor
     {
         base.OnHit();
 
-        Invoke(nameof(RunGameContinueToEnd), 2f);
+        if (isSpine) return;
+        player.health.OnDie();
     }
 
     protected override void Start()
     {
         base.Start();
-    }
-
-    private void RunGameContinueToEnd()
-    {
-        GamePlayManager.instance.GameContinueToEnd();
     }
 }

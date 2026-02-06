@@ -7,16 +7,16 @@ public class Obstacles : MonoBehaviour
     public Vector3 position;
     public Vector3 rotation;
 
+    private GamePlayManager gamePlayManager;
+
     //[SerializeField] private float destroyHeight = 50f;
     private float timeToDestroy = 4f;
-
-    private float currentSpeed;
 
     // Start is called before the first frame update
     protected virtual void OnEnable()
     {
-        currentSpeed = GamePlayManager.instance.GameSpeed;
         Invoke("Destroy", timeToDestroy);
+        gamePlayManager = GamePlayManager.instance;
     }
 
     // Update is called once per frame
@@ -40,7 +40,7 @@ public class Obstacles : MonoBehaviour
     }
     private void Up()
     {
-        transform.Translate(Vector3.up * currentSpeed * Time.deltaTime, Space.World);
+        transform.Translate(Vector3.up * gamePlayManager.GameSpeed * Time.deltaTime, Space.World);
 
     }
 

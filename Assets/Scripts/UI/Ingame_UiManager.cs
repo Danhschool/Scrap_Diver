@@ -46,8 +46,14 @@ public class Ingame_UiManager : MonoBehaviour
 
     [Header("Game Over Panel 1")]
     [SerializeField] private GameObject gameOver_Panel;
-    
-    
+    [SerializeField] private TMP_Text distance_Endtxt;
+    [SerializeField] private TMP_Text bestDis_Endtxt;
+    [SerializeField] private TMP_Text time_Endtxt;
+    [SerializeField] private TMP_Text bestTime_Endtxt;
+    [SerializeField] private TMP_Text coin_Endtxt;
+    [SerializeField] private TMP_Text bestCoin_Endtxt;
+
+
 
     private void Awake()
     {
@@ -120,6 +126,12 @@ public class Ingame_UiManager : MonoBehaviour
         Ui_Effect.OnClickExit(_img, this, ref isDown);
         Debug.Log("ad");
     }
+    public void OnEndGameClick(Image _img)
+    {
+        Ui_Effect.OnClickExit(_img, this, ref isDown);
+
+        GamePlayManager.instance.GameOver();
+    }
 
     #endregion
 
@@ -161,19 +173,51 @@ public class Ingame_UiManager : MonoBehaviour
     }
     public void UpdateDistanceUI(int _distance) => distance_Txt.text = _distance.ToString() + " m"; 
     public void UpdateCoinUI(int _coin) => coin_Txt.text = _coin.ToString();
-
     public void UpdateArrowPosition(float _currentValue , float _maxValue)
     {
         float ratio = Mathf.Clamp01(_currentValue / _maxValue);
 
         AnchoedPosition(arrowRect, ratio);
     }
-
     public void UpdateProgressBar(float _currentValue, float _maxValue, int _level)
     {
         CreateCup(_currentValue, _maxValue);
         CreateMark(_level);
     }
+    public void UpdateDistance_EndTxt(float _value)
+    {
+        distance_Endtxt.text = _value.ToString() + "m";
+        if (DataManager.BestDistance > _value) bestDis_Endtxt.text = "Best: " + DataManager.BestDistance;
+        else
+        {
+            distance_Endtxt.color = Color.yellow;
+            bestDis_Endtxt.text = "New Best!";
+            bestDis_Endtxt.color = Color.yellow;
+        }
+    }
+    public void UpdateTime_Endtxt(float _value)
+    {
+        time_Endtxt.text = _value.ToString() + "s";
+        if (DataManager.BestDistance > _value) bestTime_Endtxt.text = "Best: " + DataManager.BestTime;
+        else
+        {
+            time_Endtxt.color = Color.yellow;
+            bestTime_Endtxt.text = "New Best!";
+            bestTime_Endtxt.color = Color.yellow;
+        }
+    }
+    public void UpdateCoin_Endtxt(float _value)
+    {
+        coin_Endtxt.text = _value.ToString() + "s";
+        if (DataManager.BestDistance > _value) bestCoin_Endtxt.text = "Best: " + DataManager.BestTime;
+        else
+        {
+            coin_Endtxt.color = Color.yellow;
+            bestCoin_Endtxt.text = "New Best!";
+            bestCoin_Endtxt.color = Color.yellow;
+        }
+    }
+
     public void CreateCup(float _currentValue, float _maxValue)
     {
         float ratio = Mathf.Clamp01(_currentValue / _maxValue);

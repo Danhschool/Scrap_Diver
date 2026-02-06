@@ -59,7 +59,7 @@ public class BodyPartSensor : MonoBehaviour
             return;
 
         OnHit();
-        //player.limb.GetHit(isLimb, mesh, skel);
+        player.limb.GetHit(isLimb, mesh, skel);
     }
 
     protected virtual void OnHit()
