@@ -4,6 +4,7 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class Ingame_UiManager : MonoBehaviour
 {
@@ -16,7 +17,7 @@ public class Ingame_UiManager : MonoBehaviour
     [SerializeField] private TMP_Text distance_Txt;
     //[SerializeField] private TMP_Text time_Txt;
     [SerializeField] private TMP_Text coin_Txt;
-    [SerializeField] private GameObject pause_Btn;
+    [SerializeField] public GameObject pause_Btn;
 
     [Header("Progress Bar")]
     [SerializeField] Image fillProgressBar;
@@ -103,8 +104,9 @@ public class Ingame_UiManager : MonoBehaviour
     }
     public void OnMainClick(Image _img)
     {
-        Debug.Log("main");
         Ui_Effect.OnClickExit(_img, this, ref isDown);
+
+        SceneManager.LoadScene("Scene_MainMenu");
     }
 
     public void OnClickDown(Image _img)
@@ -131,6 +133,13 @@ public class Ingame_UiManager : MonoBehaviour
         Ui_Effect.OnClickExit(_img, this, ref isDown);
 
         GamePlayManager.instance.GameOver();
+    }
+    public void OnReStartClick(Image _img)
+    {
+        Ui_Effect.OnClickExit(_img, this, ref isDown);
+
+        string currentSceneName = SceneManager.GetActiveScene().name;
+        SceneManager.LoadScene(currentSceneName);
     }
 
     #endregion
@@ -198,7 +207,7 @@ public class Ingame_UiManager : MonoBehaviour
     public void UpdateTime_Endtxt(float _value)
     {
         time_Endtxt.text = _value.ToString() + "s";
-        if (DataManager.BestDistance > _value) bestTime_Endtxt.text = "Best: " + DataManager.BestTime;
+        if (DataManager.BestTime > _value) bestTime_Endtxt.text = "Best: " + DataManager.BestTime;
         else
         {
             time_Endtxt.color = Color.yellow;
@@ -209,7 +218,7 @@ public class Ingame_UiManager : MonoBehaviour
     public void UpdateCoin_Endtxt(float _value)
     {
         coin_Endtxt.text = _value.ToString() + "s";
-        if (DataManager.BestDistance > _value) bestCoin_Endtxt.text = "Best: " + DataManager.BestTime;
+        if (DataManager.BestTotalCoin > _value) bestCoin_Endtxt.text = "Best: " + DataManager.BestTotalCoin;
         else
         {
             coin_Endtxt.color = Color.yellow;

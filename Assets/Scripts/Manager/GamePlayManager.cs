@@ -55,6 +55,7 @@ public class GamePlayManager : MonoBehaviour
 
         bestCoin = DataManager.BestTotalCoin;
         bestTime = DataManager.BestTime;
+        bestDistance = DataManager.BestDistance;
 
         Ingame_UiManager.instance.UpdateProgressBar(bestDistance, distanceOfLevel * indexOfLevel, indexOfLevel);
         //Ingame_UiManager.instance.CreateMark(indexOfLevel);
@@ -128,14 +129,26 @@ public class GamePlayManager : MonoBehaviour
             StopCoroutine(coroutine);
             coroutine = null; 
         }
-        //UpdateData();
+        UpdateData();
 
         StartCoroutine(CountUpCoroutine(currentDistance, totalCoin, currentTime));
 
         Ingame_UiManager.instance.SetActiveContinue_Panel(false);
         Ingame_UiManager.instance.SetActiveIngame_Panel(false);
+        Ingame_UiManager.instance.pause_Btn.SetActive(false);
 
         Ingame_UiManager.instance.SetActiveGameOver_Panel(true);
+    }
+    private void UpdateData()
+    {
+        if (DataManager.BestDistance < lastDistance)
+            DataManager.BestDistance = lastDistance;
+        if (DataManager.BestTime < (int)currentTime)
+            DataManager.BestTime = (int)currentTime;
+        if (DataManager.BestTotalCoin < totalCoin)
+            DataManager.BestTotalCoin = totalCoin;
+
+        DataManager.TotalCoin += totalCoin;
     }
 
     private void UpdateDistance()
@@ -167,17 +180,6 @@ public class GamePlayManager : MonoBehaviour
         totalCoin += _i;
 
         Ingame_UiManager.instance.UpdateCoinUI(totalCoin);
-    }
-    private void UpdateData()
-    {
-        if (DataManager.BestDistance > lastDistance)
-            DataManager.BestDistance = lastDistance;
-        if (DataManager.BestTime > (int)currentTime)
-            DataManager.BestTime = (int)currentTime;
-        if (DataManager.BestTotalCoin > totalCoin)
-            DataManager.BestTotalCoin = totalCoin;
-
-        DataManager.TotalCoin += totalCoin;
     }
     private void ResetData()
     {
