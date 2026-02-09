@@ -36,6 +36,10 @@ public class MainMenuManager : MonoBehaviour
     [SerializeField] private int selectedIndex = 0;
     public int totalCharacters = 0;
 
+    [Header("Parallax Background")]
+    public Transform[] backgroundLayers;
+    public float[] parallaxMultipliers;
+
     private Rigidbody rb;
     private float targetX;
     private float currentVelocity;
@@ -93,7 +97,10 @@ public class MainMenuManager : MonoBehaviour
     void Update()
     {
         if (isShop)
+        {
             HandleInput();
+            MoveParallaxBackground();
+        }
     }
 
     void FixedUpdate()
@@ -138,7 +145,7 @@ public class MainMenuManager : MonoBehaviour
         targetX = nearestIndex * -distanceBetweenChars;
 
         selectedIndex = nearestIndex;
-        Debug.Log(selectedIndex);
+        //Debug.Log(selectedIndex);
         UpdateShopUI(selectedIndex);
     }
 
@@ -213,6 +220,20 @@ public class MainMenuManager : MonoBehaviour
             GameObject newRobot = Instantiate(charData.robot, transform);
             newRobot.transform.localPosition = new Vector3(i * distanceBetweenChars, 0, 0);
             newRobot.name = robotList[i].robotName;
+        }
+    }
+    void MoveParallaxBackground()
+    {
+        for (int i = 0; i < backgroundLayers.Length; i++)
+        {
+            if (backgroundLayers[i] != null)
+            {
+                float parallaxX = transform.position.x * 5 * parallaxMultipliers[i];
+
+                Vector3 bgPos = backgroundLayers[i].position;
+                bgPos.x = parallaxX;
+                backgroundLayers[i].position = bgPos;
+            }
         }
     }
 }
