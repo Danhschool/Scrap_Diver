@@ -1,27 +1,38 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class Main_UiManager : MonoBehaviour
 {
+    public static Main_UiManager instance;
+
+    [Header("Coin")]
     [SerializeField] private Animator coinIconAnimator;
+    [SerializeField] private TMP_Text coinText;
 
     [Header("Panels")]
     [SerializeField] private List<GameObject> panels;
 
     [Header("Shop Robot")]
     [SerializeField] private GameObject shopRobot_Panel;
-    [SerializeField] private TMP_Text description_Txt;
+    [SerializeField] private TMP_Text advantage_Txt;
+    [SerializeField] private TMP_Text disadvantage_Txt;
+    [SerializeField] private TMP_Text selectButtonText;
 
     private bool isDown = false;
     private Coroutine activeMoveCoroutine;
 
     private void Awake()
     {
+        if (instance == null) instance = this;
+        else Destroy(gameObject);
+
         if (coinIconAnimator == null)
         {
             coinIconAnimator = GetComponentInChildren<Animator>();
@@ -33,12 +44,20 @@ public class Main_UiManager : MonoBehaviour
     public void OnStartClick()
     {
         Debug.Log("OnStartClick");
-        
+
         Door_Manager[] door = FindObjectsOfType<Door_Manager>();
         foreach (var d in door)
         {
             d.StartCoroutine(d.MoveDoor());
         }
+        DataManager.SelectedPlayerIndex = MainMenuManager.instance.SelectedIndex;
+
+        Invoke("StartGame", 1f);
+    }
+
+    private void StartGame()
+    {
+        SceneManager.LoadScene("Scene_Lv1");
     }
 
     public void OnSettingClick(Image img)
@@ -59,6 +78,8 @@ public class Main_UiManager : MonoBehaviour
 
         GameObject robotShop_Panel = panels.Find(x => x.name == ("ShopRobot_Panel"));
         Debug.Log(robotShop_Panel.name);
+
+        MainMenuManager.instance.StartShop();
 
         Ui_Effect.SwitchToPanel(robotShop_Panel,panels);
     }
@@ -109,7 +130,7 @@ public class Main_UiManager : MonoBehaviour
 
     #endregion
 
-    #region
+    #region Shop
     public void OnSelectPlayerClick(Image img)
     {
         Ui_Effect.OnClickExit(img, this, ref isDown);
@@ -120,14 +141,40 @@ public class Main_UiManager : MonoBehaviour
         Ui_Effect.SwitchToPanel(main_Panel, panels);
         Debug.Log("Select Player");
     }
+    public void OnSelectRobotClick(Image img)
+    {
+        Ui_Effect.OnClickExit(img, this, ref isDown);
 
+        int index = MainMenuManager.instance.SelectedIndex;
 
-    #endregion
+        var data = MainMenuManager.instance.RobotList[index];
 
-    #region Update UI
-    public void UpdateDescriptionText(string _value) => description_Txt.text = _value;
+        if(data.isUnlocked)
+        {
+            advantage_Txt.text = data.advantage;
+            disadvantage_Txt.text = data.disadvantage;
 
-    #endregion
+            GameObject main_Panel = panels.Find(x => x.name == ("Main_Panel"));
+            Debug.Log(main_Panel.name);
+
+            MainMenuManager.instance.StopShop();
+
+            Ui_Effect.SwitchToPanel(main_Panel, panels);
+        }
+        else
+        {
+            bool success = MainMenuManager.instance.BuyCharacter(index);
+
+            if (success)
+            {
+                selectButtonText.text = "null";
+            }
+            else
+            {
+                
+            }
+        }
+    }
     public void OnBackClick(Image img)
     {
         Ui_Effect.OnClickExit(img, this, ref isDown);
@@ -135,8 +182,28 @@ public class Main_UiManager : MonoBehaviour
         GameObject main_Panel = panels.Find(x => x.name == ("Main_Panel"));
         Debug.Log(main_Panel.name);
 
+        MainMenuManager.instance.StopShop();
+
         Ui_Effect.SwitchToPanel(main_Panel, panels);
     }
+
+    #endregion
+
+    #region Update UI
+    public void UpdateAdvantageText(string _value) 
+    { 
+        advantage_Txt.color = Color.yellow;
+        advantage_Txt.text = _value; 
+    }
+    public void UpdateDisadvantageText(string _value)
+    {
+        disadvantage_Txt.color = Color.red;
+        disadvantage_Txt.text = _value;
+    }
+    public void UpdateSelectButtonText(string _value) => selectButtonText.text = _value;
+    public void UpdateCoinText() => coinText.text = DataManager.TotalCoin.ToString();
+    #endregion
+    
 
     public void OnCoinIconClick()
     {

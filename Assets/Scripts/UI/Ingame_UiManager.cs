@@ -106,7 +106,7 @@ public class Ingame_UiManager : MonoBehaviour
     public void OnMainClick(Image _img)
     {
         Ui_Effect.OnClickExit(_img, this, ref isDown);
-
+        GamePlayManager.instance.GameResume();
         SceneManager.LoadScene("Scene_MainMenu");
     }
 

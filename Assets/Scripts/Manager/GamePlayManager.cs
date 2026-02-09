@@ -11,7 +11,7 @@ public class GamePlayManager : MonoBehaviour
     private int bestDistance;
 
     [SerializeField] private Player player;
-    [SerializeField] private GameObject p;
+    [SerializeField] private GameObject[] p;
     private GameObject inGamePlayer;
     private bool isRestart = false;
 
@@ -56,7 +56,7 @@ public class GamePlayManager : MonoBehaviour
 
     private void Start()
     {
-        inGamePlayer = Instantiate(p);
+        inGamePlayer = Instantiate(p[DataManager.SelectedPlayerIndex]);
         StartIndex();
 
         savedSpeed = gameSpeed;
@@ -115,7 +115,7 @@ public class GamePlayManager : MonoBehaviour
         if (DataManager.TotalCoin > CalculateCoin() * 10)
         {
             isRestart = true;
-            inGamePlayer = Instantiate(p);
+            inGamePlayer = Instantiate(p[DataManager.SelectedPlayerIndex]);
             DataManager.TotalCoin -= CalculateCoin() * 10;
             Ingame_UiManager.instance.UpdateCoinUI(DataManager.TotalCoin);
             Ingame_UiManager.instance.SetActiveContinue_Panel(false);

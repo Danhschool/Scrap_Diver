@@ -13,5 +13,5 @@ public class PrefConst
     public const string CHALLENGE_COIN = "challenge_Coin";
     public const string CHALLENGE_TIME = "challenge_Time";
 
-
+    public const string CHAR_UNLOCK_PREFIX = "char_unlock_";
 }

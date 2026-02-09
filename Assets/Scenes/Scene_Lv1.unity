@@ -1798,7 +1798,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 1390237655}
-  p: {fileID: 7002243111453762354, guid: 9371a60d68959fe44816545c18bd2bdc, type: 3}
+  p:
+  - {fileID: 7002243111453762354, guid: 9371a60d68959fe44816545c18bd2bdc, type: 3}
+  - {fileID: 7002243111453762354, guid: 49afb8cdc5e9580439f0eb5bc4951b11, type: 3}
+  - {fileID: 7002243111453762354, guid: 24cfea19e61537741b2c1c899561ece0, type: 3}
   scaleDistance: 0.2
   isPlaying: 1
   gameSpeed: 100
