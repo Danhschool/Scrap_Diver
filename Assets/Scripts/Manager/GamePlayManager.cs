@@ -10,6 +10,11 @@ public class GamePlayManager : MonoBehaviour
     private int bestTime;
     private int bestDistance;
 
+    [SerializeField] private Player player;
+    [SerializeField] private GameObject p;
+    private GameObject inGamePlayer;
+    private bool isRestart = false;
+
     [Header("Scale")]
     [SerializeField] private float scaleDistance = 1;
     
@@ -21,7 +26,7 @@ public class GamePlayManager : MonoBehaviour
     [SerializeField] private static int totalCoin;
     [SerializeField] private bool isPlaying = true;
     [SerializeField] private float gameSpeed = 100f;
-    private float savedSpeed;
+    public float savedSpeed;
     private float coinToResume;
     public float duration = 1f;
 
@@ -51,7 +56,10 @@ public class GamePlayManager : MonoBehaviour
 
     private void Start()
     {
+        inGamePlayer = Instantiate(p);
         StartIndex();
+
+        savedSpeed = gameSpeed;
 
         bestCoin = DataManager.BestTotalCoin;
         bestTime = DataManager.BestTime;
@@ -102,20 +110,50 @@ public class GamePlayManager : MonoBehaviour
         Ingame_UiManager.instance.UpdateProgressCoinText(totalCoin, DataManager.ChallengeCoin);
         Ingame_UiManager.instance.UpdateProgressTimeText(CurentTime, DataManager.ChallengeTime);
     }
+    public void ContinueWithCoin()
+    {
+        if (DataManager.TotalCoin > CalculateCoin() * 10)
+        {
+            isRestart = true;
+            inGamePlayer = Instantiate(p);
+            DataManager.TotalCoin -= CalculateCoin() * 10;
+            Ingame_UiManager.instance.UpdateCoinUI(DataManager.TotalCoin);
+            Ingame_UiManager.instance.SetActiveContinue_Panel(false);
+            Ingame_UiManager.instance.UpdateCoinUI(totalCoin);
+            StopCoroutine(coroutine);
+            GameResume();
+
+        }
+        else
+            return;
+    }
+    public int CalculateCoin()
+    {
+        int c = (int)currentTime / 10;
+
+        return c;
+    }
     public void GameContinueToEnd()
     {
         if (!isPlaying) return;
 
+        Destroy(inGamePlayer);
         isPlaying = false;
-        savedSpeed = gameSpeed;
+        //savedSpeed = gameSpeed;
         gameSpeed = 0;
         Time.timeScale = 0;
+
 
         if (DataManager.TotalCoin > coinToResume) Ingame_UiManager.instance.UpdateContinueWithCoin(true);
         else Ingame_UiManager.instance.UpdateContinueWithCoin(false);
 
+        Ingame_UiManager.instance.UpdateContinueWithCoin_Txt(CalculateCoin() * 10);
+        Ingame_UiManager.instance.UpdateCoinUI(DataManager.TotalCoin);
         Ingame_UiManager.instance.SetActiveContinue_Panel(true);
         ClearAllObstacles();
+
+        if(isRestart) GameOver();
+
         coroutine = StartCoroutine(CountDownToEnd(()=>{
             GameOver();
             
@@ -225,7 +263,7 @@ public class GamePlayManager : MonoBehaviour
     }
     public IEnumerator SpeedToZere()
     {
-        savedSpeed = gameSpeed;
+        //savedSpeed = gameSpeed;
         while(gameSpeed > 0)
         {
             gameSpeed -= 50 * Time.unscaledDeltaTime;

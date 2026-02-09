@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -11,6 +12,10 @@ public class Main_UiManager : MonoBehaviour
 
     [Header("Panels")]
     [SerializeField] private List<GameObject> panels;
+
+    [Header("Shop Robot")]
+    [SerializeField] private GameObject shopRobot_Panel;
+    [SerializeField] private TMP_Text description_Txt;
 
     private bool isDown = false;
     private Coroutine activeMoveCoroutine;
@@ -104,6 +109,25 @@ public class Main_UiManager : MonoBehaviour
 
     #endregion
 
+    #region
+    public void OnSelectPlayerClick(Image img)
+    {
+        Ui_Effect.OnClickExit(img, this, ref isDown);
+
+        GameObject main_Panel = panels.Find(x => x.name == ("Main_Panel"));
+        Debug.Log(main_Panel.name);
+
+        Ui_Effect.SwitchToPanel(main_Panel, panels);
+        Debug.Log("Select Player");
+    }
+
+
+    #endregion
+
+    #region Update UI
+    public void UpdateDescriptionText(string _value) => description_Txt.text = _value;
+
+    #endregion
     public void OnBackClick(Image img)
     {
         Ui_Effect.OnClickExit(img, this, ref isDown);

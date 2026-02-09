@@ -37,6 +37,7 @@ public class Ingame_UiManager : MonoBehaviour
     [SerializeField] private GameObject continue_Panel;
     [SerializeField] private Image fillContinueBar;
     [SerializeField] private Image continueWithCoin;
+    [SerializeField] private TMP_Text continueWithCoin_txt;
 
     [Header("Game Over Panel 2")]
     [SerializeField] private GameObject gameOver_Panel_2;
@@ -121,7 +122,8 @@ public class Ingame_UiManager : MonoBehaviour
     public void OnResumeWithCoinClick(Image _img)
     {
         Ui_Effect.OnClickExit(_img, this, ref isDown);
-        Debug.Log("Coin");
+        //Debug.Log("Coin");
+        GamePlayManager.instance.ContinueWithCoin();
     }
     public void OnResumeWithAdClick(Image _img)
     {
@@ -162,6 +164,7 @@ public class Ingame_UiManager : MonoBehaviour
         if(_isOK) continueWithCoin.color = Color.yellow;
         else continueWithCoin.color = Color.red;
     }
+    public void UpdateContinueWithCoin_Txt(int _value) => continueWithCoin_txt.text = "Coin: " + _value.ToString();
     public void UpdateProgressCoinText(float _currentValue, float _maxValue)
     {
         progress_Coin_Txt.text = _currentValue.ToString() + "/" + _maxValue.ToString();

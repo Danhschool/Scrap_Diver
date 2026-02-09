@@ -39,17 +39,18 @@ public class PlayeMovement : MonoBehaviour
     [SerializeField] private float topLimit = 8f;
     [SerializeField] private float bottomLimit = 18f;
 
+    [Header("Smooth Settings")]
+    [Range(0f, 0.5f)]
+    [SerializeField] private float smoothTime = 0.1f;
+    private Vector3 currentDir;
+    private Vector3 currentDirVelocity;
+
     private bool isDragging = false;
 
     private Vector2 currentMousePos;
 
     public Vector2 moveInput { get; private set; }
 
-    [Header("Smooth Settings")]
-    [Range(0f, 0.5f)]
-    [SerializeField] private float smoothTime = 0.1f;
-    private Vector3 currentDir;
-    private Vector3 currentDirVelocity;
 
     private void Start()
     {

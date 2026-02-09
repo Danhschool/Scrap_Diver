@@ -15,6 +15,7 @@ public class PlayerHealth : MonoBehaviour
     [Header("Force")]
     public float minForce = 5f;
     public float maxForce = 10f;
+
     public void OnDie()
     {
         model.SetActive(false);
@@ -29,6 +30,7 @@ public class PlayerHealth : MonoBehaviour
         StartCoroutine(GamePlayManager.instance.SpeedToZere());
         Invoke(nameof(RunGameContinueToEnd), 2f);
 
+        StartCoroutine(DestroyRoutine(5));
     }
     public void SpawnSingleItem()
     {
@@ -39,7 +41,7 @@ public class PlayerHealth : MonoBehaviour
 
         Quaternion spawnRot = Quaternion.Euler(0, 0, Random.Range(0, 360f));
 
-        GameObject obj = Instantiate(selectedPrefab, transform.position, spawnRot);
+        GameObject obj = Instantiate(selectedPrefab, transform.position, spawnRot, transform);
 
         Rigidbody rb = obj.GetComponent<Rigidbody>();
         if (rb != null)
@@ -56,11 +58,15 @@ public class PlayerHealth : MonoBehaviour
         {
             Debug.LogWarning("Prefab " + obj.name + " Rigidbody2D null!");
         }
-
-        Destroy(obj, 2f);
     }
     private void RunGameContinueToEnd()
     {
         GamePlayManager.instance.GameContinueToEnd();
+    }
+    private IEnumerator DestroyRoutine(float delay)
+    {
+        yield return new WaitForSecondsRealtime(delay);
+
+        Destroy(gameObject);
     }
 }
