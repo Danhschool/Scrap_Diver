@@ -12,8 +12,6 @@ public class Main_UiManager : MonoBehaviour
 {
     public static Main_UiManager instance;
 
-    [SerializeField] GameObject background;
-
     [Header("Coin")]
     [SerializeField] private Animator coinIconAnimator;
     [SerializeField] private TMP_Text coinText;
@@ -83,7 +81,9 @@ public class Main_UiManager : MonoBehaviour
 
         MainMenuManager.instance.StartShop();
 
-        background.SetActive(false);
+        MainMenuManager.instance.Background.SetActive(false);
+
+        MainMenuManager.instance.MoveRobot();
 
         Ui_Effect.SwitchToPanel(robotShop_Panel,panels);
     }
@@ -162,7 +162,7 @@ public class Main_UiManager : MonoBehaviour
             Debug.Log(main_Panel.name);
 
             MainMenuManager.instance.StopShop();
-            background.SetActive(true);
+            MainMenuManager.instance.Background.SetActive(true);
 
             Ui_Effect.SwitchToPanel(main_Panel, panels);
         }
@@ -188,7 +188,7 @@ public class Main_UiManager : MonoBehaviour
         Debug.Log(main_Panel.name);
 
         MainMenuManager.instance.StopShop();
-        background.SetActive(true);
+        MainMenuManager.instance.Background.SetActive(true);
 
         Ui_Effect.SwitchToPanel(main_Panel, panels);
     }

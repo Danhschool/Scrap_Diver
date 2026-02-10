@@ -40,6 +40,13 @@ public class MainMenuManager : MonoBehaviour
     public Transform[] backgroundLayers;
     public float[] parallaxMultipliers;
 
+    [Header("Background")]
+    [SerializeField] private GameObject background;
+
+    [SerializeField] private CameraManager cameraManager;
+
+    [SerializeField] private Dictionary<int, GameObject> claws = new Dictionary<int, GameObject>();
+
     private Rigidbody rb;
     private float targetX;
     private float currentVelocity;
@@ -52,6 +59,7 @@ public class MainMenuManager : MonoBehaviour
 
     public RobotData[] RobotList => robotList;
     public int SelectedIndex => selectedIndex;
+    public GameObject Background => background;
 
     private void Awake()
     {
@@ -62,14 +70,14 @@ public class MainMenuManager : MonoBehaviour
     void Start()
     {
         //StartStatus(); 
-        SpawnRobot(0);
+        SpawnRobotsInShop();
     }
 
     public void StartShop()
     {
         isShop = true;
         RefreshShopData();
-        SpawnRobotsInShop();
+        //SpawnRobotsInShop();
 
         rb = GetComponent<Rigidbody>();
         rb.isKinematic = true;
@@ -80,7 +88,7 @@ public class MainMenuManager : MonoBehaviour
         maxX = 0f;
         minX = -((totalCharacters - 1) * distanceBetweenChars);
 
-        UpdateShopUI(0);
+        UpdateShopUI(DataManager.SelectedPlayerIndex);
     }
     public void StopShop()
     {
@@ -91,7 +99,7 @@ public class MainMenuManager : MonoBehaviour
             DestroyImmediate(transform.GetChild(i).gameObject);
         }
         transform.position = new Vector3(0, 0, 0);
-        SpawnRobot(0);
+        //SpawnRobot(0);
     }
 
     void Update()
@@ -132,6 +140,7 @@ public class MainMenuManager : MonoBehaviour
         {
             isDragging = false;
             SnapToNearest();
+
         }
 
     }
@@ -145,6 +154,8 @@ public class MainMenuManager : MonoBehaviour
         targetX = nearestIndex * -distanceBetweenChars;
 
         selectedIndex = nearestIndex;
+
+        DataManager.SelectedPlayerIndex = selectedIndex;
         //Debug.Log(selectedIndex);
         UpdateShopUI(selectedIndex);
     }
@@ -201,10 +212,10 @@ public class MainMenuManager : MonoBehaviour
     private void SpawnRobotsInShop()
     {
         int childCount = transform.childCount;
-        for (int i = childCount - 1; i >= 0; i--)
-        {
-            DestroyImmediate(transform.GetChild(i).gameObject); 
-        }
+        //for (int i = childCount - 1; i >= 0; i--)
+        //{
+        //    DestroyImmediate(transform.GetChild(i).gameObject); 
+        //}
 
         for (int i = 0; i < robotList.Length; i++)
         {
@@ -218,7 +229,12 @@ public class MainMenuManager : MonoBehaviour
         if (charData.robot != null)
         {
             GameObject newRobot = Instantiate(charData.robot, transform);
-            newRobot.transform.localPosition = new Vector3(i * distanceBetweenChars, 0, 0);
+            int a = i - DataManager.SelectedPlayerIndex;
+            Debug.Log(DataManager.SelectedPlayerIndex);
+            newRobot.transform.localPosition = new Vector3(a * distanceBetweenChars, 0, 0);
+
+            if(!claws.ContainsKey(i)) claws.Add(i, newRobot);
+
             newRobot.name = robotList[i].robotName;
         }
     }
@@ -234,6 +250,25 @@ public class MainMenuManager : MonoBehaviour
                 bgPos.x = parallaxX;
                 backgroundLayers[i].position = bgPos;
             }
+        }
+    }
+    public void MoveRobot()
+    {
+        //ClawController[] claws = FindObjectsOfType<ClawController>();
+        int check = DataManager.SelectedPlayerIndex;
+        for (int i = 0; i < robotList.Length; i++)
+        {
+            ClawController myClaw = claws[i].GetComponentInChildren<ClawController>();
+            Vector3 moveDir;
+            if (i < check) moveDir = new Vector3(10, 50, 0);
+            else if (i > check) moveDir = new Vector3(-10, 50, 0);
+            else moveDir = new Vector3(0, 50, 0);
+
+            myClaw.ClawPull(moveDir);
+        }
+        if (cameraManager != null)
+        {
+            cameraManager.MoveCamera(new Vector3(0, 50, 0));
         }
     }
 }

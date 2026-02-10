@@ -27,7 +27,7 @@ public class GamePlayManager : MonoBehaviour
     [SerializeField] private bool isPlaying = true;
     [SerializeField] private float gameSpeed = 100f;
     public float savedSpeed;
-    private float coinToResume;
+    //private float coinToResume;
     public float duration = 1f;
 
     [SerializeField] private int lastDistance;
@@ -136,6 +136,7 @@ public class GamePlayManager : MonoBehaviour
     public void GameContinueToEnd()
     {
         if (!isPlaying) return;
+        ClearAllObstacles();
 
         Destroy(inGamePlayer);
         isPlaying = false;
@@ -144,13 +145,12 @@ public class GamePlayManager : MonoBehaviour
         Time.timeScale = 0;
 
 
-        if (DataManager.TotalCoin > coinToResume) Ingame_UiManager.instance.UpdateContinueWithCoin(true);
+        if (DataManager.TotalCoin > CalculateCoin() * 10) Ingame_UiManager.instance.UpdateContinueWithCoin(true);
         else Ingame_UiManager.instance.UpdateContinueWithCoin(false);
 
         Ingame_UiManager.instance.UpdateContinueWithCoin_Txt(CalculateCoin() * 10);
         Ingame_UiManager.instance.UpdateCoinUI(DataManager.TotalCoin);
         Ingame_UiManager.instance.SetActiveContinue_Panel(true);
-        ClearAllObstacles();
 
         if(isRestart) GameOver();
 

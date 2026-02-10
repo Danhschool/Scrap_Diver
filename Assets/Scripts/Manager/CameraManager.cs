@@ -17,6 +17,10 @@ public class CameraManager : MonoBehaviour
 
     private float limitAngle = 10f;
 
+    [Header("Camera Settings")]
+    public float moveDuration = 1.5f;
+    public AnimationCurve moveCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
+
     [SerializeField] private float shakeTime = .2f;
 
     private Coroutine coroutine;
@@ -98,5 +102,32 @@ public class CameraManager : MonoBehaviour
 
         noise.m_AmplitudeGain = _value;
         noise.m_FrequencyGain = _value;
+    }
+
+
+    public void MoveCamera(Vector3 moveDelta)
+    {
+        StartCoroutine(MoveCameraRoutine(moveDelta));
+    }
+
+    IEnumerator MoveCameraRoutine(Vector3 moveDelta)
+    {
+        Vector3 startPos = transform.position;
+        Vector3 targetPos = startPos + moveDelta;
+
+        float elapsed = 0f;
+
+        while (elapsed < moveDuration)
+        {
+            elapsed += Time.deltaTime;
+            float t = elapsed / moveDuration;
+            float curveT = moveCurve.Evaluate(t);
+
+            transform.position = Vector3.Lerp(startPos, targetPos, curveT);
+
+            yield return null;
+        }
+
+        transform.position = targetPos;
     }
 }
