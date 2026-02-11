@@ -84,15 +84,23 @@ public static class DataManager
         PlayerPrefs.Save();
     }
 
-    private const string SELECTED_PLAYER_KEY = "Selected_Player_Index";
-
     public static int SelectedPlayerIndex
     {
-        get => PlayerPrefs.GetInt(SELECTED_PLAYER_KEY, 0);
+        get => PlayerPrefs.GetInt(PrefConst.SELECTED_PLAYER_KEY, 0);
         set
         {
             if (value < 0) return;
-            PlayerPrefs.SetInt(SELECTED_PLAYER_KEY, value);
+            PlayerPrefs.SetInt(PrefConst.SELECTED_PLAYER_KEY, value);
+            PlayerPrefs.Save();
+        }
+    }
+    public static int SelectedLevelIndex
+    {
+        get => PlayerPrefs.GetInt(PrefConst.SELECTED_LEVEL_KEY, 0);
+        set
+        {
+            if (value < 0) return;
+            PlayerPrefs.SetInt(PrefConst.SELECTED_LEVEL_KEY, value);
             PlayerPrefs.Save();
         }
     }

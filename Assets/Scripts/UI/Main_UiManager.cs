@@ -12,6 +12,8 @@ public class Main_UiManager : MonoBehaviour
 {
     public static Main_UiManager instance;
 
+    [SerializeField] private RectTransform img;
+
     [Header("Coin")]
     [SerializeField] private Animator coinIconAnimator;
     [SerializeField] private TMP_Text coinText;
@@ -27,6 +29,8 @@ public class Main_UiManager : MonoBehaviour
 
     private bool isDown = false;
     private Coroutine activeMoveCoroutine;
+
+    public RectTransform Img => img;
 
     private void Awake()
     {
@@ -92,10 +96,14 @@ public class Main_UiManager : MonoBehaviour
         Ui_Effect.OnClickExit(img, this,ref isDown);
 
         GameObject map_Panel = panels.Find(x => x.name == ("Map_Panel"));
-        Debug.Log(map_Panel.name);
 
-        Ui_Effect.SwitchToPanel(map_Panel, panels);
+        MainMenuManager.instance.SetState(true);
+
+        if(activeMoveCoroutine != null) StopCoroutine(activeMoveCoroutine);
+
+        activeMoveCoroutine = StartCoroutine(DelaySwitchPanel(map_Panel, panels));
     }
+    
     public void OnChallengeClick(Image img)
     {
         Ui_Effect.OnClickExit(img, this, ref isDown);
@@ -181,14 +189,13 @@ public class Main_UiManager : MonoBehaviour
             }
         }
     }
-    public void OnBackClick(Image img)
+    public void OnShopBackClick(Image img)
     {
         Ui_Effect.OnClickExit(img, this, ref isDown);
 
         GameObject main_Panel = panels.Find(x => x.name == ("Main_Panel"));
         Debug.Log(main_Panel.name);
 
-        MainMenuManager.instance.MoveDownRobot();
         MainMenuManager.instance.StopShop();
         MainMenuManager.instance.Background.SetActive(true);
 
@@ -197,7 +204,40 @@ public class Main_UiManager : MonoBehaviour
 
     #endregion
 
+    #region Select map
+
+    public void OnSelectMapClick(Image img)
+    {
+        Ui_Effect.OnClickExit(img, this, ref isDown);
+
+        GameObject main_Panel = panels.Find(x => x.name == ("Main_Panel"));
+        PageScroller pageScroller = gameObject.GetComponentInChildren<PageScroller>();
+        
+        DataManager.SelectedLevelIndex = pageScroller.CurrentLevelIndex;
+        
+        Debug.Log(DataManager.SelectedLevelIndex + "AAA");
+        MainMenuManager.instance.SetState(false);
+
+        if (activeMoveCoroutine != null) StopCoroutine(activeMoveCoroutine);
+        activeMoveCoroutine = StartCoroutine(DelaySwitchPanel(main_Panel, panels));
+    }
+    public void OnMapBackClick(Image img)
+    {
+        Ui_Effect.OnClickExit(img, this, ref isDown);
+
+        GameObject main_Panel = panels.Find(x => x.name == ("Main_Panel"));
+        Debug.Log(main_Panel.name);
+
+        MainMenuManager.instance.SetState(false);
+
+        if (activeMoveCoroutine != null) StopCoroutine(activeMoveCoroutine);
+        activeMoveCoroutine = StartCoroutine(DelaySwitchPanel(main_Panel, panels));
+    }
+
+    #endregion
+
     #region Update UI
+    public void UpdateImageTrans(Vector2 value) => img.anchoredPosition = value;
     public void UpdateAdvantageText(string _value) 
     { 
         advantage_Txt.color = Color.yellow;
@@ -232,5 +272,11 @@ public class Main_UiManager : MonoBehaviour
         yield return new WaitForSeconds(delayTime);
 
         MainMenuManager.instance.Background.SetActive(false);
+    }
+    IEnumerator DelaySwitchPanel(GameObject targetPanel, List<GameObject> _panels)
+    {
+        yield return new WaitForSeconds(.2f);
+
+        Ui_Effect.SwitchToPanel(targetPanel, _panels);
     }
 }

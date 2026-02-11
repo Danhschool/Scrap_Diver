@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Overlays;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class MainMenuManager : MonoBehaviour
 {
@@ -35,7 +37,7 @@ public class MainMenuManager : MonoBehaviour
     private bool isShop = false;
     [SerializeField] private int selectedIndex = 0;
     public int totalCharacters = 0;
-    [SerializeField] private GameObject select;
+    //[SerializeField] private GameObject select;
 
     [Header("Parallax Background")]
     public Transform[] backgroundLayers;
@@ -48,6 +50,9 @@ public class MainMenuManager : MonoBehaviour
 
     [SerializeField] private Dictionary<int, GameObject> claws = new Dictionary<int, GameObject>();
 
+    private float duration = 0.5f;
+
+
     private Rigidbody rb;
     private float targetX;
     private float currentVelocity;
@@ -56,6 +61,8 @@ public class MainMenuManager : MonoBehaviour
     private Vector3 startDragContainerPos;
 
     private float minX, maxX;
+
+    Coroutine imgUpAndDown;
 
 
     public RobotData[] RobotList => robotList;
@@ -86,7 +93,7 @@ public class MainMenuManager : MonoBehaviour
 
         selectedIndex = DataManager.SelectedPlayerIndex;
         targetX = selectedIndex * -10f;
-        select.transform.position = new Vector3(targetX, select.transform.position.y, select.transform.position.z);
+        transform.position = new Vector3(targetX, transform.position.y, transform.position.z);
 
         totalCharacters = transform.childCount;
 
@@ -99,6 +106,8 @@ public class MainMenuManager : MonoBehaviour
     {
         isShop = false;
 
+        MoveDownRobot();
+
         transform.position = new Vector3(0, 0, 0);
         //SpawnRobot(0);
     }
@@ -110,7 +119,8 @@ public class MainMenuManager : MonoBehaviour
             HandleInput();
             MoveParallaxBackground();
         }
-        //if(Input.GetKey(KeyCode.Space)) DataManager.SelectedPlayerIndex = 1;
+        if (Input.GetKey(KeyCode.N)) SetState(true);
+        if (Input.GetKey(KeyCode.B)) SetState(false);
     }
 
     void FixedUpdate()
@@ -260,17 +270,16 @@ public class MainMenuManager : MonoBehaviour
         //ClawController[] claws = FindObjectsOfType<ClawController>();
         int check = DataManager.SelectedPlayerIndex;
 
-        float anchorX = 0f;
-        if (claws.ContainsKey(check))
-        {
-            anchorX = claws[check].transform.position.x;
-        }
+        //float anchorX = 0f;
+        //if (claws.ContainsKey(check))
+        //{
+        //    anchorX = claws[check].transform.position.x;
+        //}
 
         for (int i = 0; i < robotList.Length; i++)
         {
             ClawController myClaw = claws[i].GetComponentInChildren<ClawController>();
-            float targetX = anchorX + (i - check) * 10;
-            Debug.Log(DataManager.SelectedPlayerIndex + targetX);
+            float targetX = (i - check) * 10;
 
             Vector3 moveDir = new Vector3(targetX, 50, 0);
 
@@ -302,4 +311,36 @@ public class MainMenuManager : MonoBehaviour
         }
     }
 
+    public void SetState(bool isDown)
+    {
+        Vector2 targetPos = isDown ? new Vector2(0, 1400) : new Vector2(0, -1400);
+
+        if (imgUpAndDown != null)
+        {
+            StopCoroutine(imgUpAndDown);
+        }
+
+        // Bắt đầu coroutine mới
+        imgUpAndDown = StartCoroutine(MoveRoutine(targetPos, Main_UiManager.instance.Img));
+    }
+    private IEnumerator MoveRoutine(Vector2 target, RectTransform targetImage)
+    {
+        Vector2 startPos = targetImage.anchoredPosition;
+        float elapsedTime = 0f;
+
+        while (elapsedTime < duration)
+        {
+            elapsedTime += Time.deltaTime;
+            float t = elapsedTime / duration;
+
+            t = Mathf.SmoothStep(0f, 1f, t);
+
+            targetImage.anchoredPosition = Vector2.Lerp(startPos, target, t);
+
+            yield return null; 
+        }
+
+        targetImage.anchoredPosition = target;
+        imgUpAndDown = null;
+    }
 }

@@ -14,4 +14,7 @@ public class PrefConst
     public const string CHALLENGE_TIME = "challenge_Time";
 
     public const string CHAR_UNLOCK_PREFIX = "char_unlock_";
+
+    public const string SELECTED_PLAYER_KEY = "Selected_Player_Index";
+    public const string SELECTED_LEVEL_KEY = "Selected_Level_Index";
 }
