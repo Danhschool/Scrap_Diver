@@ -91,6 +91,7 @@ public static class DataManager
         get => PlayerPrefs.GetInt(SELECTED_PLAYER_KEY, 0);
         set
         {
+            if (value < 0) return;
             PlayerPrefs.SetInt(SELECTED_PLAYER_KEY, value);
             PlayerPrefs.Save();
         }

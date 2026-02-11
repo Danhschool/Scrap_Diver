@@ -81,9 +81,9 @@ public class Main_UiManager : MonoBehaviour
 
         MainMenuManager.instance.StartShop();
 
-        MainMenuManager.instance.Background.SetActive(false);
+        StartCoroutine(Delay(.4f));
 
-        MainMenuManager.instance.MoveRobot();
+        MainMenuManager.instance.MoveUpRobot();
 
         Ui_Effect.SwitchToPanel(robotShop_Panel,panels);
     }
@@ -149,7 +149,7 @@ public class Main_UiManager : MonoBehaviour
     {
         Ui_Effect.OnClickExit(img, this, ref isDown);
 
-        int index = MainMenuManager.instance.SelectedIndex;
+        int index = DataManager.SelectedPlayerIndex;
 
         var data = MainMenuManager.instance.RobotList[index];
 
@@ -161,6 +161,7 @@ public class Main_UiManager : MonoBehaviour
             GameObject main_Panel = panels.Find(x => x.name == ("Main_Panel"));
             Debug.Log(main_Panel.name);
 
+            MainMenuManager.instance.MoveDownRobot();
             MainMenuManager.instance.StopShop();
             MainMenuManager.instance.Background.SetActive(true);
 
@@ -187,6 +188,7 @@ public class Main_UiManager : MonoBehaviour
         GameObject main_Panel = panels.Find(x => x.name == ("Main_Panel"));
         Debug.Log(main_Panel.name);
 
+        MainMenuManager.instance.MoveDownRobot();
         MainMenuManager.instance.StopShop();
         MainMenuManager.instance.Background.SetActive(true);
 
@@ -223,5 +225,12 @@ public class Main_UiManager : MonoBehaviour
     public void OnClickExit(Image _img)
     {
         Ui_Effect.OnClickExit(_img, this, ref isDown);
+    }
+
+    IEnumerator Delay(float delayTime)
+    {
+        yield return new WaitForSeconds(delayTime);
+
+        MainMenuManager.instance.Background.SetActive(false);
     }
 }

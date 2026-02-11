@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using UnityEngine;
-using static UnityEngine.Rendering.DebugUI;
 
 public class ClawController : MonoBehaviour
 {
@@ -9,74 +8,77 @@ public class ClawController : MonoBehaviour
     [SerializeField] private float swaySpeed = 2f;
 
     [Header("Pull")]
-     //private float pullHeight = 50f;
     [SerializeField] private float pullDuration = 1.5f;
     [SerializeField] private AnimationCurve pullCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
 
     [Header("Setup")]
-    [SerializeField] private Transform mainCamera; 
-    private Rigidbody rb;
+    [SerializeField] private Transform mainCamera;
 
-    private Vector3 startLocalPos;
+    private Transform parentTransform;
+    private Rigidbody childRb;
+
+    private Vector3 localPos;
     private bool isBeingPulled = false;
-    private float swayTimer = 0f; 
-    //private Vector3 camOffset;
+    private float swayTimer = 0f;
 
-    Coroutine coroutine;
+    private Coroutine coroutine;
 
     void Start()
     {
-        rb = GetComponent<Rigidbody>();
-        rb.isKinematic = true;
-        rb.interpolation = RigidbodyInterpolation.Interpolate;
+        if (transform.parent != null)
+        {
+            parentTransform = transform.parent;
+        }
+        else
+        {
+            parentTransform = transform;
+            Debug.LogError("ClawController");
+        }
 
-        startLocalPos = transform.localPosition;
+        childRb = GetComponent<Rigidbody>();
+        childRb.isKinematic = true;
+        childRb.interpolation = RigidbodyInterpolation.Interpolate;
+
+        localPos = transform.localPosition;
 
         if (mainCamera == null && Camera.main != null)
             mainCamera = Camera.main.transform;
-
-        //if (mainCamera != null)
-        //    camOffset = mainCamera.position - transform.position;
     }
 
     void FixedUpdate()
     {
+
         if (!isBeingPulled)
         {
             swayTimer += Time.fixedDeltaTime * swaySpeed;
 
             float offsetX = Mathf.Sin(swayTimer) * swayDistance;
-            Vector3 targetPos = startLocalPos + new Vector3(offsetX, 0f, 0f);
+            Vector3 targetPos = localPos + new Vector3(offsetX, 0f, 0f);
 
-            if (transform.parent != null)
-                targetPos = transform.parent.TransformPoint(targetPos);
+            if (parentTransform != null)
+                targetPos = parentTransform.TransformPoint(targetPos);
 
-            rb.MovePosition(targetPos);
+            childRb.MovePosition(targetPos);
 
             float tilt = Mathf.Cos(swayTimer) * -5f;
-            rb.MoveRotation(Quaternion.Euler(0, 0, tilt));
+            childRb.MoveRotation(Quaternion.Euler(0, 0, tilt));
         }
     }
 
-    //void Update()
-    //{
-    //    if (Input.GetKeyDown(KeyCode.V) && !isBeingPulled)
-    //    {
-    //        coroutine = StartCoroutine(PullSequence(new Vector3(50, 50, 0)));
-    //    }
-    //}
-
     public void ClawPull(Vector3 moveDelta)
     {
+        Vector3 startParentPos = parentTransform.position;
+        Vector3 targetParentPos = moveDelta;
+
         if (coroutine != null) StopCoroutine(coroutine);
-        coroutine = StartCoroutine(PullSequence(moveDelta));
+        coroutine = StartCoroutine(PullSequence(startParentPos, targetParentPos));
     }
 
-    IEnumerator PullSequence(Vector3 moveDelta)
+    IEnumerator PullSequence(Vector3 startPos, Vector3 endPos)
     {
         isBeingPulled = true;
-        Vector3 startPos = transform.position;
-        Vector3 targetPos = startPos + moveDelta;
+
+        childRb.interpolation = RigidbodyInterpolation.None;
 
         float elapsed = 0f;
 
@@ -86,16 +88,15 @@ public class ClawController : MonoBehaviour
             float t = elapsed / pullDuration;
             float curveT = pullCurve.Evaluate(t);
 
-            transform.position = Vector3.Lerp(startPos, targetPos, curveT);
+            parentTransform.position = Vector3.Lerp(startPos, endPos, curveT);
 
             yield return null;
         }
 
-        transform.position = targetPos;
-        rb.position = targetPos;
+        parentTransform.position = endPos;
 
-        startLocalPos = transform.localPosition;
         swayTimer = 0f;
+        childRb.interpolation = RigidbodyInterpolation.Interpolate;
         isBeingPulled = false;
     }
 }

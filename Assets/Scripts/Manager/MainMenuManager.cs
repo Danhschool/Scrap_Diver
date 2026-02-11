@@ -35,6 +35,7 @@ public class MainMenuManager : MonoBehaviour
     private bool isShop = false;
     [SerializeField] private int selectedIndex = 0;
     public int totalCharacters = 0;
+    [SerializeField] private GameObject select;
 
     [Header("Parallax Background")]
     public Transform[] backgroundLayers;
@@ -83,6 +84,10 @@ public class MainMenuManager : MonoBehaviour
         rb.isKinematic = true;
         targetX = transform.position.x;
 
+        selectedIndex = DataManager.SelectedPlayerIndex;
+        targetX = selectedIndex * -10f;
+        select.transform.position = new Vector3(targetX, select.transform.position.y, select.transform.position.z);
+
         totalCharacters = transform.childCount;
 
         maxX = 0f;
@@ -93,11 +98,7 @@ public class MainMenuManager : MonoBehaviour
     public void StopShop()
     {
         isShop = false;
-        int childCount = transform.childCount;
-        for (int i = childCount - 1; i >= 0; i--)
-        {
-            DestroyImmediate(transform.GetChild(i).gameObject);
-        }
+
         transform.position = new Vector3(0, 0, 0);
         //SpawnRobot(0);
     }
@@ -109,6 +110,7 @@ public class MainMenuManager : MonoBehaviour
             HandleInput();
             MoveParallaxBackground();
         }
+        //if(Input.GetKey(KeyCode.Space)) DataManager.SelectedPlayerIndex = 1;
     }
 
     void FixedUpdate()
@@ -147,11 +149,11 @@ public class MainMenuManager : MonoBehaviour
 
     void SnapToNearest()
     {
-        int nearestIndex = Mathf.RoundToInt(targetX / -distanceBetweenChars);
+        int nearestIndex = Mathf.RoundToInt(targetX / -10);
 
         nearestIndex = Mathf.Clamp(nearestIndex, 0, totalCharacters - 1);
 
-        targetX = nearestIndex * -distanceBetweenChars;
+        targetX = nearestIndex * -10;
 
         selectedIndex = nearestIndex;
 
@@ -229,9 +231,10 @@ public class MainMenuManager : MonoBehaviour
         if (charData.robot != null)
         {
             GameObject newRobot = Instantiate(charData.robot, transform);
+            //GameObject newRobot = Instantiate(charData.robot);
             int a = i - DataManager.SelectedPlayerIndex;
             Debug.Log(DataManager.SelectedPlayerIndex);
-            newRobot.transform.localPosition = new Vector3(a * distanceBetweenChars, 0, 0);
+            newRobot.transform.localPosition = new Vector3(a * distanceBetweenChars, 0, 0); //
 
             if(!claws.ContainsKey(i)) claws.Add(i, newRobot);
 
@@ -252,17 +255,24 @@ public class MainMenuManager : MonoBehaviour
             }
         }
     }
-    public void MoveRobot()
+    public void MoveUpRobot()
     {
         //ClawController[] claws = FindObjectsOfType<ClawController>();
         int check = DataManager.SelectedPlayerIndex;
+
+        float anchorX = 0f;
+        if (claws.ContainsKey(check))
+        {
+            anchorX = claws[check].transform.position.x;
+        }
+
         for (int i = 0; i < robotList.Length; i++)
         {
             ClawController myClaw = claws[i].GetComponentInChildren<ClawController>();
-            Vector3 moveDir;
-            if (i < check) moveDir = new Vector3(10, 50, 0);
-            else if (i > check) moveDir = new Vector3(-10, 50, 0);
-            else moveDir = new Vector3(0, 50, 0);
+            float targetX = anchorX + (i - check) * 10;
+            Debug.Log(DataManager.SelectedPlayerIndex + targetX);
+
+            Vector3 moveDir = new Vector3(targetX, 50, 0);
 
             myClaw.ClawPull(moveDir);
         }
@@ -271,4 +281,25 @@ public class MainMenuManager : MonoBehaviour
             cameraManager.MoveCamera(new Vector3(0, 50, 0));
         }
     }
+    public void MoveDownRobot()
+    {
+        //ClawController[] claws = FindObjectsOfType<ClawController>();
+        int check = DataManager.SelectedPlayerIndex;
+        for (int i = 0; i < robotList.Length; i++)
+        {
+            ClawController myClaw = claws[i].GetComponentInChildren<ClawController>();
+
+            float targetX = (i - check) * 40;
+
+            Vector3 moveDir = new Vector3(targetX, 0, 0);
+
+            myClaw.ClawPull(moveDir);
+
+        }
+        if (cameraManager != null)
+        {
+            cameraManager.MoveCamera(new Vector3(0, -50, 0));
+        }
+    }
+
 }

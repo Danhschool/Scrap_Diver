@@ -18,7 +18,7 @@ public class CameraManager : MonoBehaviour
     private float limitAngle = 10f;
 
     [Header("Camera Settings")]
-    public float moveDuration = 1.5f;
+    public float moveDuration = .8f;
     public AnimationCurve moveCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
 
     [SerializeField] private float shakeTime = .2f;
@@ -40,13 +40,13 @@ public class CameraManager : MonoBehaviour
     {
         player = FindObjectOfType<Player>();
     }
-    private void Update()
-    {
-        if(Input.GetButtonDown("Jump"))
-        {
-            StartCoroutine(ShakeCoroutine());
-        }
-    }
+    //private void Update()
+    //{
+    //    if(Input.GetButtonDown("Jump"))
+    //    {
+    //        StartCoroutine(ShakeCoroutine());
+    //    }
+    //}
     private void FixedUpdate()
     {
         //if(transform.rotation.y > limitAngle || transform.rotation.y < limitAngle )
