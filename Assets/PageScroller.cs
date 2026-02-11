@@ -2,7 +2,6 @@
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
 
-// Yêu cầu gắn vào object có RectTransform
 [RequireComponent(typeof(RectTransform))]
 public class PageScroller : MonoBehaviour, IDragHandler, IEndDragHandler
 {
@@ -102,7 +101,5 @@ public class PageScroller : MonoBehaviour, IDragHandler, IEndDragHandler
         float newY = currentLevelIndex * pageHeight;
 
         targetPosition = new Vector2(contentPanel.anchoredPosition.x, newY);
-
-        Debug.Log("page: " + (index + 1));
     }
 }

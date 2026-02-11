@@ -215,7 +215,6 @@ public class Main_UiManager : MonoBehaviour
         
         DataManager.SelectedLevelIndex = pageScroller.CurrentLevelIndex;
         
-        Debug.Log(DataManager.SelectedLevelIndex + "AAA");
         MainMenuManager.instance.SetState(false);
 
         if (activeMoveCoroutine != null) StopCoroutine(activeMoveCoroutine);
