@@ -148,6 +148,8 @@ public class GamePlayManager : MonoBehaviour
         if (DataManager.TotalCoin > CalculateCoin() * 10) Ingame_UiManager.instance.UpdateContinueWithCoin(true);
         else Ingame_UiManager.instance.UpdateContinueWithCoin(false);
 
+        CheckAchivement();
+
         Ingame_UiManager.instance.UpdateContinueWithCoin_Txt(CalculateCoin() * 10);
         Ingame_UiManager.instance.UpdateCoinUI(DataManager.TotalCoin);
         Ingame_UiManager.instance.SetActiveContinue_Panel(true);
@@ -176,6 +178,17 @@ public class GamePlayManager : MonoBehaviour
         Ingame_UiManager.instance.pause_Btn.SetActive(false);
 
         Ingame_UiManager.instance.SetActiveGameOver_Panel(true);
+    }
+
+    private void CheckAchivement()
+    {
+        RunStats stats = new RunStats();
+        stats.timeAlive = currentTime;
+        stats.coinsCollected = totalCoin;
+        stats.robotID = inGamePlayer.name;
+        stats.currentLevelIndex = indexOfLevel;
+
+        AchievementManager.Instance.CheckEndRunAchievements(stats);
     }
     private void UpdateData()
     {

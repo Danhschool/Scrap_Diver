@@ -17,4 +17,6 @@ public class PrefConst
 
     public const string SELECTED_PLAYER_KEY = "Selected_Player_Index";
     public const string SELECTED_LEVEL_KEY = "Selected_Level_Index";
+
+    public const string ACHIEVEMENT_LEVEL_PREFIX = "ach_";
 }

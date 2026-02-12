@@ -104,4 +104,22 @@ public static class DataManager
             PlayerPrefs.Save();
         }
     }
+    public static int GetAchievementLevel(string achievementID)
+    {
+        return PlayerPrefs.GetInt(PrefConst.ACHIEVEMENT_LEVEL_PREFIX + achievementID, 0);
+    }
+    public static void SetAchievementLevel(string achievementID, int newLevel)
+    {
+        int currentLevel = GetAchievementLevel(achievementID);
+
+        if (newLevel <= currentLevel) return;
+
+        PlayerPrefs.SetInt(PrefConst.ACHIEVEMENT_LEVEL_PREFIX + achievementID, newLevel);
+        PlayerPrefs.Save();
+    }
+    public static void ResetAchievementData(string achievementID)
+    {
+        PlayerPrefs.DeleteKey(PrefConst.ACHIEVEMENT_LEVEL_PREFIX + achievementID);
+        PlayerPrefs.Save();
+    }
 }
