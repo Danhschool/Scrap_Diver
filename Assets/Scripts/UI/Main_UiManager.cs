@@ -27,6 +27,10 @@ public class Main_UiManager : MonoBehaviour
     [SerializeField] private TMP_Text disadvantage_Txt;
     [SerializeField] private TMP_Text selectButtonText;
 
+    [Header("Challenge")]
+    public Transform contentPanel;
+    public GameObject itemPrefab;
+
     private bool isDown = false;
     private Coroutine activeMoveCoroutine;
 
@@ -43,6 +47,8 @@ public class Main_UiManager : MonoBehaviour
         }
     }
 
+
+   
     #region Main Panels
 
     public void OnStartClick()
@@ -109,9 +115,15 @@ public class Main_UiManager : MonoBehaviour
         Ui_Effect.OnClickExit(img, this, ref isDown);
 
         GameObject challenge_Panel = panels.Find(x => x.name == ("Challenge_Panel"));
+
+        GenerateListChallenge();
+
         Debug.Log(challenge_Panel.name);
 
-        Ui_Effect.SwitchToPanel(challenge_Panel, panels);
+        MainMenuManager.instance.SetState(true);
+
+        if (activeMoveCoroutine != null) StopCoroutine(activeMoveCoroutine);
+        activeMoveCoroutine = StartCoroutine(DelaySwitchPanel(challenge_Panel, panels));
     }
     #endregion
 
@@ -199,7 +211,8 @@ public class Main_UiManager : MonoBehaviour
         MainMenuManager.instance.StopShop();
         MainMenuManager.instance.Background.SetActive(true);
 
-        Ui_Effect.SwitchToPanel(main_Panel, panels);
+        if (activeMoveCoroutine != null) StopCoroutine(activeMoveCoroutine);
+        activeMoveCoroutine = StartCoroutine(DelaySwitchPanel(main_Panel, panels));
     }
 
     #endregion
@@ -226,6 +239,18 @@ public class Main_UiManager : MonoBehaviour
 
         GameObject main_Panel = panels.Find(x => x.name == ("Main_Panel"));
         Debug.Log(main_Panel.name);
+
+        MainMenuManager.instance.SetState(false);
+
+        if (activeMoveCoroutine != null) StopCoroutine(activeMoveCoroutine);
+        activeMoveCoroutine = StartCoroutine(DelaySwitchPanel(main_Panel, panels));
+    }
+
+    public void OnChallBackClick(Image img)
+    {
+        Ui_Effect.OnClickExit(img, this, ref isDown);
+
+        GameObject main_Panel = panels.Find(x => x.name == ("Main_Panel"));
 
         MainMenuManager.instance.SetState(false);
 
@@ -277,5 +302,28 @@ public class Main_UiManager : MonoBehaviour
         yield return new WaitForSeconds(.2f);
 
         Ui_Effect.SwitchToPanel(targetPanel, _panels);
+    }
+
+    public void GenerateListChallenge()
+    {
+        foreach (Transform child in contentPanel)
+        {
+            Destroy(child.gameObject);
+        }
+
+        if (AchievementManager.instance == null) return;
+        List<AchievementData> listData = AchievementManager.instance.allAchievements;
+
+        foreach (var data in listData)
+        {
+            GameObject newItem = Instantiate(itemPrefab, contentPanel);
+
+            AchievementUIItem script = newItem.GetComponent<AchievementUIItem>();
+
+            if (script != null)
+            {
+                script.Setup(data);
+            }
+        }
     }
 }

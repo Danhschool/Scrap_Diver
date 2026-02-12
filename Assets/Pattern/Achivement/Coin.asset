@@ -10,14 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 28b2af0b63909484ca77a63ef1253975, type: 3}
-  m_Name: Achievement
+  m_Name: Coin
   m_EditorClassIdentifier: 
-  id: 
-  title: 
-  description: 
-  icon: {fileID: 0}
+  id: coin
+  title: coin
+  descriptionTemplate: 'EARN {0} COIN IN A SINGLE RUN
+
+'
+  icon: {fileID: 21300000, guid: 7ecb5fa4c5f4baa48969fe038f09baec, type: 3}
   type: 0
-  targetValue: 0
-  isCharacterSpecific: 0
-  requiredCharacterID: 
-  rewardCoins: 0
+  isRobotSpecific: 0
+  robotID: 
+  stages:
+  - targetValue: 10
+    rewardCoins: 10
+  - targetValue: 20
+    rewardCoins: 20

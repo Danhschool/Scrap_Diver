@@ -243,7 +243,6 @@ public class MainMenuManager : MonoBehaviour
             GameObject newRobot = Instantiate(charData.robot, transform);
             //GameObject newRobot = Instantiate(charData.robot);
             int a = i - DataManager.SelectedPlayerIndex;
-            Debug.Log(DataManager.SelectedPlayerIndex);
             newRobot.transform.localPosition = new Vector3(a * distanceBetweenChars, 0, 0); //
 
             if(!claws.ContainsKey(i)) claws.Add(i, newRobot);

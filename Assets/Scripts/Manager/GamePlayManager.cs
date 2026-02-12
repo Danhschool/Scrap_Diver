@@ -188,7 +188,7 @@ public class GamePlayManager : MonoBehaviour
         stats.robotID = inGamePlayer.name;
         stats.currentLevelIndex = indexOfLevel;
 
-        AchievementManager.Instance.CheckEndRunAchievements(stats);
+        AchievementManager.instance.CheckEndRunAchievements(stats);
     }
     private void UpdateData()
     {

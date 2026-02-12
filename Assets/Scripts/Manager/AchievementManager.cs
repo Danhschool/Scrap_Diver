@@ -3,14 +3,14 @@ using System.Collections.Generic;
 
 public class AchievementManager : MonoBehaviour
 {
-    public static AchievementManager Instance;
+    public static AchievementManager instance;
     public List<AchievementData> allAchievements;
 
     private void Awake()
     {
-        if (Instance == null)
+        if (instance == null)
         {
-            Instance = this;
+            instance = this;
             DontDestroyOnLoad(gameObject);
         }
         else
