@@ -96,7 +96,7 @@ public static class DataManager
     }
     public static int SelectedLevelIndex
     {
-        get => PlayerPrefs.GetInt(PrefConst.SELECTED_LEVEL_KEY, 0);
+        get => PlayerPrefs.GetInt(PrefConst.SELECTED_LEVEL_KEY, 1);
         set
         {
             if (value < 0) return;

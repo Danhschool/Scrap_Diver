@@ -2,6 +2,13 @@
 using System.Collections;
 using UnityEngine;
 
+
+/// <summary>
+/// lay level sai 
+/// 
+/// sinh ra portal o vi tri 1900????
+/// </summary>
+
 public class GamePlayManager : MonoBehaviour
 {
     public static GamePlayManager instance { get; private set; }
@@ -35,6 +42,10 @@ public class GamePlayManager : MonoBehaviour
     [Header("Level")]
     [SerializeField] private int indexOfLevel;
     [SerializeField] private float distanceOfLevel;
+
+    [Header("Portal Settings")]
+    [SerializeField] private float preSpawnDistance = 100f;
+    private bool hasSpawnedPortal = false;
 
     private Coroutine coroutine;
 
@@ -213,6 +224,27 @@ public class GamePlayManager : MonoBehaviour
         if (currentIntDistance > lastDistance)
         {
             lastDistance = currentIntDistance;
+        }
+
+        float targetDistance = (indexOfLevel) * distanceOfLevel;
+
+        if (!hasSpawnedPortal && currentDistance >= targetDistance - preSpawnDistance)
+        {
+            hasSpawnedPortal = true;
+
+            Debug.Log("Spawn Portal at distance: " + currentDistance);
+            // Thực thi lệnh Instantiate cánh cổng.
+            // Tọa độ Y của cánh cổng phải được đặt tại vị trí mà nhân vật sẽ chạm tới khi currentDistance đúng bằng targetDistance.
+        }
+
+        if (currentDistance >= targetDistance)
+        {
+            indexOfLevel++;
+            hasSpawnedPortal = false;
+
+            Debug.Log("Level Up! Current Level: " + indexOfLevel);
+
+            // Thực thi lệnh chuyển đổi môi trường bản đồ
         }
 
         Ingame_UiManager.instance.UpdateDistanceUI(lastDistance);
