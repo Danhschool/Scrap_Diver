@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using TMPro; // Bắt buộc: Dùng thư viện này để điều khiển Text (TMP)
+using TMPro;
 
 public class AchievementUIItem : MonoBehaviour
 {
@@ -23,7 +23,29 @@ public class AchievementUIItem : MonoBehaviour
     public void RefreshView()
     {
         int currentLv = DataManager.GetAchievementLevel(data.id);
+        bool isReady = DataManager.IsRewardReady(data.id);
+
         if (data.icon != null) challIcon.sprite = data.icon;
+
+        claimBtn.onClick.RemoveAllListeners();
+
+        if (isReady)
+        {
+            AchievementStage stage = data.stages[currentLv];
+
+            if (completeTextObj != null) completeTextObj.SetActive(false);
+
+            claimBtn.gameObject.SetActive(true);
+            claimBtn.interactable = true;
+            coinRewardIcon.gameObject.SetActive(true);
+            rewardText.gameObject.SetActive(true);
+
+            descriptionText.text = "Hoàn thành!";
+            rewardText.text = stage.rewardCoins.ToString();
+
+            claimBtn.onClick.AddListener(() => OnClaimClick(stage));
+            return;
+        }
 
         if (currentLv >= data.stages.Count)
         {
@@ -31,23 +53,20 @@ public class AchievementUIItem : MonoBehaviour
             claimBtn.gameObject.SetActive(false);
             coinRewardIcon.gameObject.SetActive(false);
             rewardText.gameObject.SetActive(false);
-            descriptionText.text = "Bạn đã hoàn thành!";
+            descriptionText.text = "Done!";
+            return;
         }
-        else
-        {
-            if (completeTextObj != null) completeTextObj.SetActive(false);
 
-            claimBtn.gameObject.SetActive(true);
-            coinRewardIcon.gameObject.SetActive(true);
-            rewardText.gameObject.SetActive(true);
+        if (completeTextObj != null) completeTextObj.SetActive(false);
 
-            AchievementStage stage = data.stages[currentLv];
-            descriptionText.text = string.Format(data.descriptionTemplate, stage.targetValue);
-            rewardText.text = stage.rewardCoins.ToString();
+        claimBtn.gameObject.SetActive(true);
+        claimBtn.interactable = false;
+        coinRewardIcon.gameObject.SetActive(true);
+        rewardText.gameObject.SetActive(true);
 
-            claimBtn.onClick.RemoveAllListeners();
-            claimBtn.onClick.AddListener(() => OnClaimClick(stage));
-        }
+        AchievementStage nextStage = data.stages[currentLv];
+        descriptionText.text = string.Format(data.descriptionTemplate, nextStage.targetValue);
+        rewardText.text = nextStage.rewardCoins.ToString();
     }
 
     private void OnClaimClick(AchievementStage stage)

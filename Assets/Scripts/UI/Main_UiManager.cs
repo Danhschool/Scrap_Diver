@@ -31,6 +31,9 @@ public class Main_UiManager : MonoBehaviour
     public Transform contentPanel;
     public GameObject itemPrefab;
 
+    [Header("Exclamation")]
+    [SerializeField] private GameObject exclamation;
+
     private bool isDown = false;
     private Coroutine activeMoveCoroutine;
 
@@ -273,6 +276,8 @@ public class Main_UiManager : MonoBehaviour
         disadvantage_Txt.text = _value;
     }
     public void UpdateSelectButtonText(string _value) => selectButtonText.text = _value;
+
+    /// ///////
     public void UpdateCoinText() => coinText.text = DataManager.TotalCoin.ToString();
     #endregion
     
@@ -312,7 +317,7 @@ public class Main_UiManager : MonoBehaviour
         }
 
         if (AchievementManager.instance == null) return;
-        List<AchievementData> listData = AchievementManager.instance.allAchievements;
+        List<AchievementData> listData = AchievementManager.instance.AllAchievements;
 
         foreach (var data in listData)
         {

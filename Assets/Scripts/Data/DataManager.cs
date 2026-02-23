@@ -122,4 +122,13 @@ public static class DataManager
         PlayerPrefs.DeleteKey(PrefConst.ACHIEVEMENT_LEVEL_PREFIX + achievementID);
         PlayerPrefs.Save();
     }
+    public static bool IsRewardReady(string id)
+    {
+        return PlayerPrefs.GetInt(PrefConst.ACH_READY_PREFIX + id, 0) == 1;
+    }
+    public static void SetRewardReady(string id, bool isReady)
+    {
+        PlayerPrefs.SetInt(PrefConst.ACH_READY_PREFIX + id, isReady ? 1 : 0);
+        PlayerPrefs.Save();
+    }
 }

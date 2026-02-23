@@ -4,7 +4,9 @@ using System.Collections.Generic;
 public class AchievementManager : MonoBehaviour
 {
     public static AchievementManager instance;
-    public List<AchievementData> allAchievements;
+    [SerializeField] private List<AchievementData> allAchievements;
+
+    public List<AchievementData> AllAchievements => allAchievements;
 
     private void Awake()
     {
@@ -50,10 +52,7 @@ public class AchievementManager : MonoBehaviour
 
     private void UnlockLevel(AchievementData ach, int currentLv)
     {
-        Debug.Log($"Hoàn thành: {ach.title}");
-
         DataManager.SetAchievementLevel(ach.id, currentLv + 1);
-
     }
 
     public int GetCurrentLevel(string id)

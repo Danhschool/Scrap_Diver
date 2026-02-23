@@ -220,7 +220,7 @@ public class Ingame_UiManager : MonoBehaviour
     }
     public void UpdateCoin_Endtxt(float _value)
     {
-        coin_Endtxt.text = _value.ToString() + "s";
+        coin_Endtxt.text = _value.ToString() + "";
         if (DataManager.BestTotalCoin > _value) bestCoin_Endtxt.text = "Best: " + DataManager.BestTotalCoin;
         else
         {

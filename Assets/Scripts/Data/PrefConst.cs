@@ -19,4 +19,5 @@ public class PrefConst
     public const string SELECTED_LEVEL_KEY = "Selected_Level_Index";
 
     public const string ACHIEVEMENT_LEVEL_PREFIX = "ach_";
+    public const string ACH_READY_PREFIX = "ach_ready_";
 }

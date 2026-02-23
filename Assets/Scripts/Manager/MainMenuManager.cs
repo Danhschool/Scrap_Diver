@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEditor.Overlays;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -46,6 +47,15 @@ public class MainMenuManager : MonoBehaviour
     [Header("Background")]
     [SerializeField] private GameObject background;
 
+    // Affordable Check
+    [SerializeField] public bool HasAffordableRobot { get; private set; }
+    [SerializeField] public int MaxAffordableRobotIndex { get; private set; } = -1;
+
+    [SerializeField] public bool HasAffordableCheckpoint { get; private set; }
+    [SerializeField] public int MaxAffordableCheckpointIndex { get; private set; } = -1;
+
+
+
     [SerializeField] private CameraManager cameraManager;
 
     [SerializeField] private Dictionary<int, GameObject> claws = new Dictionary<int, GameObject>();
@@ -64,7 +74,6 @@ public class MainMenuManager : MonoBehaviour
 
     Coroutine imgUpAndDown;
 
-
     public RobotData[] RobotList => robotList;
     public int SelectedIndex => selectedIndex;
     public GameObject Background => background;
@@ -79,6 +88,10 @@ public class MainMenuManager : MonoBehaviour
     {
         //StartStatus(); 
         SpawnRobotsInShop();
+
+        SetState(false);
+
+        Main_UiManager.instance.UpdateCoinText();
     }
 
     public void StartShop()
@@ -119,8 +132,8 @@ public class MainMenuManager : MonoBehaviour
             HandleInput();
             MoveParallaxBackground();
         }
-        if (Input.GetKey(KeyCode.N)) SetState(true);
-        if (Input.GetKey(KeyCode.B)) SetState(false);
+        //if (Input.GetKey(KeyCode.N)) SetState(true);
+        //if (Input.GetKey(KeyCode.B)) SetState(false);
     }
 
     void FixedUpdate()
@@ -312,7 +325,8 @@ public class MainMenuManager : MonoBehaviour
 
     public void SetState(bool isDown)
     {
-        Vector2 targetPos = isDown ? new Vector2(0, 1400) : new Vector2(0, -1400);
+        float value = Screen.height;
+        Vector2 targetPos = isDown ? new Vector2(0, value) : new Vector2(0, -value);
 
         if (imgUpAndDown != null)
         {
@@ -324,6 +338,11 @@ public class MainMenuManager : MonoBehaviour
     }
     private IEnumerator MoveRoutine(Vector2 target, RectTransform targetImage)
     {
+        float uiWidth = Screen.width;
+        float uiHeight = Screen.height;
+
+        targetImage.sizeDelta = new Vector2(uiWidth, uiHeight);
+
         Vector2 startPos = targetImage.anchoredPosition;
         float elapsedTime = 0f;
 
@@ -342,4 +361,5 @@ public class MainMenuManager : MonoBehaviour
         targetImage.anchoredPosition = target;
         imgUpAndDown = null;
     }
+
 }

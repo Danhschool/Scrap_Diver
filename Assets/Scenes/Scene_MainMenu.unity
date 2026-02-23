@@ -775,7 +775,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &122608386
 Transform:
   m_ObjectHideFlags: 0
@@ -6895,7 +6895,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -1400}
+  m_AnchoredPosition: {x: 0, y: -20000}
   m_SizeDelta: {x: 1000, y: 1400}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &845707922
@@ -16741,6 +16741,7 @@ MonoBehaviour:
   selectButtonText: {fileID: 677321797}
   contentPanel: {fileID: 1738952882}
   itemPrefab: {fileID: 8845509490681053660, guid: e5e35cd7d73d0fa4eb3d51d421cb78c2, type: 3}
+  exclamation: {fileID: 0}
 --- !u!114 &1893710965
 MonoBehaviour:
   m_ObjectHideFlags: 0
