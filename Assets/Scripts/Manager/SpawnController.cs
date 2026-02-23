@@ -13,10 +13,18 @@ public class SpawnController : MonoBehaviour
     [Header("(Spawn Rate)")]
     public float timeBetweenSpawns = 2f;
 
+
+    Coroutine spawnCoroutine;
+
     private void Start()
     {
         //StartCoroutine(SpawnRoutine());
-        StartCoroutine(SpawnRoutine());
+
+        if (spawnCoroutine != null)
+        {
+            StopCoroutine(spawnCoroutine);
+        }
+        spawnCoroutine = StartCoroutine(SpawnRoutine());
     }
 
     private IEnumerator SpawnRoutine()
