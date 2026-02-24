@@ -76,7 +76,7 @@ public class Ingame_UiManager : MonoBehaviour
         Ui_Effect.OnClickExit(_img, this, ref isDown);
         if (GamePlayManager.instance.IsPlaying)
         {
-            GamePlayManager.instance.GamePause();
+            GamePlayManager.instance.PauseGame();
 
             gameOver_Panel_2.SetActive(true);
         }

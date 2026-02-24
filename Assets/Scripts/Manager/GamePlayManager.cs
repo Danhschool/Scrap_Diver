@@ -44,7 +44,7 @@ public class GamePlayManager : MonoBehaviour
     [SerializeField] private float distanceOfLevel;
 
     [Header("Portal Settings")]
-    [SerializeField] private float preSpawnDistance = 100f;
+    private float preSpawnDistance;
     private bool hasSpawnedPortal = false;
 
     private Coroutine coroutine;
@@ -75,6 +75,8 @@ public class GamePlayManager : MonoBehaviour
         bestCoin = DataManager.BestTotalCoin;
         bestTime = DataManager.BestTime;
         bestDistance = DataManager.BestDistance;
+
+        preSpawnDistance = scaleDistance * Mathf.Abs(SpawnController.instance.SpawnYPosition);
 
         Ingame_UiManager.instance.UpdateProgressBar(bestDistance, distanceOfLevel * indexOfLevel, indexOfLevel);
         //Ingame_UiManager.instance.CreateMark(indexOfLevel);
@@ -109,7 +111,7 @@ public class GamePlayManager : MonoBehaviour
         Time.timeScale = 1;
     }
 
-    public void GamePause()
+    public void PauseGame()
     {
         if(!isPlaying) return;
 
@@ -232,6 +234,8 @@ public class GamePlayManager : MonoBehaviour
         {
             hasSpawnedPortal = true;
 
+            SpawnController.instance.SpawnPort();
+
             Debug.Log("Spawn Portal at distance: " + currentDistance);
             // Thực thi lệnh Instantiate cánh cổng.
             // Tọa độ Y của cánh cổng phải được đặt tại vị trí mà nhân vật sẽ chạm tới khi currentDistance đúng bằng targetDistance.
@@ -244,8 +248,20 @@ public class GamePlayManager : MonoBehaviour
 
             Debug.Log("Level Up! Current Level: " + indexOfLevel);
 
-            // Thực thi lệnh chuyển đổi môi trường bản đồ
+            PauseGame();
+
+            // Kích hoạt hiệu ứng và truyền lệnh đổi map vào bên trong
+            TransitionManager.instance.PlayTransition(() =>
+            {
+                // TOÀN BỘ CODE TRONG NÀY CHỈ CHẠY KHI MÀN HÌNH ĐÃ TRẮNG XOÁ
+                ClearAllObstacles();
+
+                // Gọi hàm đổi màu hầm/đổi prefab đường hầm của bạn ở đây
+                // VD: EnvironmentManager.instance.ChangeMap(indexOfLevel);
+            });
         }
+
+        // Thực thi lệnh chuyển đổi môi trường bản đồ
 
         Ingame_UiManager.instance.UpdateDistanceUI(lastDistance);
         if(currentDistance > bestDistance)

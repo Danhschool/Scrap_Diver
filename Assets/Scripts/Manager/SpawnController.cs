@@ -4,9 +4,12 @@ using UnityEngine;
 
 public class SpawnController : MonoBehaviour
 {
+    public static SpawnController instance;
+
     [Header("Data & Settings")]
-    [SerializeField] private SpawnDataSO[] spawnData;
+    //[SerializeField] private SpawnDataSO[] spawnData;
     [SerializeField] private Obstacle_Data[] obstacleData;
+    [SerializeField] private Obstacle_Data port;
     [SerializeField] private float spawnYPosition = -250f;
     //[SerializeField] private float tunnelWidth = 36f; 
 
@@ -15,6 +18,12 @@ public class SpawnController : MonoBehaviour
 
 
     Coroutine spawnCoroutine;
+
+    private void Awake()
+    {
+        if (instance == null) instance = this;
+        else Destroy(gameObject);
+    }
 
     private void Start()
     {
@@ -26,6 +35,8 @@ public class SpawnController : MonoBehaviour
         }
         spawnCoroutine = StartCoroutine(SpawnRoutine());
     }
+
+    public float SpawnYPosition => spawnYPosition;
 
     private IEnumerator SpawnRoutine()
     {
@@ -51,6 +62,11 @@ public class SpawnController : MonoBehaviour
 
             yield return new WaitForSeconds(timeBetweenSpawns - 0.01f);
         }
+    }
+
+    public void SpawnPort()
+    {
+        Spawn(port.items[0]);
     }
 
     private void Spawn(Obstacle_Data.SpawnItem _ob)
@@ -101,12 +117,12 @@ public class SpawnController : MonoBehaviour
 
     //    //GameObject obj = Instantiate(item.prefab, finalPos, Quaternion.identity);
     //    GameObject obj = ObjectPool.instance.GetObject(_item.prefab);
-        
+
     //    obj.transform.position = finalPos;
 
     //    Quaternion patternRot = _item.pattern.GetCalculatedRotation();
 
-    //    Quaternion tunnelRot = Quaternion.Euler(90,0,0);
+    //    Quaternion tunnelRot = Quaternion.Euler(90, 0, 0);
 
     //    obj.transform.rotation = tunnelRot * patternRot;
 

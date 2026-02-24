@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-
+// bo code nay
 [CreateAssetMenu(fileName = "NewSpawnData", menuName = "ScrapDivers/Spawn Data")]
 public class SpawnDataSO : ScriptableObject
 {
