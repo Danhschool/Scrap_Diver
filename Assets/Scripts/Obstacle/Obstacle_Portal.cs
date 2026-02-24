@@ -20,7 +20,7 @@ public class Obstacle_Portal : Obstacles
         if (isUp) {
             base.Update();
 
-            if (gameObject.transform.position.y >= -1)
+            if (gameObject.transform.position.y >= -2)
             {
                 isUp = false;
             }

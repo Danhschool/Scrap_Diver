@@ -84,7 +84,7 @@ public class Ingame_UiManager : MonoBehaviour
         {
             StartCoroutine(GamePlayManager.instance.Countdown(() =>
             {
-                GamePlayManager.instance.GameResume();
+                GamePlayManager.instance.ResumeGame();
                 pause_Btn.SetActive(true);
             }));
             gameOver_Panel_2.SetActive(false);
@@ -106,7 +106,7 @@ public class Ingame_UiManager : MonoBehaviour
     public void OnMainClick(Image _img)
     {
         Ui_Effect.OnClickExit(_img, this, ref isDown);
-        GamePlayManager.instance.GameResume();
+        GamePlayManager.instance.ResumeGame();
         SceneManager.LoadScene("Scene_MainMenu");
     }
 

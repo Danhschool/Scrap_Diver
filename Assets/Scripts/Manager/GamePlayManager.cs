@@ -104,7 +104,7 @@ public class GamePlayManager : MonoBehaviour
         Time.timeScale = 1;
     }
 
-    public void GameResume()
+    public void ResumeGame()
     {
         isPlaying = true;
         gameSpeed = savedSpeed;
@@ -134,7 +134,7 @@ public class GamePlayManager : MonoBehaviour
             Ingame_UiManager.instance.SetActiveContinue_Panel(false);
             Ingame_UiManager.instance.UpdateCoinUI(totalCoin);
             StopCoroutine(coroutine);
-            GameResume();
+            ResumeGame();
 
         }
         else
@@ -236,9 +236,7 @@ public class GamePlayManager : MonoBehaviour
 
             SpawnController.instance.SpawnPort();
 
-            Debug.Log("Spawn Portal at distance: " + currentDistance);
-            // Thực thi lệnh Instantiate cánh cổng.
-            // Tọa độ Y của cánh cổng phải được đặt tại vị trí mà nhân vật sẽ chạm tới khi currentDistance đúng bằng targetDistance.
+            //Debug.Log("Spawn Portal at distance: " + currentDistance);
         }
 
         if (currentDistance >= targetDistance)
@@ -250,14 +248,15 @@ public class GamePlayManager : MonoBehaviour
 
             PauseGame();
 
-            // Kích hoạt hiệu ứng và truyền lệnh đổi map vào bên trong
             TransitionManager.instance.PlayTransition(() =>
             {
-                // TOÀN BỘ CODE TRONG NÀY CHỈ CHẠY KHI MÀN HÌNH ĐÃ TRẮNG XOÁ
                 ClearAllObstacles();
 
-                // Gọi hàm đổi màu hầm/đổi prefab đường hầm của bạn ở đây
-                // VD: EnvironmentManager.instance.ChangeMap(indexOfLevel);
+                EndlessManager.instance.ChangeTheme(indexOfLevel);
+                EndlessManager.instance.ChangeAllSegmentsImmediately();
+
+                ResumeGame();
+
             });
         }
 
