@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   items:
   - name: 
-    prefab: {fileID: 0}
-    position: {x: 0, y: 0, z: 0}
+    prefab: {fileID: 7938772859249671092, guid: 64ace57a18c9efa4191e99abc2b5c727, type: 3}
+    position: {x: 0, y: 0, z: -5}
     rotation: {x: 0, y: 0, z: 0}
     timeToNextSpawn: 0
