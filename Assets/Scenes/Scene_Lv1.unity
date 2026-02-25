@@ -675,6 +675,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   obstacleData:
   - {fileID: 11400000, guid: 607e344ad712f634eaa7fc9a8b3290b3, type: 2}
+  - {fileID: 11400000, guid: bb36e192ad7387c4983359ee1640a7d7, type: 2}
   port: {fileID: 11400000, guid: bfec8ff2fa40414489155be50930e60d, type: 2}
   spawnYPosition: -250
   timeBetweenSpawns: 2
@@ -1844,7 +1845,7 @@ MonoBehaviour:
   duration: 1
   lastDistance: 0
   indexOfLevel: 1
-  distanceOfLevel: 100
+  distanceOfLevel: 1000
 --- !u!4 &315117644
 Transform:
   m_ObjectHideFlags: 0

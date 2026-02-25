@@ -35,7 +35,7 @@ public class AchievementManager : MonoBehaviour
 
             switch (ach.type)
             {
-                case AchievementType.SingleRunCoins:
+                case AchievementType.SingleRun:
                     if (stats.coinsCollected >= currentStage.targetValue) isCompleted = true;
                     break;
                 case AchievementType.SingleRunTime:
