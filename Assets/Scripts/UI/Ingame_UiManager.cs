@@ -40,7 +40,7 @@ public class Ingame_UiManager : MonoBehaviour
     [SerializeField] private TMP_Text continueWithCoin_txt;
 
     [Header("Game Over Panel 2")]
-    [SerializeField] private GameObject gameOver_Panel_2;
+    [SerializeField] private GameObject pause_Panel;
     [SerializeField] private TMP_Text progress_Coin_Txt;
     [SerializeField] private TMP_Text explain_Coin_Txt;
     [SerializeField] private TMP_Text progress_Time_Txt;
@@ -78,7 +78,7 @@ public class Ingame_UiManager : MonoBehaviour
         {
             GamePlayManager.instance.PauseGame();
 
-            gameOver_Panel_2.SetActive(true);
+            pause_Panel.SetActive(true);
         }
         else
         {
@@ -87,7 +87,7 @@ public class Ingame_UiManager : MonoBehaviour
                 GamePlayManager.instance.ResumeGame();
                 pause_Btn.SetActive(true);
             }));
-            gameOver_Panel_2.SetActive(false);
+            pause_Panel.SetActive(false);
             pause_Btn.SetActive(false);
         }
     }
@@ -159,6 +159,19 @@ public class Ingame_UiManager : MonoBehaviour
     #endregion
 
     #region Update UI
+    public void UpdatePausePanel()
+    {
+        if (AchievementManager.instance == null) return;
+        List<AchievementData> listData = AchievementManager.instance.AllAchievements;
+
+        foreach (var data in listData)
+        {
+            if (data.id == "coin" || data.id == "time")
+            {
+                progress_Coin_Txt.text = "EARN ";
+            }
+        }
+    }
     public void UpdateContinueWithCoin(bool _isOK)
     {
         if(_isOK) continueWithCoin.color = Color.yellow;
