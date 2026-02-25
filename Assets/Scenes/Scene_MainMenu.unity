@@ -14769,13 +14769,13 @@ MonoBehaviour:
     price: 0
     isUnlocked: 0
   - robotName: No2
-    robot: {fileID: 1977966711844639497, guid: 2ae9edff15b45364e90bd489c2e26f8b, type: 3}
+    robot: {fileID: 1977966711844639497, guid: 2fac2967ac2f80c48936fe41477ec9f7, type: 3}
     advantage: quick maneuvering
     disadvantage: fast fall
     price: 100
     isUnlocked: 0
   - robotName: No3
-    robot: {fileID: 1977966711844639497, guid: 2ae9edff15b45364e90bd489c2e26f8b, type: 3}
+    robot: {fileID: 1977966711844639497, guid: d556ce67ae35179439fe7e3d280bdbe9, type: 3}
     advantage: tough
     disadvantage: slow maneuvering
     price: 200
@@ -16771,12 +16771,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
+  m_ReferenceResolution: {x: 1280, y: 720}
   m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0
+  m_MatchWidthOrHeight: 0.5
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96

@@ -14,6 +14,8 @@ public class GameData
     public int selectedPlayerIndex = 0;
     public int selectedLevelIndex = 1;
 
+    public bool isFirstTime = true;
+
     public List<string> unlockedCharacters = new List<string>();
 
     [System.Serializable]

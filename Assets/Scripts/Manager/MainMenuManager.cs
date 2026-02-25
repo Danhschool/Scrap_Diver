@@ -201,15 +201,7 @@ public class MainMenuManager : MonoBehaviour
         for (int i = 0; i < robotList.Length; i++)
         {
             var charData = robotList[i];
-
-            if (i == 0)
-            {
-                charData.isUnlocked = true;
-            }
-            else
-            {
-                charData.isUnlocked = DataManager.GetCharacterUnlockState(charData.robotName);
-            }
+            charData.isUnlocked = DataManager.GetCharacterUnlockState(charData.robotName);
         }
     }
 
