@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28b2af0b63909484ca77a63ef1253975, type: 3}
+  m_Name: Stage
+  m_EditorClassIdentifier: 
+  id: stage
+  title: stage
+  descriptionTemplate: FINISH STAGE {0}
+  icon: {fileID: 0}
+  type: 0
+  isRobotSpecific: 0
+  robotID: 
+  stages:
+  - targetValue: 2
+    rewardCoins: 20
+  - targetValue: 3
+    rewardCoins: 30
+  - targetValue: 4
+    rewardCoins: 40
+  - targetValue: 5
+    rewardCoins: 50
+  - targetValue: 6
+    rewardCoins: 60
+  - targetValue: 7
+    rewardCoins: 70

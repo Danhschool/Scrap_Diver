@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public enum AchievementType
 {
-    SingleRunCoins,
+    SingleRun,
     SingleRunTime,
     TotalRobotsOwned,
     ReachLevelIndex
