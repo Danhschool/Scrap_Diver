@@ -9698,7 +9698,7 @@ MonoBehaviour:
   fillContinueBar: {fileID: 634659962}
   continueWithCoin: {fileID: 33792413}
   continueWithCoin_txt: {fileID: 936226039}
-  gameOver_Panel_2: {fileID: 1848440430}
+  pause_Panel: {fileID: 1848440430}
   progress_Coin_Txt: {fileID: 1648028125}
   explain_Coin_Txt: {fileID: 419565611}
   progress_Time_Txt: {fileID: 859398504}
@@ -9842,7 +9842,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 192
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
