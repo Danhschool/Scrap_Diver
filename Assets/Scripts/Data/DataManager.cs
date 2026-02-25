@@ -11,6 +11,25 @@ public static class DataManager
     {
         dataService = new JsonDataService();
         currentData = dataService.Load();
+
+            InitializeDefaultData();
+    }
+
+    private static void InitializeDefaultData()
+    {
+        if (currentData.unlockedCharacters == null || currentData.unlockedCharacters.Count == 0)
+        {
+            if (currentData.unlockedCharacters == null)
+                currentData.unlockedCharacters = new List<string>();
+
+            string defaultRobotID = "No1";
+
+            currentData.unlockedCharacters.Add(defaultRobotID);
+
+            SaveToDisk();
+
+            Debug.Log($"[DataManager] First-time setup: Unlocked {defaultRobotID} by default.");
+        }
     }
 
     private static void SaveToDisk()

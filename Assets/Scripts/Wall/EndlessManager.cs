@@ -88,7 +88,6 @@ public class EndlessManager : MonoBehaviour
 
         GameObject obj = Instantiate(prefabToSpawn, position, Quaternion.Euler(spawnRotation));
 
-        // Gộp chức năng TunnelSegment: Tự động xử lý đồ họa dựa trên cấu trúc Hierarchy
         if (obj.transform.childCount > 0)
         {
             Transform visualRoot = obj.transform.GetChild(0);

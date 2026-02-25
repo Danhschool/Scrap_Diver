@@ -79,6 +79,8 @@ public class Ingame_UiManager : MonoBehaviour
             GamePlayManager.instance.PauseGame();
 
             pause_Panel.SetActive(true);
+
+            UpdatePausePanel();
         }
         else
         {
@@ -168,8 +170,15 @@ public class Ingame_UiManager : MonoBehaviour
         {
             if (data.id == "coin" || data.id == "time")
             {
-                progress_Coin_Txt.text = "EARN ";
+                string achCoinValue = data.stages[DataManager.GetAchievementLevel("coin")].targetValue.ToString();
+                string achTimeValue = data.stages[DataManager.GetAchievementLevel("time")].targetValue.ToString();
+                progress_Coin_Txt.text = GamePlayManager.instance.TotalCoin.ToString() + "/" + achCoinValue;
+                explain_Coin_Txt.text = "EARN " + achCoinValue + " COIN IN A SINGLE RUN";
+                progress_Time_Txt.text = GamePlayManager.instance.CurentTime.ToString() + "/" + achTimeValue;
+                explain_Time_Txt.text = "FLY FOR " + achTimeValue + " IN A SINGLE RUN";
             }
+
+           
         }
     }
     public void UpdateContinueWithCoin(bool _isOK)
