@@ -15,6 +15,6 @@ public class Obstacle_Data : ScriptableObject
         public float timeToNextSpawn;
     }
 
-    [Header("Danh sách vật cản")]
+    [Header("Obstacle_Data")]
     public SpawnItem[] items;
 }

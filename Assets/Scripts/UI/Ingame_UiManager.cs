@@ -76,7 +76,7 @@ public class Ingame_UiManager : MonoBehaviour
         Ui_Effect.OnClickExit(_img, this, ref isDown);
         if (GamePlayManager.instance.IsPlaying)
         {
-            GamePlayManager.instance.GamePause();
+            GamePlayManager.instance.PauseGame();
 
             pause_Panel.SetActive(true);
         }
@@ -84,7 +84,7 @@ public class Ingame_UiManager : MonoBehaviour
         {
             StartCoroutine(GamePlayManager.instance.Countdown(() =>
             {
-                GamePlayManager.instance.GameResume();
+                GamePlayManager.instance.ResumeGame();
                 pause_Btn.SetActive(true);
             }));
             pause_Panel.SetActive(false);
@@ -106,7 +106,7 @@ public class Ingame_UiManager : MonoBehaviour
     public void OnMainClick(Image _img)
     {
         Ui_Effect.OnClickExit(_img, this, ref isDown);
-        GamePlayManager.instance.GameResume();
+        GamePlayManager.instance.ResumeGame();
         SceneManager.LoadScene("Scene_MainMenu");
     }
 

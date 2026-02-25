@@ -3,12 +3,6 @@ using System.Collections;
 using UnityEngine;
 
 
-/// <summary>
-/// lay level sai 
-/// 
-/// sinh ra portal o vi tri 1900????
-/// </summary>
-
 public class GamePlayManager : MonoBehaviour
 {
     public static GamePlayManager instance { get; private set; }
@@ -44,7 +38,7 @@ public class GamePlayManager : MonoBehaviour
     [SerializeField] private float distanceOfLevel;
 
     [Header("Portal Settings")]
-    [SerializeField] private float preSpawnDistance = 100f;
+    private float preSpawnDistance;
     private bool hasSpawnedPortal = false;
 
     private Coroutine coroutine;
@@ -67,7 +61,11 @@ public class GamePlayManager : MonoBehaviour
 
     private void Start()
     {
+        indexOfLevel = DataManager.SelectedLevelIndex;
+
         inGamePlayer = Instantiate(p[DataManager.SelectedPlayerIndex]);
+        inGamePlayer.name = p[DataManager.SelectedPlayerIndex].name;
+
         StartIndex();
 
         savedSpeed = gameSpeed;
@@ -75,6 +73,8 @@ public class GamePlayManager : MonoBehaviour
         bestCoin = DataManager.BestTotalCoin;
         bestTime = DataManager.BestTime;
         bestDistance = DataManager.BestDistance;
+
+        preSpawnDistance = scaleDistance * Mathf.Abs(SpawnController.instance.SpawnYPosition);
 
         Ingame_UiManager.instance.UpdateProgressBar(bestDistance, distanceOfLevel * indexOfLevel, indexOfLevel);
         //Ingame_UiManager.instance.CreateMark(indexOfLevel);
@@ -102,14 +102,14 @@ public class GamePlayManager : MonoBehaviour
         Time.timeScale = 1;
     }
 
-    public void GameResume()
+    public void ResumeGame()
     {
         isPlaying = true;
         gameSpeed = savedSpeed;
         Time.timeScale = 1;
     }
 
-    public void GamePause()
+    public void PauseGame()
     {
         if(!isPlaying) return;
 
@@ -123,20 +123,26 @@ public class GamePlayManager : MonoBehaviour
     }
     public void ContinueWithCoin()
     {
-        if (DataManager.TotalCoin > CalculateCoin() * 10)
+        int cost = CalculateCoin() * 10;
+
+        if (DataManager.TrySpendCoin(cost))
         {
             isRestart = true;
             inGamePlayer = Instantiate(p[DataManager.SelectedPlayerIndex]);
-            DataManager.TotalCoin -= CalculateCoin() * 10;
+            inGamePlayer.name = p[DataManager.SelectedPlayerIndex].name;
+
+            // Cập nhật UI ngay lập tức
             Ingame_UiManager.instance.UpdateCoinUI(DataManager.TotalCoin);
             Ingame_UiManager.instance.SetActiveContinue_Panel(false);
-            Ingame_UiManager.instance.UpdateCoinUI(totalCoin);
-            StopCoroutine(coroutine);
-            GameResume();
 
+            if (coroutine != null) StopCoroutine(coroutine);
+            ResumeGame();
         }
         else
+        {
+            Debug.Log("Không đủ xu để hồi sinh!");
             return;
+        }
     }
     public int CalculateCoin()
     {
@@ -196,21 +202,18 @@ public class GamePlayManager : MonoBehaviour
         RunStats stats = new RunStats();
         stats.timeAlive = currentTime;
         stats.coinsCollected = totalCoin;
-        stats.robotID = inGamePlayer.name;
+        stats.robotID = p[DataManager.SelectedPlayerIndex].name;
         stats.currentLevelIndex = indexOfLevel;
 
         AchievementManager.instance.CheckEndRunAchievements(stats);
     }
     private void UpdateData()
     {
-        if (DataManager.BestDistance < lastDistance)
-            DataManager.BestDistance = lastDistance;
-        if (DataManager.BestTime < (int)currentTime)
-            DataManager.BestTime = (int)currentTime;
-        if (DataManager.BestTotalCoin < totalCoin)
-            DataManager.BestTotalCoin = totalCoin;
+        DataManager.BestDistance = lastDistance;
+        DataManager.BestTime = (int)currentTime;
+        DataManager.BestTotalCoin = totalCoin;
 
-        DataManager.TotalCoin += totalCoin;
+        DataManager.AddTotalCoin(totalCoin);
     }
 
     private void UpdateDistance()
@@ -232,9 +235,9 @@ public class GamePlayManager : MonoBehaviour
         {
             hasSpawnedPortal = true;
 
-            Debug.Log("Spawn Portal at distance: " + currentDistance);
-            // Thực thi lệnh Instantiate cánh cổng.
-            // Tọa độ Y của cánh cổng phải được đặt tại vị trí mà nhân vật sẽ chạm tới khi currentDistance đúng bằng targetDistance.
+            SpawnController.instance.SpawnPort();
+
+            //Debug.Log("Spawn Portal at distance: " + currentDistance);
         }
 
         if (currentDistance >= targetDistance)
@@ -244,8 +247,21 @@ public class GamePlayManager : MonoBehaviour
 
             Debug.Log("Level Up! Current Level: " + indexOfLevel);
 
-            // Thực thi lệnh chuyển đổi môi trường bản đồ
+            PauseGame();
+
+            TransitionManager.instance.PlayTransition(() =>
+            {
+                ClearAllObstacles();
+
+                EndlessManager.instance.ChangeTheme(indexOfLevel);
+                EndlessManager.instance.ChangeAllSegmentsImmediately();
+
+                ResumeGame();
+
+            });
         }
+
+        // Thực thi lệnh chuyển đổi môi trường bản đồ
 
         Ingame_UiManager.instance.UpdateDistanceUI(lastDistance);
         if(currentDistance > bestDistance)

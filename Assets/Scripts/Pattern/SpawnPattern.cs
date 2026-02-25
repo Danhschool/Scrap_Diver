@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-
+//bo code nay
 [CreateAssetMenu(fileName = "NewPattern", menuName = "ScrapDivers/Spawn Pattern")]
 public class SpawnPattern : ScriptableObject
 {

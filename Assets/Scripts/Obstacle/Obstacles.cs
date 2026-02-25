@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class Obstacles : MonoBehaviour
 {
-    public Vector3 position;
-    public Vector3 rotation;
+    [SerializeField] private Vector3 position;
+    [SerializeField] private Vector3 rotation;
 
     private GamePlayManager gamePlayManager;
 
@@ -17,6 +17,9 @@ public class Obstacles : MonoBehaviour
     {
         Invoke("Destroy", timeToDestroy);
         gamePlayManager = GamePlayManager.instance;
+
+        SetPosition(position);
+        SetRotation(rotation);
     }
 
     // Update is called once per frame
