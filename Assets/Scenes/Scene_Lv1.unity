@@ -435,6 +435,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa99f94cb879560408635b739ae75d98, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player: {fileID: 0}
   moveDuration: 0.8
   moveCurve:
     serializedVersion: 2
@@ -9290,7 +9291,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1463725818
 RectTransform:
   m_ObjectHideFlags: 0
@@ -12402,8 +12403,8 @@ GameObject:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 821583442}
   - {fileID: 78181691}
+  - {fileID: 821583442}
   - {fileID: 3036094208969584404}
   - {fileID: 705507995}
   - {fileID: 32653026312163265}

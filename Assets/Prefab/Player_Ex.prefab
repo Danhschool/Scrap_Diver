@@ -1485,6 +1485,10 @@ PrefabInstance:
       value: Claw_1
       objectReference: {fileID: 0}
     - target: {fileID: 5179285401661084653, guid: 699365065d7284c4ca8b292dd3f39058, type: 3}
+      propertyPath: hinge
+      value: 
+      objectReference: {fileID: 7291325338411925027}
+    - target: {fileID: 5179285401661084653, guid: 699365065d7284c4ca8b292dd3f39058, type: 3}
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}

@@ -32,10 +32,8 @@ public class AchievementManager : MonoBehaviour
 
             AchievementStage currentStage = ach.stages[currentLv];
 
-            // Nếu chưa gán condition trong Inspector, bỏ qua để tránh lỗi NullReference
             if (ach.condition == null) continue;
 
-            // Ủy quyền xử lý logic cho đối tượng condition
             bool isCompleted = ach.condition.CheckCompletion(stats, currentStage.targetValue);
 
             if (isCompleted)

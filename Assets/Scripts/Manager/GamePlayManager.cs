@@ -41,6 +41,11 @@ public class GamePlayManager : MonoBehaviour
     private float preSpawnDistance;
     private bool hasSpawnedPortal = false;
 
+    private int startLevelWindow;
+    private int targetLevelWindow;
+    private int totalSegments;
+    private float segmentWeight;
+
     private Coroutine coroutine;
 
     public float CurentTime => Mathf.FloorToInt(currentTime);
@@ -61,12 +66,16 @@ public class GamePlayManager : MonoBehaviour
 
     private void Start()
     {
+        Time.timeScale = 1f;
+
         indexOfLevel = DataManager.SelectedLevelIndex;
 
         inGamePlayer = Instantiate(p[DataManager.SelectedPlayerIndex]);
         inGamePlayer.name = p[DataManager.SelectedPlayerIndex].name;
 
         StartIndex();
+
+        InitializeProgressBarLogic();
 
         savedSpeed = gameSpeed;
 
@@ -76,11 +85,15 @@ public class GamePlayManager : MonoBehaviour
 
         preSpawnDistance = scaleDistance * Mathf.Abs(SpawnController.instance.SpawnYPosition);
 
-        Ingame_UiManager.instance.UpdateProgressBar(bestDistance, distanceOfLevel * indexOfLevel, indexOfLevel);
+        Ingame_UiManager.instance.SetupDynamicProgressBar();
+
+        //int d = (int)DataManager.GetTargetDistance(DataManager.LevelPassed + 1);
+
+        //Ingame_UiManager.instance.UpdateProgressBar(bestDistance, d, DataManager.LevelPassed + 1);
         //Ingame_UiManager.instance.CreateMark(indexOfLevel);
         //Ingame_UiManager.instance.CreateCup(bestDistance, distanceOfLevel * indexOfLevel);
 
-        Time.timeScale = 0;
+        //STime.timeScale = 0;
     }
 
     private void Update()
@@ -216,57 +229,75 @@ public class GamePlayManager : MonoBehaviour
         DataManager.AddTotalCoin(totalCoin);
     }
 
+    private void InitializeProgressBarLogic()
+    {
+        startLevelWindow = DataManager.SelectedLevelIndex;
+        targetLevelWindow = DataManager.LevelPassed + 1;
+        totalSegments = Mathf.Max(1, targetLevelWindow - startLevelWindow + 1);
+        segmentWeight = 1f / totalSegments;
+    }
+
     private void UpdateDistance()
     {
         if (!isPlaying) return;
 
         currentDistance += gameSpeed * scaleDistance * Time.deltaTime;
 
-        int currentIntDistance = (int)currentDistance;
+        float startDist = DataManager.GetStartDistance(indexOfLevel);
+        float targetDist = DataManager.GetTargetDistance(indexOfLevel);
 
+        float localProgress = Mathf.Clamp01((currentDistance - startDist) / (targetDist - startDist));
+        int indexInWindow = indexOfLevel - startLevelWindow;
+        float uiRatio = (indexInWindow * segmentWeight) + (localProgress * segmentWeight);
+
+        int currentIntDistance = (int)currentDistance;
         if (currentIntDistance > lastDistance)
         {
             lastDistance = currentIntDistance;
+            Ingame_UiManager.instance.UpdateDistanceUI(lastDistance);
         }
 
-        float targetDistance = (indexOfLevel) * distanceOfLevel;
-
-        if (!hasSpawnedPortal && currentDistance >= targetDistance - preSpawnDistance)
+        if (!hasSpawnedPortal && currentDistance >= targetDist - preSpawnDistance)
         {
             hasSpawnedPortal = true;
-
             SpawnController.instance.SpawnPort();
-
-            //Debug.Log("Spawn Portal at distance: " + currentDistance);
         }
 
-        if (currentDistance >= targetDistance)
+        if (currentDistance >= targetDist)
         {
-            indexOfLevel++;
-            hasSpawnedPortal = false;
-
-            Debug.Log("Level Up! Current Level: " + indexOfLevel);
-
-            PauseGame();
-
-            TransitionManager.instance.PlayTransition(() =>
-            {
-                ClearAllObstacles();
-
-                EndlessManager.instance.ChangeTheme(indexOfLevel);
-                EndlessManager.instance.ChangeAllSegmentsImmediately();
-
-                ResumeGame();
-
-            });
+            HandleLevelUp();
         }
 
-        // Thực thi lệnh chuyển đổi môi trường bản đồ
+        // Cập nhật UI Progress
+        if (currentDistance > DataManager.BestDistance)
+        {
+            Ingame_UiManager.instance.UpdateFillProgressBar(uiRatio, 1f);
+        }
+        Ingame_UiManager.instance.UpdateArrowPosition(uiRatio, 1f);
+        //Debug.Log($"Distance: {currentDistance}, UI Ratio: {uiRatio}");
+    }
 
-        Ingame_UiManager.instance.UpdateDistanceUI(lastDistance);
-        if(currentDistance > bestDistance)
-            Ingame_UiManager.instance.UpdateFillProgressBar(currentDistance, indexOfLevel * distanceOfLevel);
-        Ingame_UiManager.instance.UpdateArrowPosition(currentIntDistance, indexOfLevel * distanceOfLevel);
+    private void HandleLevelUp()
+    {
+        indexOfLevel++;
+        hasSpawnedPortal = false;
+
+        if (indexOfLevel - 1 > DataManager.LevelPassed)
+        {
+            DataManager.LevelPassed = indexOfLevel - 1;
+
+            InitializeProgressBarLogic();
+            Ingame_UiManager.instance.SetupDynamicProgressBar();
+        }
+
+        PauseGame();
+        ClearAllObstacles();
+        TransitionManager.instance.PlayTransition(() =>
+        {
+            EndlessManager.instance.ChangeTheme(indexOfLevel);
+            EndlessManager.instance.ChangeAllSegmentsImmediately();
+            ResumeGame();
+        });
     }
     private void UpdateTime()
     {
@@ -286,7 +317,6 @@ public class GamePlayManager : MonoBehaviour
         currentTime = 0;
         totalCoin = 0;
     }
-
     public void StartCountdown() => StartCoroutine(Countdown());
     public IEnumerator Countdown(Action _onComplete = null)
     {

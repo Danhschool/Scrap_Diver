@@ -34,8 +34,12 @@ public class Main_UiManager : MonoBehaviour
     [Header("Exclamation")]
     [SerializeField] private GameObject exclamation;
 
+    [Header("Trans")]
+    [SerializeField] private Image trans;
+
     private bool isDown = false;
     private Coroutine activeMoveCoroutine;
+    private Coroutine startGame;
 
     public RectTransform Img => img;
 
@@ -58,20 +62,23 @@ public class Main_UiManager : MonoBehaviour
     {
         Debug.Log("OnStartClick");
 
-        Door_Manager[] door = FindObjectsOfType<Door_Manager>();
-        foreach (var d in door)
-        {
-            d.StartCoroutine(d.MoveDoor());
-        }
+        
         DataManager.SelectedPlayerIndex = MainMenuManager.instance.SelectedIndex;
 
-        Invoke("StartGame", 1f);
+        if(startGame != null) StopCoroutine(startGame);
+        startGame = StartCoroutine(TransAnim());
+
+        //Invoke("StartGame", 1.5f);
+
+        //trans.gameObject.SetActive(true);
+
     }
 
-    private void StartGame()
-    {
-        SceneManager.LoadScene("Scene_Lv1");
-    }
+    //private void StartGame()
+    //{
+    //    SceneManager.LoadScene("Scene_Lv1");
+    //}
+
 
     public void OnSettingClick(Image img)
     {
@@ -295,20 +302,6 @@ public class Main_UiManager : MonoBehaviour
     {
         Ui_Effect.OnClickExit(_img, this, ref isDown);
     }
-
-    IEnumerator Delay(float delayTime)
-    {
-        yield return new WaitForSeconds(delayTime);
-
-        MainMenuManager.instance.Background.SetActive(false);
-    }
-    IEnumerator DelaySwitchPanel(GameObject targetPanel, List<GameObject> _panels)
-    {
-        yield return new WaitForSeconds(.2f);
-
-        Ui_Effect.SwitchToPanel(targetPanel, _panels);
-    }
-
     public void GenerateListChallenge()
     {
         foreach (Transform child in contentPanel)
@@ -330,5 +323,37 @@ public class Main_UiManager : MonoBehaviour
                 script.Setup(data);
             }
         }
+    }
+
+    IEnumerator Delay(float delayTime)
+    {
+        yield return new WaitForSeconds(delayTime);
+
+        MainMenuManager.instance.Background.SetActive(false);
+    }
+    IEnumerator DelaySwitchPanel(GameObject targetPanel, List<GameObject> _panels)
+    {
+        yield return new WaitForSeconds(.2f);
+
+        Ui_Effect.SwitchToPanel(targetPanel, _panels);
+    }
+
+    IEnumerator TransAnim()
+    {
+        Door_Manager[] door = FindObjectsOfType<Door_Manager>();
+        foreach (var d in door)
+        {
+            d.StartCoroutine(d.MoveDoor());
+        }
+
+        MainMenuManager.instance.DropRobot();
+
+        yield return new WaitForSeconds(1f);
+
+        trans.gameObject.SetActive(true);
+
+        yield return new WaitForSeconds(2f);
+
+        SceneManager.LoadScene("Scene_Lv1");
     }
 }

@@ -13,6 +13,7 @@ public class ClawController : MonoBehaviour
 
     [Header("Setup")]
     [SerializeField] private Transform mainCamera;
+    [SerializeField] private HingeJoint hinge;
 
     private Transform parentTransform;
     private Rigidbody childRb;
@@ -63,6 +64,12 @@ public class ClawController : MonoBehaviour
             float tilt = Mathf.Cos(swayTimer) * -5f;
             childRb.MoveRotation(Quaternion.Euler(0, 0, tilt));
         }
+    }
+
+    public void Drop()
+    {
+        hinge.connectedBody = null;
+        Destroy(hinge);
     }
 
     public void ClawPull(Vector3 moveDelta)

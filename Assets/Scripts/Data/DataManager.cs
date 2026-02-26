@@ -26,10 +26,34 @@ public static class DataManager
 
             currentData.unlockedCharacters.Add(defaultRobotID);
 
-            SaveToDisk();
 
             Debug.Log($"[DataManager] First-time setup: Unlocked {defaultRobotID} by default.");
         }
+
+        List<string> defaultAchIDs = new List<string> { "coin", "time", "unlock", "stage" };
+
+        foreach (string id in defaultAchIDs)
+        {
+            if (!currentData.achievements.Exists(a => a.id == id))
+            {
+                currentData.achievements.Add(new GameData.AchievementSave
+                {
+                    id = id,
+                    level = 0,
+                    isRewardReady = false
+                });
+            }
+        }
+        if (currentData.unlockedLevels == null || currentData.unlockedLevels.Count == 0)
+        {
+            currentData.unlockedLevels = new List<bool> { true, false, false, false, false, false };
+        }
+
+        if (currentData.levelPrices == null || currentData.levelPrices.Count == 0)
+        {
+            currentData.levelPrices = new List<int> { 0, 100, 250, 500, 1000, 2000 };
+        }
+        SaveToDisk();
     }
 
     private static void SaveToDisk()
@@ -128,6 +152,17 @@ public static class DataManager
         }
     }
 
+    public static int LevelPassed
+    {
+        get => currentData.levelPassed;
+        set
+        {
+            if (value < 0) return;
+            currentData.levelPassed = value;
+            SaveToDisk();
+        }
+    }
+
     public static bool GetCharacterUnlockState(string charName)
     {
         return currentData.unlockedCharacters.Contains(charName);
@@ -202,6 +237,89 @@ public static class DataManager
         }
         return false;
     }
+
+    public static float GetTargetDistance(int levelIndex)
+    {
+        int actualIndex = levelIndex - 1;
+
+        if (currentData.levelMilestones == null || currentData.levelMilestones.Count == 0)
+            return levelIndex * 1000f;
+
+        if (actualIndex >= 0 && actualIndex < currentData.levelMilestones.Count)
+        {
+            return currentData.levelMilestones[actualIndex];
+        }
+
+        float lastMilestone = currentData.levelMilestones[currentData.levelMilestones.Count - 1];
+        int extraLevels = levelIndex - currentData.levelMilestones.Count;
+        return lastMilestone + (extraLevels * 2000f);
+    }
+
+    public static float GetStartDistance(int levelIndex)
+    {
+        if (levelIndex <= 1) return 0;
+        return GetTargetDistance(levelIndex - 1);
+    }
+
+    public static int TotalDefinedLevels => currentData.levelMilestones.Count;
+
+    public static bool CanPlayLevel(int levelIndex)
+    {
+        if (currentData.unlockedLevels == null) return false;
+
+        if (levelIndex >= 0 && levelIndex < currentData.unlockedLevels.Count)
+        {
+            return currentData.unlockedLevels[levelIndex];
+        }
+        return false;
+    }
+
+    public static bool TryBuyLevel(int levelIndex)
+    {
+        if (currentData.unlockedLevels == null || currentData.levelPrices == null) return false;
+
+        if (levelIndex < 0 || levelIndex >= currentData.unlockedLevels.Count) return false;
+
+        if (currentData.unlockedLevels[levelIndex]) return false; // Đã được mở
+
+        int price = currentData.levelPrices[levelIndex];
+
+        if (currentData.totalCoin >= price)
+        {
+            currentData.totalCoin -= price;
+            currentData.unlockedLevels[levelIndex] = true;
+            SaveToDisk();
+            return true;
+        }
+
+        return false;
+    }
+
+    public static void UnlockLevel(int levelIndex)
+    {
+        if (currentData.unlockedLevels == null) return;
+
+        if (levelIndex >= 0 && levelIndex < currentData.unlockedLevels.Count)
+        {
+            if (!currentData.unlockedLevels[levelIndex])
+            {
+                currentData.unlockedLevels[levelIndex] = true;
+                SaveToDisk();
+            }
+        }
+    }
+
+    public static int GetLevelPrice(int levelIndex)
+    {
+        if (currentData.levelPrices == null) return 0;
+
+        if (levelIndex >= 0 && levelIndex < currentData.levelPrices.Count)
+        {
+            return currentData.levelPrices[levelIndex];
+        }
+        return 0;
+    }
+
     #region code old
     //public static int BestDistance
     //{
