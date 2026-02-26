@@ -5,4 +5,5 @@ public struct RunStats
     public int coinsCollected;
     public int currentLevelIndex;
     public string robotID;
+    public int robotCount;
 }

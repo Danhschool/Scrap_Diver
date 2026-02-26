@@ -136,10 +136,10 @@ public class MainMenuManager : MonoBehaviour
         //if (Input.GetKey(KeyCode.B)) SetState(false);
     }
 
-    void FixedUpdate()
-    {
+    //void FixedUpdate()
+    //{
         
-    }
+    //}
 
     void HandleInput()
     {
@@ -268,6 +268,14 @@ public class MainMenuManager : MonoBehaviour
                 backgroundLayers[i].position = bgPos;
             }
         }
+    }
+    public void DropRobot()
+    {
+        int check = DataManager.SelectedPlayerIndex;
+
+        ClawController claw = claws[check].GetComponentInChildren<ClawController>();
+
+        claw.Drop();
     }
     public void MoveUpRobot()
     {

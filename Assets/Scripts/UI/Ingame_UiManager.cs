@@ -283,5 +283,51 @@ public class Ingame_UiManager : MonoBehaviour
 
         _rect.anchoredPosition = new Vector2(0, _rect.anchoredPosition.y);
     }
+    public void SetupDynamicProgressBar()
+    {
+        int startLevel = DataManager.SelectedLevelIndex;
+        int targetLevel = DataManager.LevelPassed + 1;
+        int totalSegments = targetLevel - startLevel + 1;
+
+        foreach (Transform child in mark_Container) Destroy(child.gameObject);
+
+        float segmentWeight = 1f / totalSegments;
+        for (int i = 1; i < totalSegments; i++)
+        {
+            float ratio = i * segmentWeight;
+            GameObject m = Instantiate(mark, mark_Container);
+            AnchoedPosition(m.GetComponent<RectTransform>(), ratio);
+        }
+
+        UpdateCupInDynamicWindow(startLevel, targetLevel, totalSegments);
+    }
+    private void UpdateCupInDynamicWindow(int startLv, int targetLv, int totalSeg)
+    {
+        float bestDist = DataManager.BestDistance;
+        float startWindowDist = DataManager.GetStartDistance(startLv);
+        float endWindowDist = DataManager.GetTargetDistance(targetLv);
+
+        if (bestDist >= startWindowDist && bestDist <= endWindowDist)
+        {
+            int bestLevel = startLv;
+            for (int i = startLv; i <= targetLv; i++)
+            {
+                if (bestDist <= DataManager.GetTargetDistance(i))
+                {
+                    bestLevel = i;
+                    break;
+                }
+            }
+
+            float segWeight = 1f / totalSeg;
+            float sDist = DataManager.GetStartDistance(bestLevel);
+            float tDist = DataManager.GetTargetDistance(bestLevel);
+            float prog = (bestDist - sDist) / (tDist - sDist);
+
+            float cupRatio = ((bestLevel - startLv) * segWeight) + (prog * segWeight);
+
+            CreateCup(cupRatio, 1f);
+        }
+    }
     #endregion
 }

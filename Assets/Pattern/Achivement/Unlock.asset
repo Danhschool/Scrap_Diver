@@ -16,7 +16,13 @@ MonoBehaviour:
   title: unlock
   descriptionTemplate: UNLOCK {0} ROBOTS
   icon: {fileID: 0}
-  type: 0
+  condition: {fileID: 11400000, guid: bd359077781fefb4891a87af23f52648, type: 2}
   isRobotSpecific: 0
   robotID: 
-  stages: []
+  stages:
+  - targetValue: 1
+    rewardCoins: 50
+  - targetValue: 2
+    rewardCoins: 50
+  - targetValue: 3
+    rewardCoins: 50

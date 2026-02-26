@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using UnityEngine;
 
+[DefaultExecutionOrder(50)]
 public class CameraManager : MonoBehaviour
 {
     public static CameraManager instance;
@@ -11,7 +12,7 @@ public class CameraManager : MonoBehaviour
     private CinemachineVirtualCamera virtualCamera;
     private CinemachineBasicMultiChannelPerlin noise;
 
-    private Player player;
+    [SerializeField] private Player player;
 
     private float rotationSpeed = 2f;
 
@@ -72,8 +73,7 @@ public class CameraManager : MonoBehaviour
 
     private void RotateCamera()
     {
-        if(player == null)
-            return;
+        if(player == null) return;
 
         float targetAngle = 0f;
         Direction currentDir = player.movement.CheckDirection();
