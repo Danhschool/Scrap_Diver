@@ -55,6 +55,10 @@ public class Ingame_UiManager : MonoBehaviour
     [SerializeField] private TMP_Text coin_Endtxt;
     [SerializeField] private TMP_Text bestCoin_Endtxt;
 
+    [Header("Achievement Notification")]
+    [SerializeField] private CanvasGroup challengePopup;
+
+    Coroutine coroutineAch;
 
 
     private void Awake()
@@ -285,9 +289,13 @@ public class Ingame_UiManager : MonoBehaviour
     }
     public void SetupDynamicProgressBar()
     {
-        int startLevel = DataManager.SelectedLevelIndex;
+        int startLevel = DataManager.SelectedLevelIndex + 1;
+
         int targetLevel = DataManager.LevelPassed + 1;
+
         int totalSegments = targetLevel - startLevel + 1;
+
+        Debug.Log($"Start Level: {startLevel}, Target Level: {targetLevel}, Total Segments: {totalSegments}");
 
         foreach (Transform child in mark_Container) Destroy(child.gameObject);
 
@@ -301,33 +309,73 @@ public class Ingame_UiManager : MonoBehaviour
 
         UpdateCupInDynamicWindow(startLevel, targetLevel, totalSegments);
     }
+
     private void UpdateCupInDynamicWindow(int startLv, int targetLv, int totalSeg)
     {
         float bestDist = DataManager.BestDistance;
         float startWindowDist = DataManager.GetStartDistance(startLv);
         float endWindowDist = DataManager.GetTargetDistance(targetLv);
 
-        if (bestDist >= startWindowDist && bestDist <= endWindowDist)
+        if (bestDist < startWindowDist) bestDist = startWindowDist;
+        if (bestDist > endWindowDist) bestDist = endWindowDist;
+
+        int bestLevel = targetLv;
+        for (int i = startLv; i <= targetLv; i++)
         {
-            int bestLevel = startLv;
-            for (int i = startLv; i <= targetLv; i++)
+            if (bestDist <= DataManager.GetTargetDistance(i))
             {
-                if (bestDist <= DataManager.GetTargetDistance(i))
-                {
-                    bestLevel = i;
-                    break;
-                }
+                bestLevel = i;
+                break;
             }
-
-            float segWeight = 1f / totalSeg;
-            float sDist = DataManager.GetStartDistance(bestLevel);
-            float tDist = DataManager.GetTargetDistance(bestLevel);
-            float prog = (bestDist - sDist) / (tDist - sDist);
-
-            float cupRatio = ((bestLevel - startLv) * segWeight) + (prog * segWeight);
-
-            CreateCup(cupRatio, 1f);
         }
+
+        float segWeight = 1f / totalSeg;
+        float sDist = DataManager.GetStartDistance(bestLevel);
+        float tDist = DataManager.GetTargetDistance(bestLevel);
+
+        float prog = 0f;
+        if (tDist > sDist)
+        {
+            prog = Mathf.Clamp01((bestDist - sDist) / (tDist - sDist));
+        }
+
+        int indexInWindow = bestLevel - startLv;
+
+        float cupRatio = (indexInWindow * segWeight) + (prog * segWeight);
+
+        CreateCup(cupRatio, 1f);
+    }
+    public void ShowChallengeComplete()
+    {
+        if (coroutineAch != null) StopCoroutine(coroutineAch);
+        coroutineAch = StartCoroutine(AnimateChallengeComplete());
+        Debug.Log("Show Challenge Complete");
+    }
+
+    private IEnumerator AnimateChallengeComplete()
+    {
+        challengePopup.gameObject.SetActive(true);
+        challengePopup.alpha = 1;
+        float t = 0;
+        while (t < 0.3f)
+        {
+            t += Time.deltaTime;
+            float scale = Mathf.Lerp(0, 1.2f, t / 0.3f);
+            challengePopup.transform.localScale = Vector3.one * (scale > 1.1f ? 1f : scale);
+            yield return null;
+        }
+
+        yield return new WaitForSeconds(.75f);
+
+        t = 0;
+        while (t < 0.5f)
+        {
+            t += Time.deltaTime;
+            challengePopup.alpha = 1 - (t / 0.5f);
+            yield return null;
+        }
+        challengePopup.alpha = 0;
+        challengePopup.gameObject.SetActive(false);
     }
     #endregion
 }

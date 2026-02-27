@@ -2,6 +2,7 @@
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
 using TMPro;
+using System.Collections;
 
 [RequireComponent(typeof(RectTransform))]
 public class PageScroller : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
@@ -10,7 +11,7 @@ public class PageScroller : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
     [SerializeField] private RectTransform viewportRect;
     [SerializeField] private RectTransform contentPanel;
 
-    [SerializeField] private TextMeshProUGUI statusText;
+    [SerializeField] private TMP_Text statusText;
 
     [Header("Dynamic Content")]
     [SerializeField] private GameObject[] pagePrefabs;
@@ -32,6 +33,8 @@ public class PageScroller : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
 
     public int CurrentLevelIndex => currentLevelIndex;
 
+    Coroutine coroutine;
+
     void Start()
     {
         if (viewportRect == null || contentPanel == null) return;
@@ -44,6 +47,31 @@ public class PageScroller : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
         targetPosition = contentPanel.anchoredPosition;
 
         UpdateLevelStatusUI();
+    }
+
+    private void OnEnable()
+    {
+        if(coroutine != null)
+        {
+            StopCoroutine(coroutine);
+        }
+        coroutine = StartCoroutine(SnapPage(DataManager.SelectedLevelIndex));
+    }
+    private void OnDisable()
+    {
+        currentLevelIndex = 0;
+
+        targetPosition = new Vector2(contentPanel.anchoredPosition.x, 0);
+
+        contentPanel.anchoredPosition = targetPosition;
+
+        UpdateLevelStatusUI();
+    }
+
+    IEnumerator SnapPage(int page)
+    {
+        yield return new WaitForSeconds(.5f);
+        SnapToPage(page);
     }
 
     private void GeneratePages()
@@ -111,7 +139,9 @@ public class PageScroller : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
         float maxY = 0;
         if (pages.Count > 0)
         {
-            maxY = (pages.Count - 1) * pageHeight;
+            int maxAllowedIndex = Mathf.Min(DataManager.LevelPassed + 1, pages.Count - 1);
+
+            maxY = maxAllowedIndex * pageHeight;
         }
 
         pos.y = Mathf.Clamp(pos.y, 0, maxY);
@@ -146,7 +176,10 @@ public class PageScroller : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
             currentLevelIndex = Mathf.RoundToInt(currentY / pageHeight);
         }
 
-        currentLevelIndex = Mathf.Clamp(currentLevelIndex, 0, pages.Count - 1);
+        int maxAllowedIndex = Mathf.Min(DataManager.LevelPassed , pages.Count - 1);
+
+        currentLevelIndex = Mathf.Clamp(currentLevelIndex, 0, maxAllowedIndex);
+
         SnapToPage(currentLevelIndex);
     }
 
@@ -165,12 +198,28 @@ public class PageScroller : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
 
         if (DataManager.CanPlayLevel(currentLevelIndex))
         {
-            statusText.text = "OK";
+            
+            if(currentLevelIndex == DataManager.SelectedLevelIndex)
+            {
+                statusText.text = "OKKKKK";
+            }
+                else
+                {
+                    statusText.text = "OK";
+            }
         }
         else
         {
             int price = DataManager.GetLevelPrice(currentLevelIndex);
-            statusText.text = price.ToString();
+            if (price <= DataManager.TotalCoin )
+            {
+                statusText.text = price.ToString();
+                
+            }
+            else
+            {
+                statusText.text = $"<color=red>{price}</color>";
+            }
         }
     }
 }

@@ -118,9 +118,10 @@ public class EndlessManager : MonoBehaviour
         {
             currentThemeIndex = newThemeIndex;
         }
+        ChangeAllSegments();
     }
 
-    public void ChangeAllSegmentsImmediately()
+    private void ChangeAllSegments()
     {
         if (activeSegments.Count == 0) return;
 

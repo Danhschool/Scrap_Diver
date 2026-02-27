@@ -25,20 +25,55 @@ public class AchievementManager : MonoBehaviour
     {
         foreach (var ach in allAchievements)
         {
-            int currentLv = DataManager.GetAchievementLevel(ach.id);
-
-            if (currentLv >= ach.stages.Count) continue;
+            if (ach.condition == null) continue;
             if (ach.isRobotSpecific && ach.robotID != stats.robotID) continue;
 
-            AchievementStage currentStage = ach.stages[currentLv];
+            int currentLv = DataManager.GetAchievementLevel(ach.id);
+            int unclaimed = DataManager.GetUnclaimedCount(ach.id);
 
-            if (ach.condition == null) continue;
+            int nextStageIndex = currentLv + unclaimed;
 
-            bool isCompleted = ach.condition.CheckCompletion(stats, currentStage.targetValue);
-
-            if (isCompleted)
+            while (nextStageIndex < ach.stages.Count)
             {
-                UnlockLevel(ach, currentLv);
+                AchievementStage stage = ach.stages[nextStageIndex];
+
+                if (ach.condition.CheckCompletion(stats, stage.targetValue))
+                {
+                    DataManager.AddUnclaimedReward(ach.id);
+                    nextStageIndex++;
+                    Debug.Log($"Real-time Unlock: {ach.title} Stage {nextStageIndex}");
+                }
+                else
+                {
+                    break;
+                }
+            }
+        }
+    }
+    public void CheckAchievementsByType<T>(RunStats stats) where T : AchievementCondition
+    {
+        foreach (var ach in allAchievements)
+        {
+            if (ach.condition is T)
+            {
+                int currentLv = DataManager.GetAchievementLevel(ach.id);
+                int unclaimed = DataManager.GetUnclaimedCount(ach.id);
+
+                int nextStageIndex = currentLv + unclaimed;
+
+                while (nextStageIndex < ach.stages.Count)
+                {
+                    AchievementStage stage = ach.stages[nextStageIndex];
+                    if (ach.condition.CheckCompletion(stats, stage.targetValue))
+                    {
+                        DataManager.AddUnclaimedReward(ach.id);
+                        nextStageIndex++;
+                        if(Ingame_UiManager.instance != null)
+                            Ingame_UiManager.instance.ShowChallengeComplete();
+                        Debug.Log($"Real-time Unlock: {ach.title} Stage {nextStageIndex}");
+                    }
+                    else { break; }
+                }
             }
         }
     }

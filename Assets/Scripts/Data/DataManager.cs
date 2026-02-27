@@ -40,7 +40,8 @@ public static class DataManager
                 {
                     id = id,
                     level = 0,
-                    isRewardReady = false
+                    isRewardReady = false,
+                    unclaimedCount = 0
                 });
             }
         }
@@ -162,7 +163,37 @@ public static class DataManager
             SaveToDisk();
         }
     }
+    public static int GetUnclaimedCount(string id)
+    {
+        return GetOrCreateAchievement(id).unclaimedCount;
+    }
 
+    public static void AddUnclaimedReward(string id)
+    {
+        var ach = GetOrCreateAchievement(id);
+        ach.unclaimedCount++;
+        ach.isRewardReady = true;
+        SaveToDisk();
+    }
+
+    public static void DecreaseUnclaimedReward(string id)
+    {
+        var ach = GetOrCreateAchievement(id);
+        if (ach.unclaimedCount > 0)
+        {
+            ach.unclaimedCount--;
+        }
+
+        if (ach.unclaimedCount <= 0)
+        {
+            ach.isRewardReady = false;
+        }
+        SaveToDisk();
+    }
+    public static int GetUnlockedRobotCount()
+    {
+        return currentData.unlockedCharacters != null ? currentData.unlockedCharacters.Count : 0;
+    }
     public static bool GetCharacterUnlockState(string charName)
     {
         return currentData.unlockedCharacters.Contains(charName);

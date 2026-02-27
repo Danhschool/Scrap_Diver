@@ -12,7 +12,7 @@ public class GameData
     public int challengeCoin = 0;
     public int challengeTime = 0;
     public int selectedPlayerIndex = 0;
-    public int selectedLevelIndex = 1;
+    public int selectedLevelIndex = 0;
     public int levelPassed = 0;
 
     public bool isFirstTime = true;
@@ -29,6 +29,7 @@ public class GameData
         public string id;
         public int level;
         public bool isRewardReady;
+        public int unclaimedCount;
     }
     public List<AchievementSave> achievements = new List<AchievementSave>();
 }
