@@ -66,7 +66,7 @@ public class Main_UiManager : MonoBehaviour
         DataManager.SelectedPlayerIndex = MainMenuManager.instance.SelectedIndex;
 
         if(startGame != null) StopCoroutine(startGame);
-        startGame = StartCoroutine(TransAnim());
+        startGame = StartCoroutine(TransAnimStart());
 
         //Invoke("StartGame", 1.5f);
 
@@ -179,7 +179,8 @@ public class Main_UiManager : MonoBehaviour
     {
         Ui_Effect.OnClickExit(img, this, ref isDown);
 
-        int index = DataManager.SelectedPlayerIndex;
+        //int index = DataManager.SelectedPlayerIndex;
+        int index = MainMenuManager.instance.SelectedIndex;
 
         var data = MainMenuManager.instance.RobotList[index];
 
@@ -190,6 +191,8 @@ public class Main_UiManager : MonoBehaviour
 
             GameObject main_Panel = panels.Find(x => x.name == ("Main_Panel"));
             Debug.Log(main_Panel.name);
+
+            DataManager.SelectedPlayerIndex = index;
 
             MainMenuManager.instance.MoveDownRobot();
             MainMenuManager.instance.StopShop();
@@ -203,11 +206,16 @@ public class Main_UiManager : MonoBehaviour
 
             if (success)
             {
+                DataManager.SelectedPlayerIndex = index;
+                DataManager.SetCharacterUnlockState(data.robotName, true);
                 selectButtonText.text = "null";
             }
             else
             {
-                
+                if (coinText != null)
+                {
+                    StartCoroutine(ShakeUI(coinText, 0.5f, 10f));
+                }
             }
         }
     }
@@ -236,12 +244,30 @@ public class Main_UiManager : MonoBehaviour
         GameObject main_Panel = panels.Find(x => x.name == ("Main_Panel"));
         PageScroller pageScroller = gameObject.GetComponentInChildren<PageScroller>();
         
-        DataManager.SelectedLevelIndex = pageScroller.CurrentLevelIndex;
-        
-        MainMenuManager.instance.SetState(false);
+        int index = pageScroller.CurrentLevelIndex;
 
-        if (activeMoveCoroutine != null) StopCoroutine(activeMoveCoroutine);
-        activeMoveCoroutine = StartCoroutine(DelaySwitchPanel(main_Panel, panels));
+        if (DataManager.CanPlayLevel(index))
+        {
+            DataManager.SelectedLevelIndex = index;
+
+            UpdateCoinText();
+
+            MainMenuManager.instance.SetState(false);
+            if (activeMoveCoroutine != null) StopCoroutine(activeMoveCoroutine);
+            activeMoveCoroutine = StartCoroutine(DelaySwitchPanel(main_Panel, panels));
+        }
+        else
+        {
+            bool success = DataManager.TryBuyLevel(index);
+            if (success)
+            {
+                DataManager.SelectedLevelIndex = index;
+                pageScroller.SnapToPage(index);
+            }
+            else
+                if(coinText != null) StartCoroutine(ShakeUI(coinText, 0.5f, 10f));
+        }
+
     }
     public void OnMapBackClick(Image img)
     {
@@ -338,7 +364,7 @@ public class Main_UiManager : MonoBehaviour
         Ui_Effect.SwitchToPanel(targetPanel, _panels);
     }
 
-    IEnumerator TransAnim()
+    IEnumerator TransAnimStart()
     {
         Door_Manager[] door = FindObjectsOfType<Door_Manager>();
         foreach (var d in door)
@@ -355,5 +381,25 @@ public class Main_UiManager : MonoBehaviour
         yield return new WaitForSeconds(2f);
 
         SceneManager.LoadScene("Scene_Lv1");
+    }
+    private IEnumerator ShakeUI(TMP_Text target, float duration, float magnitude)
+    {
+        Vector2 originalPos = target.rectTransform.anchoredPosition;
+        float elapsed = 0.0f;
+        target.color = Color.red;
+
+        while (elapsed < duration)
+        {
+            float x = originalPos.x + Random.Range(-1f, 1f) * magnitude;
+            float y = originalPos.y + Random.Range(-1f, 1f) * magnitude;
+
+            target.rectTransform.anchoredPosition = new Vector2(x, y);
+            elapsed += Time.deltaTime;
+
+            yield return null;
+        }
+
+        target.color = Color.white;
+        target.rectTransform.anchoredPosition = originalPos;
     }
 }

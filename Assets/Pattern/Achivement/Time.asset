@@ -20,11 +20,11 @@ MonoBehaviour:
   isRobotSpecific: 0
   robotID: 
   stages:
-  - targetValue: 30
+  - targetValue: 10
     rewardCoins: 50
-  - targetValue: 60
+  - targetValue: 20
     rewardCoins: 100
-  - targetValue: 90
+  - targetValue: 30
     rewardCoins: 150
-  - targetValue: 120
+  - targetValue: 40
     rewardCoins: 200

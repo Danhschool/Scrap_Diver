@@ -180,17 +180,26 @@ public class MainMenuManager : MonoBehaviour
 
         selectedIndex = nearestIndex;
 
-        DataManager.SelectedPlayerIndex = selectedIndex;
+
+        //DataManager.SelectedPlayerIndex = selectedIndex;
         //Debug.Log(selectedIndex);
         UpdateShopUI(selectedIndex);
     }
 
     private void UpdateShopUI(int value)
     {
+        var data = robotList[value];
+
         Main_UiManager.instance.UpdateAdvantageText(robotList[value].advantage);
         Main_UiManager.instance.UpdateDisadvantageText(robotList[value].disadvantage);
         if (robotList[value].isUnlocked) Main_UiManager.instance.UpdateSelectButtonText("null++");
-        else Main_UiManager.instance.UpdateSelectButtonText(robotList[value].price.ToString());
+        else
+        {
+            if (DataManager.TotalCoin >= data.price)
+                Main_UiManager.instance.UpdateSelectButtonText(robotList[value].price.ToString());
+            else
+                Main_UiManager.instance.UpdateSelectButtonText($"<color=red>{data.price}</color>");
+        }
         Main_UiManager.instance.UpdateCoinText();
     }
 
@@ -209,22 +218,23 @@ public class MainMenuManager : MonoBehaviour
     {
         var charData = robotList[index];
 
-        if (DataManager.TotalCoin >= charData.price)
+        if (DataManager.TrySpendCoin(charData.price))
         {
-            DataManager.TotalCoin -= charData.price;
-
             DataManager.SetCharacterUnlockState(charData.robotName, true);
-
             charData.isUnlocked = true;
+
+            RunStats stats = new RunStats();
+            stats.robotCount = DataManager.GetUnlockedRobotCount();
+
+            AchievementManager.instance.CheckAchievementsByType<UnlockRobot>(stats);
+
 
             Debug.Log($"{charData.robotName} : {DataManager.TotalCoin}");
             return true;
         }
-        else
-        {
-            Debug.Log("Not enough Money!");
-            return false;
-        }
+
+        Debug.Log("Not enough Money!");
+        return false;
     }
     private void SpawnRobotsInShop()
     {

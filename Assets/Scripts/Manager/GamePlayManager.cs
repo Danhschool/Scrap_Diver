@@ -24,7 +24,7 @@ public class GamePlayManager : MonoBehaviour
     [SerializeField] private static float currentTime;
     [SerializeField] private static float currentDistance;
     //[SerializeField] private float checkPoint;
-    [SerializeField] private static int totalCoin;
+    [SerializeField] private int totalCoin;
     [SerializeField] private bool isPlaying = true;
     [SerializeField] private float gameSpeed = 100f;
     public float savedSpeed;
@@ -68,7 +68,7 @@ public class GamePlayManager : MonoBehaviour
     {
         Time.timeScale = 1f;
 
-        indexOfLevel = DataManager.SelectedLevelIndex;
+        indexOfLevel = DataManager.SelectedLevelIndex +1;
 
         inGamePlayer = Instantiate(p[DataManager.SelectedPlayerIndex]);
         inGamePlayer.name = p[DataManager.SelectedPlayerIndex].name;
@@ -77,6 +77,8 @@ public class GamePlayManager : MonoBehaviour
 
         InitializeProgressBarLogic();
 
+        EndlessManager.instance.ChangeTheme(DataManager.SelectedLevelIndex + 1);
+         
         savedSpeed = gameSpeed;
 
         bestCoin = DataManager.BestTotalCoin;
@@ -86,6 +88,8 @@ public class GamePlayManager : MonoBehaviour
         preSpawnDistance = scaleDistance * Mathf.Abs(SpawnController.instance.SpawnYPosition);
 
         Ingame_UiManager.instance.SetupDynamicProgressBar();
+
+        InitializeProgressUI();
 
         //int d = (int)DataManager.GetTargetDistance(DataManager.LevelPassed + 1);
 
@@ -101,12 +105,13 @@ public class GamePlayManager : MonoBehaviour
         UpdateDistance();
         UpdateTime();
 
-        //if (Input.GetKeyDown(KeyCode.V)) UpdateCoin(1);
+        if (Input.GetKeyDown(KeyCode.V)) Ingame_UiManager.instance.ShowChallengeComplete();
     }
     private void StartIndex()
     {
         currentTime = 0;
-        currentDistance = 0;
+        currentDistance = DataManager.GetStartDistance(indexOfLevel);
+        Debug.Log($"Start Distance: {currentDistance}");
         //isPlaying = false;
     }
 
@@ -178,7 +183,7 @@ public class GamePlayManager : MonoBehaviour
         if (DataManager.TotalCoin > CalculateCoin() * 10) Ingame_UiManager.instance.UpdateContinueWithCoin(true);
         else Ingame_UiManager.instance.UpdateContinueWithCoin(false);
 
-        CheckAchivement();
+        //CheckAchivement();
 
         Ingame_UiManager.instance.UpdateContinueWithCoin_Txt(CalculateCoin() * 10);
         Ingame_UiManager.instance.UpdateCoinUI(DataManager.TotalCoin);
@@ -231,10 +236,25 @@ public class GamePlayManager : MonoBehaviour
 
     private void InitializeProgressBarLogic()
     {
-        startLevelWindow = DataManager.SelectedLevelIndex;
+        startLevelWindow = DataManager.SelectedLevelIndex + 1;
         targetLevelWindow = DataManager.LevelPassed + 1;
         totalSegments = Mathf.Max(1, targetLevelWindow - startLevelWindow + 1);
         segmentWeight = 1f / totalSegments;
+    }
+
+    private void InitializeProgressUI()
+    {
+        Ingame_UiManager.instance.UpdateDistanceUI(lastDistance);
+
+        float startDist = DataManager.GetStartDistance(indexOfLevel);
+        float targetDist = DataManager.GetTargetDistance(indexOfLevel);
+
+        float localProgress = Mathf.Clamp01((currentDistance - startDist) / (targetDist - startDist));
+        int indexInWindow = indexOfLevel - startLevelWindow;
+        float uiRatio = (indexInWindow * segmentWeight) + (localProgress * segmentWeight);
+
+        Ingame_UiManager.instance.UpdateFillProgressBar(uiRatio, 1f);
+        Ingame_UiManager.instance.UpdateArrowPosition(uiRatio, 1f);
     }
 
     private void UpdateDistance()
@@ -295,8 +315,10 @@ public class GamePlayManager : MonoBehaviour
         TransitionManager.instance.PlayTransition(() =>
         {
             EndlessManager.instance.ChangeTheme(indexOfLevel);
-            EndlessManager.instance.ChangeAllSegmentsImmediately();
             ResumeGame();
+            RunStats stats = new RunStats();
+            stats.currentLevelIndex = indexOfLevel;
+            AchievementManager.instance.CheckAchievementsByType<FinishStage>(stats);
         });
     }
     private void UpdateTime()
@@ -304,10 +326,20 @@ public class GamePlayManager : MonoBehaviour
         if (!isPlaying) return;
 
         currentTime += Time.deltaTime;
+
+        RunStats stats = new RunStats();
+        stats.timeAlive = currentTime;
+
+        AchievementManager.instance.CheckAchievementsByType<SingleRun_Time>(stats);
     }
     public void UpdateCoin(int _i)
     {
         totalCoin += _i;
+
+        RunStats stats = new RunStats();
+        stats.coinsCollected = totalCoin;
+
+        AchievementManager.instance.CheckAchievementsByType<SingleRun_Coin>(stats);
 
         Ingame_UiManager.instance.UpdateCoinUI(totalCoin);
     }

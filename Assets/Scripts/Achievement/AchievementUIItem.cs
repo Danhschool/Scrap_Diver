@@ -71,6 +71,15 @@ public class AchievementUIItem : MonoBehaviour
 
     private void OnClaimClick(AchievementStage stage)
     {
-        Debug.Log("Claim: " + data.title);
+        DataManager.AddTotalCoin(stage.rewardCoins);
+
+        int currentLv = DataManager.GetAchievementLevel(data.id);
+        DataManager.SetAchievementLevel(data.id, currentLv + 1);
+
+        DataManager.DecreaseUnclaimedReward(data.id);
+
+        Main_UiManager.instance.UpdateCoinText();
+
+        RefreshView();
     }
 }
