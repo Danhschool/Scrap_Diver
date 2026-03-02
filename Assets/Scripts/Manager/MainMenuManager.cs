@@ -65,12 +65,14 @@ public class MainMenuManager : MonoBehaviour
 
     private Rigidbody rb;
     private float targetX;
-    private float currentVelocity;
+    public float currentVelocity;
     private bool isDragging = false;
     private Vector3 startDragMousePos;
     private Vector3 startDragContainerPos;
 
     private float minX, maxX;
+
+    private bool isScrollingSoundPlaying = false;
 
     Coroutine imgUpAndDown;
 
@@ -90,6 +92,8 @@ public class MainMenuManager : MonoBehaviour
         SpawnRobotsInShop();
 
         SetState(false);
+
+        AudioManager.instance.PlayRandomBGM();
 
         Main_UiManager.instance.UpdateCoinText();
     }
@@ -119,6 +123,8 @@ public class MainMenuManager : MonoBehaviour
     {
         isShop = false;
 
+        //background.SetActive(true);
+
         MoveDownRobot();
 
         transform.position = new Vector3(0, 0, 0);
@@ -131,6 +137,7 @@ public class MainMenuManager : MonoBehaviour
         {
             HandleInput();
             MoveParallaxBackground();
+            PlaySound();
         }
         //if (Input.GetKey(KeyCode.N)) SetState(true);
         //if (Input.GetKey(KeyCode.B)) SetState(false);
@@ -145,6 +152,7 @@ public class MainMenuManager : MonoBehaviour
     {
         float newX = Mathf.SmoothDamp(transform.position.x, targetX, ref currentVelocity, snapTime);
         rb.MovePosition(new Vector3(newX, transform.position.y, transform.position.z));
+
         if (Input.GetMouseButtonDown(0))
         {
             isDragging = true;
@@ -168,6 +176,22 @@ public class MainMenuManager : MonoBehaviour
 
         }
 
+    }
+
+    private void PlaySound()
+    {
+        bool isMoving = Mathf.Abs(currentVelocity) > 5f;
+
+        if (isMoving && !isScrollingSoundPlaying)
+        {
+            AudioManager.instance.PlayScrollSFX();
+            isScrollingSoundPlaying = true;
+        }
+        else if (!isMoving && isScrollingSoundPlaying)
+        {
+            AudioManager.instance.StopScrollSFX();
+            isScrollingSoundPlaying = false;
+        }
     }
 
     void SnapToNearest()
@@ -310,6 +334,7 @@ public class MainMenuManager : MonoBehaviour
         if (cameraManager != null)
         {
             cameraManager.MoveCamera(new Vector3(0, 50, 0));
+            //cameraManager.CameraBasePosition = new Vector3(0, 50, 0);
         }
     }
     public void MoveDownRobot()

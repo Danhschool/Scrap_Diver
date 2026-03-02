@@ -26,6 +26,12 @@ public class CameraManager : MonoBehaviour
 
     private Coroutine coroutine;
 
+    // ensure camera movement always starts from a fixed reference point
+    private Coroutine moveCoroutine;
+    private Vector3 cameraBasePosition;
+
+    public Vector3 CameraBasePosition => cameraBasePosition;
+
     private void Awake()
     {
         if (instance == null)
@@ -35,6 +41,9 @@ public class CameraManager : MonoBehaviour
 
         virtualCamera = GetComponentInChildren<CinemachineVirtualCamera>();
         noise = virtualCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+
+        // store the fixed base position for all camera moves
+        cameraBasePosition = transform.position;
     }
 
     private void Start()
@@ -42,7 +51,7 @@ public class CameraManager : MonoBehaviour
         player = FindObjectOfType<Player>();
     }
     //private void Update()
-    //{
+    //{ 
     //    if(Input.GetButtonDown("Jump"))
     //    {
     //        StartCoroutine(ShakeCoroutine());
@@ -107,13 +116,24 @@ public class CameraManager : MonoBehaviour
 
     public void MoveCamera(Vector3 moveDelta)
     {
-        StartCoroutine(MoveCameraRoutine(moveDelta));
+        // stop any ongoing camera move so we don't stack movements
+        if (moveCoroutine != null)
+        {
+            StopCoroutine(moveCoroutine);
+            moveCoroutine = null;
+        }
+
+        // always start from the fixed base position (cameraBasePosition)
+        moveCoroutine = StartCoroutine(MoveCameraRoutine(moveDelta));
     }
 
     IEnumerator MoveCameraRoutine(Vector3 moveDelta)
     {
-        Vector3 startPos = transform.position;
-        Vector3 targetPos = startPos + moveDelta;
+        // start from the fixed base position instead of current transform.position
+        Vector3 startPos = cameraBasePosition;
+        Vector3 targetPos = cameraBasePosition + moveDelta;
+
+        cameraBasePosition = targetPos;
 
         float elapsed = 0f;
 
@@ -129,5 +149,7 @@ public class CameraManager : MonoBehaviour
         }
 
         transform.position = targetPos;
+
+        moveCoroutine = null;
     }
 }

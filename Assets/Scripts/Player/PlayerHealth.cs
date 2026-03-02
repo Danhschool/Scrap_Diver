@@ -30,6 +30,8 @@ public class PlayerHealth : MonoBehaviour
         StartCoroutine(GamePlayManager.instance.SpeedToZere());
         Invoke(nameof(RunGameContinueToEnd), 2f);
 
+        AudioManager.instance.PlayExplosionSFX();
+
         StartCoroutine(DestroyRoutine(5));
     }
     public void SpawnSingleItem()

@@ -35,6 +35,10 @@ public class PageScroller : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
 
     Coroutine coroutine;
 
+    // Các biến hỗ trợ âm thanh
+    private bool isScrollingSoundPlaying = false;
+    //private float lastPosY;
+
     void Start()
     {
         if (viewportRect == null || contentPanel == null) return;
@@ -45,18 +49,20 @@ public class PageScroller : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
         GeneratePages();
 
         targetPosition = contentPanel.anchoredPosition;
+        //lastPosY = targetPosition.y;
 
         UpdateLevelStatusUI();
     }
 
     private void OnEnable()
     {
-        if(coroutine != null)
+        if (coroutine != null)
         {
             StopCoroutine(coroutine);
         }
         coroutine = StartCoroutine(SnapPage(DataManager.SelectedLevelIndex));
     }
+
     private void OnDisable()
     {
         currentLevelIndex = 0;
@@ -66,6 +72,13 @@ public class PageScroller : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
         contentPanel.anchoredPosition = targetPosition;
 
         UpdateLevelStatusUI();
+
+        // Ngắt âm thanh lập tức nếu UI đóng lại
+        if (isScrollingSoundPlaying)
+        {
+            AudioManager.instance.StopScrollSFX();
+            isScrollingSoundPlaying = false;
+        }
     }
 
     IEnumerator SnapPage(int page)
@@ -121,6 +134,12 @@ public class PageScroller : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
                 ref velocity,
                 smoothTime
             );
+
+            if (isScrollingSoundPlaying && Mathf.Abs(velocity.y) < 10f)
+            {
+                AudioManager.instance.StopScrollSFX();
+                isScrollingSoundPlaying = false;
+            }
         }
     }
 
@@ -129,6 +148,12 @@ public class PageScroller : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
         isDragging = true;
         dragStartY = contentPanel.anchoredPosition.y;
         startIndexOnDrag = currentLevelIndex;
+
+        if (!isScrollingSoundPlaying)
+        {
+            AudioManager.instance.PlayScrollSFX();
+            isScrollingSoundPlaying = true;
+        }
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -176,7 +201,7 @@ public class PageScroller : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
             currentLevelIndex = Mathf.RoundToInt(currentY / pageHeight);
         }
 
-        int maxAllowedIndex = Mathf.Min(DataManager.LevelPassed , pages.Count - 1);
+        int maxAllowedIndex = Mathf.Min(DataManager.LevelPassed, pages.Count - 1);
 
         currentLevelIndex = Mathf.Clamp(currentLevelIndex, 0, maxAllowedIndex);
 
@@ -198,23 +223,23 @@ public class PageScroller : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
 
         if (DataManager.CanPlayLevel(currentLevelIndex))
         {
-            
-            if(currentLevelIndex == DataManager.SelectedLevelIndex)
+
+            if (currentLevelIndex == DataManager.SelectedLevelIndex)
             {
                 statusText.text = "OKKKKK";
             }
-                else
-                {
-                    statusText.text = "OK";
+            else
+            {
+                statusText.text = "OK";
             }
         }
         else
         {
             int price = DataManager.GetLevelPrice(currentLevelIndex);
-            if (price <= DataManager.TotalCoin )
+            if (price <= DataManager.TotalCoin)
             {
                 statusText.text = price.ToString();
-                
+
             }
             else
             {

@@ -46,6 +46,8 @@ public class TransitionManager : MonoBehaviour
     {
         //GamePlayManager.instance.SetIsPlay(false);
 
+        AudioManager.instance.PlayTransitionSFX();
+
         yield return StartCoroutine(Flash(0.7f));
 
         isSpawningCircles = true;
@@ -63,6 +65,7 @@ public class TransitionManager : MonoBehaviour
             Destroy(child.gameObject);
         }
 
+        AudioManager.instance.StopTransitionSFX();
         whiteImage.SetActive(false);
         GamePlayManager.instance.SetIsPlay(true);
     }
