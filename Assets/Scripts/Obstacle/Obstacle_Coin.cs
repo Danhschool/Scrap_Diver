@@ -36,6 +36,8 @@ public class Obstacle_Coin : Obstacles
         isCollected = true;
 
         ObjectPool.instance.ReturnObject(gameObject);  
+
+        AudioManager.instance.PlayCoinSFX();
         //Destroy(gameObject);
     }
 

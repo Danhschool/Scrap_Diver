@@ -25,6 +25,8 @@ public static class Ui_Effect
         _isDown = true;
         _img.color = Color.gray;
 
+        AudioManager.instance.PlayClickSFX();
+
         //settingIcon.transform.position -= new Vector3(0, 10f, 0);
     }
     public static void OnClickExit(Image _img, MonoBehaviour _host,ref bool _isDown)

@@ -41,6 +41,9 @@ public class Main_UiManager : MonoBehaviour
     private Coroutine activeMoveCoroutine;
     private Coroutine startGame;
 
+    // background delay coroutine reference to prevent races
+    private Coroutine backgroundDelayCoroutine;
+
     public RectTransform Img => img;
 
     private void Awake()
@@ -55,14 +58,14 @@ public class Main_UiManager : MonoBehaviour
     }
 
 
-   
+
     #region Main Panels
 
     public void OnStartClick()
     {
         Debug.Log("OnStartClick");
 
-        
+
         DataManager.SelectedPlayerIndex = MainMenuManager.instance.SelectedIndex;
 
         if(startGame != null) StopCoroutine(startGame);
@@ -84,7 +87,7 @@ public class Main_UiManager : MonoBehaviour
     {
         //Debug.Log("OnSettingClick");
         Ui_Effect.OnClickExit(img,this,ref isDown);
-        
+
         GameObject setting_Panel = panels.Find(x => x.name == ("Setting_Panel"));
         Debug.Log(setting_Panel.name);
 
@@ -101,7 +104,7 @@ public class Main_UiManager : MonoBehaviour
 
         MainMenuManager.instance.StartShop();
 
-        StartCoroutine(Delay(.4f));
+        StartBackgroundDelay(.4f);
 
         MainMenuManager.instance.MoveUpRobot();
 
@@ -194,9 +197,9 @@ public class Main_UiManager : MonoBehaviour
 
             DataManager.SelectedPlayerIndex = index;
 
-            MainMenuManager.instance.MoveDownRobot();
+            //MainMenuManager.instance.MoveDownRobot();
             MainMenuManager.instance.StopShop();
-            MainMenuManager.instance.Background.SetActive(true);
+            ShowBackground();
 
             Ui_Effect.SwitchToPanel(main_Panel, panels);
         }
@@ -216,6 +219,7 @@ public class Main_UiManager : MonoBehaviour
                 {
                     StartCoroutine(ShakeUI(coinText, 0.5f, 10f));
                 }
+                AudioManager.instance.PlayWrongSFX();
             }
         }
     }
@@ -227,7 +231,7 @@ public class Main_UiManager : MonoBehaviour
         Debug.Log(main_Panel.name);
 
         MainMenuManager.instance.StopShop();
-        MainMenuManager.instance.Background.SetActive(true);
+        ShowBackground();
 
         if (activeMoveCoroutine != null) StopCoroutine(activeMoveCoroutine);
         activeMoveCoroutine = StartCoroutine(DelaySwitchPanel(main_Panel, panels));
@@ -265,7 +269,10 @@ public class Main_UiManager : MonoBehaviour
                 pageScroller.SnapToPage(index);
             }
             else
+            {
                 if(coinText != null) StartCoroutine(ShakeUI(coinText, 0.5f, 10f));
+                AudioManager.instance.PlayWrongSFX();
+            }
         }
 
     }
@@ -318,6 +325,8 @@ public class Main_UiManager : MonoBehaviour
     public void OnCoinIconClick()
     {
         coinIconAnimator.Play("Coin_Roll", 0, 0f);
+
+        AudioManager.instance.PlayCoinSFX();
     }
 
     public void OnClickDown(Image _img)
@@ -351,11 +360,35 @@ public class Main_UiManager : MonoBehaviour
         }
     }
 
+    private void StartBackgroundDelay(float delayTime)
+    {
+        if (backgroundDelayCoroutine != null)
+        {
+            StopCoroutine(backgroundDelayCoroutine);
+            backgroundDelayCoroutine = null;
+        }
+
+        backgroundDelayCoroutine = StartCoroutine(Delay(delayTime));
+    }
+
+    public void ShowBackground()
+    {
+        if (backgroundDelayCoroutine != null)
+        {
+            StopCoroutine(backgroundDelayCoroutine);
+            backgroundDelayCoroutine = null;
+        }
+
+        MainMenuManager.instance.Background.SetActive(true);
+    }
+
     IEnumerator Delay(float delayTime)
     {
         yield return new WaitForSeconds(delayTime);
 
         MainMenuManager.instance.Background.SetActive(false);
+
+        backgroundDelayCoroutine = null;
     }
     IEnumerator DelaySwitchPanel(GameObject targetPanel, List<GameObject> _panels)
     {
@@ -384,22 +417,20 @@ public class Main_UiManager : MonoBehaviour
     }
     private IEnumerator ShakeUI(TMP_Text target, float duration, float magnitude)
     {
-        Vector2 originalPos = target.rectTransform.anchoredPosition;
         float elapsed = 0.0f;
         target.color = Color.red;
 
         while (elapsed < duration)
         {
-            float x = originalPos.x + Random.Range(-1f, 1f) * magnitude;
-            float y = originalPos.y + Random.Range(-1f, 1f) * magnitude;
+            float x = Random.Range(-1f, 1f) * magnitude;
+            float y = Random.Range(-1f, 1f) * magnitude;
 
-            target.rectTransform.anchoredPosition = new Vector2(x, y);
+            target.rectTransform.localPosition = new Vector2(x, y);
             elapsed += Time.deltaTime;
-
             yield return null;
         }
 
         target.color = Color.white;
-        target.rectTransform.anchoredPosition = originalPos;
+        target.rectTransform.localPosition = Vector2.zero;
     }
 }

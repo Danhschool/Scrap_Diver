@@ -78,7 +78,10 @@ public class GamePlayManager : MonoBehaviour
         InitializeProgressBarLogic();
 
         EndlessManager.instance.ChangeTheme(DataManager.SelectedLevelIndex + 1);
-         
+
+        AudioManager.instance.PlayRandomBGM();
+        AudioManager.instance.PlayWindSFX();
+
         savedSpeed = gameSpeed;
 
         bestCoin = DataManager.BestTotalCoin;
@@ -105,7 +108,7 @@ public class GamePlayManager : MonoBehaviour
         UpdateDistance();
         UpdateTime();
 
-        if (Input.GetKeyDown(KeyCode.V)) Ingame_UiManager.instance.ShowChallengeComplete();
+        //if (Input.GetKeyDown(KeyCode.V)) Ingame_UiManager.instance.ShowChallengeComplete();
     }
     private void StartIndex()
     {
@@ -353,6 +356,9 @@ public class GamePlayManager : MonoBehaviour
     public IEnumerator Countdown(Action _onComplete = null)
     {
         int count = 3;
+
+        AudioManager.instance.PlayCountdownSFX();
+
         while (count > 0)
         {
             Ingame_UiManager.instance.UpdateCountdown(count.ToString(), true);

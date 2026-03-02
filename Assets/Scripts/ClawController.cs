@@ -24,6 +24,9 @@ public class ClawController : MonoBehaviour
 
     private Coroutine coroutine;
 
+    // Expose state so callers can avoid re-triggering an in-progress pull.
+    public bool IsBeingPulled => isBeingPulled;
+
     void Start()
     {
         if (transform.parent != null)
@@ -77,7 +80,15 @@ public class ClawController : MonoBehaviour
         Vector3 startParentPos = parentTransform.position;
         Vector3 targetParentPos = moveDelta;
 
-        if (coroutine != null) StopCoroutine(coroutine);
+        // If a previous pull coroutine exists, stop it and ensure its SFX is stopped
+        if (coroutine != null)
+        {
+            StopCoroutine(coroutine);
+            coroutine = null;
+            if (AudioManager.instance != null)
+                AudioManager.instance.StopGearSFX();
+        }
+
         coroutine = StartCoroutine(PullSequence(startParentPos, targetParentPos));
     }
 
@@ -88,6 +99,9 @@ public class ClawController : MonoBehaviour
         childRb.interpolation = RigidbodyInterpolation.None;
 
         float elapsed = 0f;
+
+        if (AudioManager.instance != null)
+            AudioManager.instance.PlayGearSFX();
 
         while (elapsed < pullDuration)
         {
@@ -100,10 +114,15 @@ public class ClawController : MonoBehaviour
             yield return null;
         }
 
+        if (AudioManager.instance != null)
+            AudioManager.instance.StopGearSFX();
+
         parentTransform.position = endPos;
 
         swayTimer = 0f;
         childRb.interpolation = RigidbodyInterpolation.Interpolate;
         isBeingPulled = false;
+
+        coroutine = null;
     }
 }
