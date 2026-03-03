@@ -114,7 +114,6 @@ public class GamePlayManager : MonoBehaviour
     {
         currentTime = 0;
         currentDistance = DataManager.GetStartDistance(indexOfLevel);
-        Debug.Log($"Start Distance: {currentDistance}");
         //isPlaying = false;
     }
 
@@ -139,8 +138,8 @@ public class GamePlayManager : MonoBehaviour
         gameSpeed = 0;
         Time.timeScale = 0;
 
-        Ingame_UiManager.instance.UpdateProgressCoinText(totalCoin, DataManager.ChallengeCoin);
-        Ingame_UiManager.instance.UpdateProgressTimeText(CurentTime, DataManager.ChallengeTime);
+        //Ingame_UiManager.instance.UpdateProgressCoinText(totalCoin, DataManager.ChallengeCoin);
+        //Ingame_UiManager.instance.UpdateProgressTimeText(CurentTime, DataManager.ChallengeTime);
     }
     public void ContinueWithCoin()
     {

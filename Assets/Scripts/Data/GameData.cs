@@ -15,6 +15,8 @@ public class GameData
     public int selectedLevelIndex = 0;
     public int levelPassed = 0;
 
+    public int languagePref = 1;
+
     public bool isFirstTime = true;
 
     public List<string> unlockedCharacters = new List<string>();

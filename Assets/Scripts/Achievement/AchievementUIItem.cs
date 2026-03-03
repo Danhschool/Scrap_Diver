@@ -37,7 +37,15 @@ public class AchievementUIItem : MonoBehaviour
 
         AchievementStage displayStage = data.stages[displayIndex];
 
-        descriptionText.text = string.Format(data.descriptionTemplate, displayStage.targetValue);
+        //descriptionText.text = string.Format(data.descriptionTemplate, displayStage.targetValue);
+        string localizedTemplate = data.descriptionTemplate;
+        if (LanguageManager.Instance != null)
+        {
+            localizedTemplate = LanguageManager.Instance.GetText(data.descriptionTemplate);
+        }
+
+        descriptionText.text = string.Format(localizedTemplate, displayStage.targetValue);
+
         rewardText.text = displayStage.rewardCoins.ToString();
 
         if (currentLv >= data.stages.Count && !isReady)

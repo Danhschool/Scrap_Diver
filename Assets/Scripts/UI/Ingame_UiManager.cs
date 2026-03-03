@@ -55,6 +55,13 @@ public class Ingame_UiManager : MonoBehaviour
     [SerializeField] private TMP_Text coin_Endtxt;
     [SerializeField] private TMP_Text bestCoin_Endtxt;
 
+    [Header("Setting Panel")]
+    [SerializeField] private GameObject setting_Panel;
+    [SerializeField] private Sprite[] music_Sprites;
+    [SerializeField] private Sprite[] sound_Sprites;
+    [SerializeField] private Image music_Icon;
+    [SerializeField] private Image sound_Icon;
+
     [Header("Achievement Notification")]
     [SerializeField] private CanvasGroup challengePopup;
 
@@ -106,8 +113,55 @@ public class Ingame_UiManager : MonoBehaviour
 
     public void OnSettingClick(Image _img)
     {
-        Debug.Log("qqq");
         Ui_Effect.OnClickExit(_img, this, ref isDown);
+
+        int levelIndex = (int)VolumeController.instance.CurrentSFXLevel;
+        sound_Icon.sprite = sound_Sprites[levelIndex];
+
+        int index = (int)VolumeController.instance.CurrentBGMLevel;
+        music_Icon.sprite = music_Sprites[index];
+
+        pause_Panel.SetActive(false);
+        setting_Panel.SetActive(true);
+    }
+
+    public void OnSoundClick(Image img)
+    {
+        Ui_Effect.OnClickExit(img, this, ref isDown);
+
+        VolumeController.instance.ToggleSFX();
+
+        int levelIndex = (int)VolumeController.instance.CurrentSFXLevel;
+        sound_Icon.sprite = sound_Sprites[levelIndex];
+    }
+    public void OnMusicClick(Image img)
+    {
+        Ui_Effect.OnClickExit(img, this, ref isDown);
+
+        VolumeController.instance.ToggleBGM();
+
+        int levelIndex = (int)VolumeController.instance.CurrentBGMLevel;
+        music_Icon.sprite = music_Sprites[levelIndex];
+    }
+    public void OnCreditClick(Image img)
+    {
+        Ui_Effect.OnClickExit(img, this, ref isDown);
+    }
+    public void OnLanguageClick(Image img)
+    {
+        Ui_Effect.OnClickExit(img, this, ref isDown);
+
+        if (LanguageManager.Instance != null)
+        {
+            LanguageManager.Instance.NextLanguage();
+        }
+    }
+    public void OnSettingBackClick(Image img)
+    {
+        Ui_Effect.OnClickExit(img, this, ref isDown);
+
+        pause_Panel.SetActive(true);
+        setting_Panel.SetActive(false);
     }
     public void OnMainClick(Image _img)
     {
@@ -172,17 +226,47 @@ public class Ingame_UiManager : MonoBehaviour
 
         foreach (var data in listData)
         {
-            if (data.id == "coin" || data.id == "time")
+            if (data.id != "coin" && data.id != "time") continue;
+
+            int currentLevel = DataManager.GetAchievementLevel(data.id);
+            int displayIndex = currentLevel >= data.stages.Count ? data.stages.Count - 1 : currentLevel;
+            float targetValue = data.stages[displayIndex].targetValue;
+            bool isComplete = currentLevel >= data.stages.Count;
+
+            string currentValue = "";
+            string descKey = "";
+            string defaultDesc = "";
+            TMPro.TMP_Text progressTxt = null;
+            TMPro.TMP_Text explainTxt = null;
+
+            if (data.id == "coin")
             {
-                string achCoinValue = data.stages[DataManager.GetAchievementLevel("coin")].targetValue.ToString();
-                string achTimeValue = data.stages[DataManager.GetAchievementLevel("time")].targetValue.ToString();
-                progress_Coin_Txt.text = GamePlayManager.instance.TotalCoin.ToString() + "/" + achCoinValue;
-                explain_Coin_Txt.text = "EARN " + achCoinValue + " COIN IN A SINGLE RUN";
-                progress_Time_Txt.text = GamePlayManager.instance.CurentTime.ToString() + "/" + achTimeValue;
-                explain_Time_Txt.text = "FLY FOR " + achTimeValue + " IN A SINGLE RUN";
+                currentValue = GamePlayManager.instance.TotalCoin.ToString();
+                descKey = "ach_desc_coin";
+                defaultDesc = "EARN {0} COIN IN A SINGLE RUN";
+                progressTxt = progress_Coin_Txt;
+                explainTxt = explain_Coin_Txt;
+            }
+            else if (data.id == "time")
+            {
+                currentValue = GamePlayManager.instance.CurentTime.ToString();
+                descKey = "ach_desc_time";
+                defaultDesc = "FLY FOR {0}s IN A SINGLE RUN";
+                progressTxt = progress_Time_Txt;
+                explainTxt = explain_Time_Txt;
             }
 
-           
+            if (isComplete)
+            {
+                progressTxt.text = LanguageManager.Instance != null ? LanguageManager.Instance.GetText("ach_complete") : "COMPLETE";
+            }
+            else
+            {
+                progressTxt.text = currentValue + "/" + targetValue.ToString();
+            }
+
+            string localizedTemplate = LanguageManager.Instance != null ? LanguageManager.Instance.GetText(descKey) : defaultDesc;
+            explainTxt.text = string.Format(localizedTemplate, targetValue);
         }
     }
     public void UpdateContinueWithCoin(bool _isOK)
@@ -191,17 +275,17 @@ public class Ingame_UiManager : MonoBehaviour
         else continueWithCoin.color = Color.red;
     }
     public void UpdateContinueWithCoin_Txt(int _value) => continueWithCoin_txt.text = "Coin: " + _value.ToString();
-    public void UpdateProgressCoinText(float _currentValue, float _maxValue)
-    {
-        progress_Coin_Txt.text = _currentValue.ToString() + "/" + _maxValue.ToString();
-        explain_Coin_Txt.text = "EARN " + _maxValue + " COIN IN A SINGLE RUN";
+    //public void UpdateProgressCoinText(float _currentValue, float _maxValue)
+    //{
+    //    progress_Coin_Txt.text = _currentValue.ToString() + "/" + _maxValue.ToString();
+    //    explain_Coin_Txt.text = "EARN " + _maxValue + " COIN IN A SINGLE RUN";
 
-    } 
-    public void UpdateProgressTimeText(float _currentValue, float _maxValue)
-    {
-        progress_Time_Txt.text = _currentValue.ToString() + "/" + _maxValue.ToString() ;
-        explain_Time_Txt.text = "FLY FOR " + _maxValue + " IN A SINGLE RUN";
-    }
+    //} 
+    //public void UpdateProgressTimeText(float _currentValue, float _maxValue)
+    //{
+    //    progress_Time_Txt.text = _currentValue.ToString() + "/" + _maxValue.ToString() ;
+    //    explain_Time_Txt.text = "FLY FOR " + _maxValue + " IN A SINGLE RUN";
+    //}
     public void UpdateFillContinueBar(float _currentValue,float _maxValue) => fillContinueBar.fillAmount = _currentValue / _maxValue;
     public void UpdateFillProgressBar(float _currentValue , float _maxValue) => fillProgressBar.fillAmount = _currentValue / _maxValue;
     public void UpdateCountdown(string _text, bool _isActive)
@@ -225,33 +309,47 @@ public class Ingame_UiManager : MonoBehaviour
     public void UpdateDistance_EndTxt(float _value)
     {
         distance_Endtxt.text = _value.ToString() + "m";
-        if (DataManager.BestDistance > _value) bestDis_Endtxt.text = "Best: " + DataManager.BestDistance;
+        if (DataManager.BestDistance > _value)
+        {
+            string localizedTemplate = LanguageManager.Instance != null ? LanguageManager.Instance.GetText("ui_best_format") : "Best: {0}";
+            bestDis_Endtxt.text = string.Format(localizedTemplate, DataManager.BestDistance);
+        }
         else
         {
             distance_Endtxt.color = Color.yellow;
-            bestDis_Endtxt.text = "New Best!";
+            bestDis_Endtxt.text = LanguageManager.Instance != null ? LanguageManager.Instance.GetText("ui_new_best") : "New Best!";
             bestDis_Endtxt.color = Color.yellow;
         }
     }
+
     public void UpdateTime_Endtxt(float _value)
     {
         time_Endtxt.text = _value.ToString() + "s";
-        if (DataManager.BestTime > _value) bestTime_Endtxt.text = "Best: " + DataManager.BestTime;
+        if (DataManager.BestTime > _value)
+        {
+            string localizedTemplate = LanguageManager.Instance != null ? LanguageManager.Instance.GetText("ui_best_format") : "Best: {0}";
+            bestTime_Endtxt.text = string.Format(localizedTemplate, DataManager.BestTime);
+        }
         else
         {
             time_Endtxt.color = Color.yellow;
-            bestTime_Endtxt.text = "New Best!";
+            bestTime_Endtxt.text = LanguageManager.Instance != null ? LanguageManager.Instance.GetText("ui_new_best") : "New Best!";
             bestTime_Endtxt.color = Color.yellow;
         }
     }
+
     public void UpdateCoin_Endtxt(float _value)
     {
-        coin_Endtxt.text = _value.ToString() + "";
-        if (DataManager.BestTotalCoin > _value) bestCoin_Endtxt.text = "Best: " + DataManager.BestTotalCoin;
+        coin_Endtxt.text = _value.ToString();
+        if (DataManager.BestTotalCoin > _value)
+        {
+            string localizedTemplate = LanguageManager.Instance != null ? LanguageManager.Instance.GetText("ui_best_format") : "Best: {0}";
+            bestCoin_Endtxt.text = string.Format(localizedTemplate, DataManager.BestTotalCoin);
+        }
         else
         {
             coin_Endtxt.color = Color.yellow;
-            bestCoin_Endtxt.text = "New Best!";
+            bestCoin_Endtxt.text = LanguageManager.Instance != null ? LanguageManager.Instance.GetText("ui_new_best") : "New Best!";
             bestCoin_Endtxt.color = Color.yellow;
         }
     }
@@ -294,8 +392,6 @@ public class Ingame_UiManager : MonoBehaviour
         int targetLevel = DataManager.LevelPassed + 1;
 
         int totalSegments = targetLevel - startLevel + 1;
-
-        Debug.Log($"Start Level: {startLevel}, Target Level: {targetLevel}, Total Segments: {totalSegments}");
 
         foreach (Transform child in mark_Container) Destroy(child.gameObject);
 

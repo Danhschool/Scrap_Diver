@@ -97,6 +97,10 @@ public class AudioManager : MonoBehaviour
     {
         PlaySFX(wind);
     }
+    public void StopWindSFX()
+    {
+        wind.Stop();
+    }
     public void PlaySFX(AudioClip clip)
     {
         if (clip == null || sfx.Length == 0) return;
