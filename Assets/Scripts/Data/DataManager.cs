@@ -351,6 +351,17 @@ public static class DataManager
         return 0;
     }
 
+    public static int LanguagePref
+    {
+        get => currentData.languagePref;
+        set
+        {
+            if (value == currentData.languagePref) return;
+            currentData.languagePref = value;
+            SaveToDisk();
+        }
+    }
+
     #region code old
     //public static int BestDistance
     //{

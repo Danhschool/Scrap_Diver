@@ -1,0 +1,34 @@
+{
+  "items": [
+    { "key": "ui_start", "vi": "BAT DAU", "en": "CLICK TO START" },
+    { "key": "ui_continue", "vi": "TIEP TUC?", "en": "CONTINUE?" },
+    { "key": "ui_game_over", "vi": "KET THUC", "en": "GAME OVER" },
+    { "key": "ui_best", "vi": "TỐT NHẤT:", "en": "BEST:" },
+    { "key": "ui_language", "vi": "NGÔN NGỮ", "en": "LANGUAGE" },
+    { "key": "ui_credits", "vi": "TÁC GIẢ", "en": "CREDITS" },
+
+    { "key": "ui_claim", "vi": "NHAN", "en": "CLAIM" },
+    
+    { "key": "robot_adv_1", "vi": "NGHÈO & HY VỌNG", "en": "poor and hopeful" },
+    { "key": "robot_adv_2", "vi": "DI CHUYỂN NHANH", "en": "quick maneuvering" },
+    { "key": "robot_disadv_2", "vi": "RƠI NHANH", "en": "fast fall" },
+    { "key": "robot_adv_3", "vi": "CỨNG CÁP", "en": "tough" },
+    { "key": "robot_disadv_3", "vi": "DI CHUYỂN CHẬM", "en": "slow maneuvering" },
+
+    { "key": "chall_complete", "vi": "HOAN THANH THU THACH", "en": "CHALLENGE COMPLETE" },
+
+    { "key": "ui_best_format", "vi": "TỐT NHẤT: {0}", "en": "BEST: {0}" },
+    { "key": "ui_new_best", "vi": "KỶ LỤC MỚI!", "en": "NEW BEST!" },
+
+    { "key": "ach_complete", "vi": "HOAN THANH", "en": "COMPLETE" },
+
+    { "key": "ach_title_coin", "vi": "Đồng xu", "en": "coin" },
+    { "key": "ach_desc_coin", "vi": "KIẾM {0} XU TRONG 1 LẦN", "en": "EARN {0} COIN IN A SINGLE RUN" },
+    { "key": "ach_title_stage", "vi": "Màn chơi", "en": "stage" },
+    { "key": "ach_desc_stage", "vi": "HOÀN THÀNH MÀN {0}", "en": "FINISH STAGE {0}" },
+    { "key": "ach_title_time", "vi": "Thời gian", "en": "time" },
+    { "key": "ach_desc_time", "vi": "BAY TRONG {0}s TRONG 1 LẦN", "en": "FLY FOR {0}s IN A SINGLE RUN" },
+    { "key": "ach_title_unlock", "vi": "Mở khóa", "en": "unlock" },
+    { "key": "ach_desc_unlock", "vi": "MỞ KHÓA {0} ROBOT", "en": "UNLOCK {0} ROBOTS" }
+  ]
+}

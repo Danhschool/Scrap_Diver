@@ -31,6 +31,12 @@ public class Main_UiManager : MonoBehaviour
     public Transform contentPanel;
     public GameObject itemPrefab;
 
+    [Header("Setting")]
+    [SerializeField] private Sprite[] music_Sprites;
+    [SerializeField] private Sprite[] sound_Sprites;
+    [SerializeField] private Image music_Icon;
+    [SerializeField] private Image sound_Icon;
+
     [Header("Exclamation")]
     [SerializeField] private GameObject exclamation;
 
@@ -56,16 +62,43 @@ public class Main_UiManager : MonoBehaviour
             coinIconAnimator = GetComponentInChildren<Animator>();
         }
     }
+    private void OnEnable()
+    {
+        LanguageManager.OnLanguageChanged += RefreshLocalizedUI;
+    }
 
+    private void OnDisable()
+    {
+        LanguageManager.OnLanguageChanged -= RefreshLocalizedUI;
+    }
+    private void RefreshLocalizedUI()
+    {
+        if (MainMenuManager.instance != null && advantage_Txt != null && disadvantage_Txt != null)
+        {
+            int index = MainMenuManager.instance.SelectedIndex;
+            if (index >= 0 && index < MainMenuManager.instance.RobotList.Length)
+            {
+                var data = MainMenuManager.instance.RobotList[index];
+                if (data.isUnlocked)
+                {
+                    UpdateAdvantageText(data.advantage);
+                    UpdateDisadvantageText(data.disadvantage);
+                }
+            }
+        }
+
+        GameObject challenge_Panel = panels.Find(x => x.name == ("Challenge_Panel"));
+        if (challenge_Panel != null && challenge_Panel.activeInHierarchy)
+        {
+            GenerateListChallenge();
+        }
+    }
 
 
     #region Main Panels
 
     public void OnStartClick()
     {
-        Debug.Log("OnStartClick");
-
-
         DataManager.SelectedPlayerIndex = MainMenuManager.instance.SelectedIndex;
 
         if(startGame != null) StopCoroutine(startGame);
@@ -90,6 +123,12 @@ public class Main_UiManager : MonoBehaviour
 
         GameObject setting_Panel = panels.Find(x => x.name == ("Setting_Panel"));
         Debug.Log(setting_Panel.name);
+
+        int levelIndex = (int)VolumeController.instance.CurrentSFXLevel;
+        sound_Icon.sprite = sound_Sprites[levelIndex];
+
+        int index = (int)VolumeController.instance.CurrentBGMLevel;
+        music_Icon.sprite = music_Sprites[index];
 
         Ui_Effect.SwitchToPanel(setting_Panel, panels);
     }
@@ -146,11 +185,21 @@ public class Main_UiManager : MonoBehaviour
     {
         Ui_Effect.OnClickExit(img, this, ref isDown);
         Debug.Log("OnSoundClick");
+
+        VolumeController.instance.ToggleSFX();
+
+        int levelIndex = (int)VolumeController.instance.CurrentSFXLevel;
+        sound_Icon.sprite = sound_Sprites[levelIndex];
     }
     public void OnMusicClick(Image img)
     {
         Ui_Effect.OnClickExit(img, this,   ref isDown);
         Debug.Log("OnMusicClick");
+
+        VolumeController.instance.ToggleBGM();
+
+        int levelIndex = (int)VolumeController.instance.CurrentBGMLevel;
+        music_Icon.sprite = music_Sprites[levelIndex];
     }
     public void OnCreditClick(Image img)
     {
@@ -161,6 +210,19 @@ public class Main_UiManager : MonoBehaviour
     {
         Ui_Effect.OnClickExit(img, this, ref isDown);
         Debug.Log("OnLanguageClick");
+
+        if (LanguageManager.Instance != null)
+        {
+            LanguageManager.Instance.NextLanguage();
+        }
+    }
+    public void OnSettingBackClick(Image img)
+    {
+        Ui_Effect.OnClickExit(img, this, ref isDown);
+
+        GameObject main_Panel = panels.Find(x => x.name == ("Main_Panel"));
+        Debug.Log(main_Panel.name);
+        Ui_Effect.SwitchToPanel(main_Panel, panels);
     }
 
 
@@ -189,8 +251,11 @@ public class Main_UiManager : MonoBehaviour
 
         if(data.isUnlocked)
         {
-            advantage_Txt.text = data.advantage;
-            disadvantage_Txt.text = data.disadvantage;
+            //advantage_Txt.text = data.advantage;
+            //disadvantage_Txt.text = data.disadvantage;
+
+            advantage_Txt.text = LanguageManager.Instance.GetText(data.advantage);
+            disadvantage_Txt.text = LanguageManager.Instance.GetText(data.disadvantage);
 
             GameObject main_Panel = panels.Find(x => x.name == ("Main_Panel"));
             Debug.Log(main_Panel.name);
@@ -308,12 +373,14 @@ public class Main_UiManager : MonoBehaviour
     public void UpdateAdvantageText(string _value) 
     { 
         advantage_Txt.color = Color.yellow;
-        advantage_Txt.text = _value; 
+        //advantage_Txt.text = _value; 
+        advantage_Txt.text = LanguageManager.Instance.GetText(_value);
     }
     public void UpdateDisadvantageText(string _value)
     {
         disadvantage_Txt.color = Color.red;
-        disadvantage_Txt.text = _value;
+        //disadvantage_Txt.text = _value;
+        disadvantage_Txt.text = LanguageManager.Instance.GetText(_value);
     }
     public void UpdateSelectButtonText(string _value) => selectButtonText.text = _value;
 

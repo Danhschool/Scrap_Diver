@@ -220,6 +220,7 @@ GameObject:
   - component: {fileID: 7285638360072638464}
   - component: {fileID: 2101450058259475758}
   - component: {fileID: 1165518623968757206}
+  - component: {fileID: 5724293634335743152}
   m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -343,6 +344,19 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &5724293634335743152
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3696333856943937413}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa0a6327e668dc747817b0c1862d2daf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  key: ui_claim
 --- !u!1 &4543639359769703332
 GameObject:
   m_ObjectHideFlags: 0
@@ -557,6 +571,7 @@ GameObject:
   - component: {fileID: 8304515248607219222}
   - component: {fileID: 4270312684033899735}
   - component: {fileID: 6637106679493436471}
+  - component: {fileID: 7292954200565528746}
   m_Layer: 5
   m_Name: completeText
   m_TagString: Untagged
@@ -581,7 +596,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -40}
-  m_SizeDelta: {x: 200, y: 50}
+  m_SizeDelta: {x: 400, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4270312684033899735
 CanvasRenderer:
@@ -682,6 +697,19 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &7292954200565528746
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9059830669393911200}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa0a6327e668dc747817b0c1862d2daf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  key: ach_complete
 --- !u!1 &9067926349864321963
 GameObject:
   m_ObjectHideFlags: 0

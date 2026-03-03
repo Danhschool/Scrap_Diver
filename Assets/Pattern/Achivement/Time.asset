@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Time
   m_EditorClassIdentifier: 
   id: time
-  title: time
-  descriptionTemplate: FLY FOR {0}s IN A SINGLE RUN
+  title: ach_title_time
+  descriptionTemplate: ach_desc_time
   icon: {fileID: 21300000, guid: bc4c0279ec3efbd439dfedb146c898c3, type: 3}
   condition: {fileID: 11400000, guid: 37b2e870eb8bdd64697df7cc08fa1e49, type: 2}
   isRobotSpecific: 0

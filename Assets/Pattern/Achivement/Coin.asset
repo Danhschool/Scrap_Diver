@@ -13,10 +13,8 @@ MonoBehaviour:
   m_Name: Coin
   m_EditorClassIdentifier: 
   id: coin
-  title: coin
-  descriptionTemplate: 'EARN {0} COIN IN A SINGLE RUN
-
-'
+  title: ach_title_coin
+  descriptionTemplate: ach_desc_coin
   icon: {fileID: 21300000, guid: 7ecb5fa4c5f4baa48969fe038f09baec, type: 3}
   condition: {fileID: 11400000, guid: 3af40dfd4ed92de46855948f0dc74d4a, type: 2}
   isRobotSpecific: 0

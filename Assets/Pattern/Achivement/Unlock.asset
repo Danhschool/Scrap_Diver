@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Unlock
   m_EditorClassIdentifier: 
   id: unlock
-  title: unlock
-  descriptionTemplate: UNLOCK {0} ROBOTS
+  title: ach_title_unlock
+  descriptionTemplate: ach_desc_unlock
   icon: {fileID: 0}
   condition: {fileID: 11400000, guid: bd359077781fefb4891a87af23f52648, type: 2}
   isRobotSpecific: 0

@@ -796,6 +796,7 @@ GameObject:
   - component: {fileID: 206717180}
   - component: {fileID: 206717179}
   - component: {fileID: 206717178}
+  - component: {fileID: 206717181}
   m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -934,6 +935,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 206717176}
   m_CullTransparentMesh: 1
+--- !u!114 &206717181
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 206717176}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa0a6327e668dc747817b0c1862d2daf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  key: ui_game_over
 --- !u!1 &216555289
 GameObject:
   m_ObjectHideFlags: 0
@@ -2057,8 +2071,8 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: Main_UiManager, Assembly-CSharp
+        - m_Target: {fileID: 1502773132}
+          m_TargetAssemblyTypeName: Ingame_UiManager, Assembly-CSharp
           m_MethodName: OnClickDown
           m_Mode: 2
           m_Arguments:
@@ -2073,12 +2087,12 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: Main_UiManager, Assembly-CSharp
+        - m_Target: {fileID: 1502773132}
+          m_TargetAssemblyTypeName: Ingame_UiManager, Assembly-CSharp
           m_MethodName: OnClickExit
           m_Mode: 2
           m_Arguments:
-            m_ObjectArgument: {fileID: 922435332}
+            m_ObjectArgument: {fileID: 1500624594}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.Image, UnityEngine.UI
             m_IntArgument: 0
             m_FloatArgument: 0
@@ -2089,8 +2103,8 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: Main_UiManager, Assembly-CSharp
+        - m_Target: {fileID: 1502773132}
+          m_TargetAssemblyTypeName: Ingame_UiManager, Assembly-CSharp
           m_MethodName: OnLanguageClick
           m_Mode: 2
           m_Arguments:
@@ -4062,6 +4076,7 @@ GameObject:
   - component: {fileID: 617408836}
   - component: {fileID: 617408838}
   - component: {fileID: 617408837}
+  - component: {fileID: 617408839}
   m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -4085,8 +4100,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -90}
+  m_SizeDelta: {x: 0, y: -180}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &617408837
 MonoBehaviour:
@@ -4117,8 +4132,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4281479730
-  m_fontColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -4185,6 +4200,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 617408835}
   m_CullTransparentMesh: 1
+--- !u!114 &617408839
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 617408835}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa0a6327e668dc747817b0c1862d2daf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  key: ui_credits
 --- !u!1001 &617873522
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4583,8 +4611,8 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: Main_UiManager, Assembly-CSharp
+        - m_Target: {fileID: 1502773132}
+          m_TargetAssemblyTypeName: Ingame_UiManager, Assembly-CSharp
           m_MethodName: OnClickDown
           m_Mode: 2
           m_Arguments:
@@ -4599,8 +4627,8 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: Main_UiManager, Assembly-CSharp
+        - m_Target: {fileID: 1502773132}
+          m_TargetAssemblyTypeName: Ingame_UiManager, Assembly-CSharp
           m_MethodName: OnClickExit
           m_Mode: 2
           m_Arguments:
@@ -4615,8 +4643,8 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: Main_UiManager, Assembly-CSharp
+        - m_Target: {fileID: 1502773132}
+          m_TargetAssemblyTypeName: Ingame_UiManager, Assembly-CSharp
           m_MethodName: OnCreditClick
           m_Mode: 2
           m_Arguments:
@@ -7220,8 +7248,8 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: Main_UiManager, Assembly-CSharp
+        - m_Target: {fileID: 1502773132}
+          m_TargetAssemblyTypeName: Ingame_UiManager, Assembly-CSharp
           m_MethodName: OnClickDown
           m_Mode: 2
           m_Arguments:
@@ -7236,8 +7264,8 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: Main_UiManager, Assembly-CSharp
+        - m_Target: {fileID: 1502773132}
+          m_TargetAssemblyTypeName: Ingame_UiManager, Assembly-CSharp
           m_MethodName: OnClickExit
           m_Mode: 2
           m_Arguments:
@@ -7252,8 +7280,8 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: Main_UiManager, Assembly-CSharp
+        - m_Target: {fileID: 1502773132}
+          m_TargetAssemblyTypeName: Ingame_UiManager, Assembly-CSharp
           m_MethodName: OnMusicClick
           m_Mode: 2
           m_Arguments:
@@ -7403,6 +7431,7 @@ GameObject:
   - component: {fileID: 1091924296}
   - component: {fileID: 1091924298}
   - component: {fileID: 1091924297}
+  - component: {fileID: 1091924299}
   m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -7526,6 +7555,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1091924295}
   m_CullTransparentMesh: 1
+--- !u!114 &1091924299
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1091924295}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa0a6327e668dc747817b0c1862d2daf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  key: chall_complete
 --- !u!1 &1102155210
 GameObject:
   m_ObjectHideFlags: 0
@@ -7689,6 +7731,7 @@ GameObject:
   - component: {fileID: 1125804710}
   - component: {fileID: 1125804709}
   - component: {fileID: 1125804708}
+  - component: {fileID: 1125804711}
   m_Layer: 5
   m_Name: Continue_Txt
   m_TagString: Untagged
@@ -7827,6 +7870,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1125804706}
   m_CullTransparentMesh: 1
+--- !u!114 &1125804711
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1125804706}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa0a6327e668dc747817b0c1862d2daf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  key: ui_continue
 --- !u!1 &1229268476
 GameObject:
   m_ObjectHideFlags: 0
@@ -8848,6 +8904,7 @@ GameObject:
   - component: {fileID: 1390292595}
   - component: {fileID: 1390292597}
   - component: {fileID: 1390292596}
+  - component: {fileID: 1390292598}
   m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -8871,8 +8928,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -89.99999}
+  m_SizeDelta: {x: 0, y: -180}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1390292596
 MonoBehaviour:
@@ -8905,8 +8962,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4281479730
-  m_fontColor: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+    rgba: 4294243583
+  m_fontColor: {r: 1, g: 0.95660377, b: 0.95660377, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -8973,6 +9030,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1390292594}
   m_CullTransparentMesh: 1
+--- !u!114 &1390292598
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1390292594}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa0a6327e668dc747817b0c1862d2daf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  key: ui_language
 --- !u!1 &1417420121
 GameObject:
   m_ObjectHideFlags: 0
@@ -9847,6 +9917,17 @@ MonoBehaviour:
   bestTime_Endtxt: {fileID: 426072781}
   coin_Endtxt: {fileID: 313614064}
   bestCoin_Endtxt: {fileID: 1958189507}
+  setting_Panel: {fileID: 1354412773}
+  music_Sprites:
+  - {fileID: -2043792109, guid: e7f2602e6cbd83147b876b839317cdfa, type: 3}
+  - {fileID: -925316565, guid: e7f2602e6cbd83147b876b839317cdfa, type: 3}
+  - {fileID: -1615553936, guid: e7f2602e6cbd83147b876b839317cdfa, type: 3}
+  sound_Sprites:
+  - {fileID: 1113538146, guid: e7f2602e6cbd83147b876b839317cdfa, type: 3}
+  - {fileID: 961335573, guid: e7f2602e6cbd83147b876b839317cdfa, type: 3}
+  - {fileID: -1659639095, guid: e7f2602e6cbd83147b876b839317cdfa, type: 3}
+  music_Icon: {fileID: 922435332}
+  sound_Icon: {fileID: 433213137}
   challengePopup: {fileID: 1940439213}
 --- !u!1 &1504014660
 GameObject:
@@ -10184,8 +10265,8 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: Main_UiManager, Assembly-CSharp
+        - m_Target: {fileID: 1502773132}
+          m_TargetAssemblyTypeName: Ingame_UiManager, Assembly-CSharp
           m_MethodName: OnClickDown
           m_Mode: 2
           m_Arguments:
@@ -10200,8 +10281,8 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: Main_UiManager, Assembly-CSharp
+        - m_Target: {fileID: 1502773132}
+          m_TargetAssemblyTypeName: Ingame_UiManager, Assembly-CSharp
           m_MethodName: OnClickExit
           m_Mode: 2
           m_Arguments:
@@ -10216,8 +10297,8 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: Main_UiManager, Assembly-CSharp
+        - m_Target: {fileID: 1502773132}
+          m_TargetAssemblyTypeName: Ingame_UiManager, Assembly-CSharp
           m_MethodName: OnSoundClick
           m_Mode: 2
           m_Arguments:
@@ -11056,6 +11137,7 @@ GameObject:
   - component: {fileID: 1760563170}
   - component: {fileID: 1760563169}
   - component: {fileID: 1760563168}
+  - component: {fileID: 1760563171}
   m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -11194,6 +11276,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1760563166}
   m_CullTransparentMesh: 1
+--- !u!114 &1760563171
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1760563166}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa0a6327e668dc747817b0c1862d2daf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  key: ui_start
 --- !u!1 &1769557471
 GameObject:
   m_ObjectHideFlags: 0
@@ -11498,8 +11593,8 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: Main_UiManager, Assembly-CSharp
+        - m_Target: {fileID: 1502773132}
+          m_TargetAssemblyTypeName: Ingame_UiManager, Assembly-CSharp
           m_MethodName: OnClickDown
           m_Mode: 2
           m_Arguments:
@@ -11514,8 +11609,8 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: Main_UiManager, Assembly-CSharp
+        - m_Target: {fileID: 1502773132}
+          m_TargetAssemblyTypeName: Ingame_UiManager, Assembly-CSharp
           m_MethodName: OnClickExit
           m_Mode: 2
           m_Arguments:
@@ -11530,9 +11625,9 @@ MonoBehaviour:
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 0}
-          m_TargetAssemblyTypeName: Main_UiManager, Assembly-CSharp
-          m_MethodName: OnBackClick
+        - m_Target: {fileID: 1502773132}
+          m_TargetAssemblyTypeName: Ingame_UiManager, Assembly-CSharp
+          m_MethodName: OnSettingBackClick
           m_Mode: 2
           m_Arguments:
             m_ObjectArgument: {fileID: 131386091}

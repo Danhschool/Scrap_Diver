@@ -94,6 +94,7 @@ public class MainMenuManager : MonoBehaviour
         SetState(false);
 
         AudioManager.instance.PlayRandomBGM();
+        AudioManager.instance.StopWindSFX();
 
         Main_UiManager.instance.UpdateCoinText();
     }
