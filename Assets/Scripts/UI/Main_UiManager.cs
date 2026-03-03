@@ -104,6 +104,8 @@ public class Main_UiManager : MonoBehaviour
         if(startGame != null) StopCoroutine(startGame);
         startGame = StartCoroutine(TransAnimStart());
 
+        AudioManager.instance.PlayOpenDoorSFX();
+
         //Invoke("StartGame", 1.5f);
 
         //trans.gameObject.SetActive(true);
@@ -459,7 +461,7 @@ public class Main_UiManager : MonoBehaviour
     }
     IEnumerator DelaySwitchPanel(GameObject targetPanel, List<GameObject> _panels)
     {
-        yield return new WaitForSeconds(.2f);
+        yield return new WaitForSeconds(.5f);
 
         Ui_Effect.SwitchToPanel(targetPanel, _panels);
     }
@@ -480,6 +482,7 @@ public class Main_UiManager : MonoBehaviour
 
         yield return new WaitForSeconds(2f);
 
+        AudioManager.instance.StopOpenDoorSFX();
         SceneManager.LoadScene("Scene_Lv1");
     }
     private IEnumerator ShakeUI(TMP_Text target, float duration, float magnitude)
