@@ -5303,6 +5303,8 @@ MonoBehaviour:
   wrong: {fileID: 8300000, guid: 54be83c7672d12444a7787d44b3e87a7, type: 3}
   scroll: {fileID: 8300000, guid: 74e6395f70d4a12438cc077836e0b85b, type: 3}
   transition: {fileID: 8300000, guid: f6c935ad2f267494da3445468522e894, type: 3}
+  open_Door: {fileID: 8300000, guid: b1ebf20cab88ec94fbeff950d4400859, type: 3}
+  whoosh: {fileID: 8300000, guid: c65daa4d664aed24e862f2d3e4cbc05d, type: 3}
   playBgm: 1
   bgmIndex: 0
 --- !u!4 &578839225

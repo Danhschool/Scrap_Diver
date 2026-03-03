@@ -47,6 +47,8 @@ public class MainMenuManager : MonoBehaviour
     [Header("Background")]
     [SerializeField] private GameObject background;
 
+    private bool isFirstTime = true;
+
     // Affordable Check
     [SerializeField] public bool HasAffordableRobot { get; private set; }
     [SerializeField] public int MaxAffordableRobotIndex { get; private set; } = -1;
@@ -60,7 +62,7 @@ public class MainMenuManager : MonoBehaviour
 
     [SerializeField] private Dictionary<int, GameObject> claws = new Dictionary<int, GameObject>();
 
-    private float duration = 0.5f;
+    private float duration = 1f;
 
 
     private Rigidbody rb;
@@ -381,6 +383,9 @@ public class MainMenuManager : MonoBehaviour
 
         Vector2 startPos = targetImage.anchoredPosition;
         float elapsedTime = 0f;
+
+        if(isFirstTime) isFirstTime = false;
+        else AudioManager.instance.PlayWhooshSFX();
 
         while (elapsedTime < duration)
         {
