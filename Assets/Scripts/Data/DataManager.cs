@@ -29,6 +29,10 @@ public static class DataManager
 
             Debug.Log($"[DataManager] First-time setup: Unlocked {defaultRobotID} by default.");
         }
+        if (currentData.robotPrices == null || currentData.robotPrices.Count == 0)
+        {
+            currentData.robotPrices = new List<int> { 0, 100, 200 };
+        }
 
         List<string> defaultAchIDs = new List<string> { "coin", "time", "unlock", "stage" };
 
@@ -141,7 +145,15 @@ public static class DataManager
             SaveToDisk();
         }
     }
-
+    public static int GetRobotPrice(int index)
+    {
+        if (currentData.robotPrices == null) return 0;
+        if (index >= 0 && index < currentData.robotPrices.Count)
+        {
+            return currentData.robotPrices[index];
+        }
+        return 0;
+    }
     public static int SelectedLevelIndex
     {
         get => currentData.selectedLevelIndex;

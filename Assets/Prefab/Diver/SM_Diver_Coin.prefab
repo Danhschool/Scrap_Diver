@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 4388163316810094729}
   m_Layer: 0
   m_Name: SM_Diver_Coin
-  m_TagString: Untagged
+  m_TagString: Coin
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -122,6 +122,9 @@ MonoBehaviour:
   position: {x: 0, y: 0, z: 0}
   rotation: {x: 0, y: 0, z: 0}
   rotateSpeed: 5
+  coinValue: 1
+  moveSpeed: 30
+  eatDistance: 1
 --- !u!54 &4388163316810094729
 Rigidbody:
   m_ObjectHideFlags: 0

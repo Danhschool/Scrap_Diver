@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using DG.Tweening;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Threading.Tasks;
@@ -17,6 +18,12 @@ public class Main_UiManager : MonoBehaviour
     [Header("Coin")]
     [SerializeField] private Animator coinIconAnimator;
     [SerializeField] private TMP_Text coinText;
+
+    [Header("Coin Reward Effect")]
+    [SerializeField] private GameObject coinPrefab;
+    [SerializeField] private RectTransform targetCoinIcon;
+    [SerializeField] private int maxCoins = 10;
+    [SerializeField] private float spreadRadius = 100f;
 
     [Header("Panels")]
     [SerializeField] private List<GameObject> panels;
@@ -502,5 +509,40 @@ public class Main_UiManager : MonoBehaviour
 
         target.color = Color.white;
         target.rectTransform.localPosition = Vector2.zero;
+    }
+    public void PlayCoinRewardEffect(Vector3 spawnPosition, System.Action onCompleteDataUpdate)
+    {
+        bool isAdded = false;
+
+        for (int i = 0; i < maxCoins; i++)
+        {
+            GameObject coin = Instantiate(coinPrefab, spawnPosition, Quaternion.identity, targetCoinIcon.parent);
+            coin.transform.localScale = Vector3.zero;
+
+            Vector2 randomSpread = ((RectTransform)coin.transform).anchoredPosition + (Random.insideUnitCircle * spreadRadius);
+
+            Sequence seq = DOTween.Sequence();
+            seq.Append(coin.transform.DOScale(Vector3.one, 0.2f).SetEase(Ease.OutBack));
+            seq.Join(coin.GetComponent<RectTransform>().DOAnchorPos(randomSpread, 0.3f).SetEase(Ease.OutQuad));
+            seq.AppendInterval(Random.Range(0f, 0.2f));
+            seq.Append(coin.transform.DOMove(targetCoinIcon.position, 0.4f).SetEase(Ease.InBack));
+
+            seq.OnComplete(() =>
+            {
+                AudioManager.instance.PlayCoinSFX();
+
+                Destroy(coin);
+
+                if (!isAdded)
+                {
+                    isAdded = true;
+                    onCompleteDataUpdate?.Invoke();
+                }
+
+                targetCoinIcon.DOKill(true);
+                targetCoinIcon.DOPunchScale(new Vector3(0.2f, 0.2f, 0f), 0.15f, 5, 1)
+                              .OnComplete(() => targetCoinIcon.localScale = Vector3.one);
+            });
+        }
     }
 }

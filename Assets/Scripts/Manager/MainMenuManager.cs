@@ -216,16 +216,17 @@ public class MainMenuManager : MonoBehaviour
     private void UpdateShopUI(int value)
     {
         var data = robotList[value];
+        int currentPrice = DataManager.GetRobotPrice(value);
 
         Main_UiManager.instance.UpdateAdvantageText(robotList[value].advantage);
         Main_UiManager.instance.UpdateDisadvantageText(robotList[value].disadvantage);
         if (robotList[value].isUnlocked) Main_UiManager.instance.UpdateSelectButtonText("null++");
         else
         {
-            if (DataManager.TotalCoin >= data.price)
-                Main_UiManager.instance.UpdateSelectButtonText(robotList[value].price.ToString());
+            if (DataManager.TotalCoin >= currentPrice) //data.price)
+                Main_UiManager.instance.UpdateSelectButtonText(currentPrice.ToString());
             else
-                Main_UiManager.instance.UpdateSelectButtonText($"<color=red>{data.price}</color>");
+                Main_UiManager.instance.UpdateSelectButtonText($"<color=red>{currentPrice}</color>");
         }
         Main_UiManager.instance.UpdateCoinText();
     }
@@ -244,8 +245,9 @@ public class MainMenuManager : MonoBehaviour
     public bool BuyCharacter(int index)
     {
         var charData = robotList[index];
+        int currentPrice = DataManager.GetRobotPrice(index);
 
-        if (DataManager.TrySpendCoin(charData.price))
+        if (DataManager.TrySpendCoin(currentPrice)) //charData.price))
         {
             DataManager.SetCharacterUnlockState(charData.robotName, true);
             charData.isUnlocked = true;
