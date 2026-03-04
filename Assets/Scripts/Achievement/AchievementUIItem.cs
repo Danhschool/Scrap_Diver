@@ -79,6 +79,23 @@ public class AchievementUIItem : MonoBehaviour
 
     private void OnClaimClick(AchievementStage stage)
     {
+        claimBtn.interactable = false;
+
+        if (Main_UiManager.instance != null)
+        {
+            Main_UiManager.instance.PlayCoinRewardEffect(claimBtn.transform.position, () =>
+            {
+                ProcessClaimData(stage);
+            });
+        }
+        else
+        {
+            ProcessClaimData(stage);
+        }
+    }
+
+    private void ProcessClaimData(AchievementStage stage)
+    {
         DataManager.AddTotalCoin(stage.rewardCoins);
 
         int currentLv = DataManager.GetAchievementLevel(data.id);
@@ -86,7 +103,10 @@ public class AchievementUIItem : MonoBehaviour
 
         DataManager.DecreaseUnclaimedReward(data.id);
 
-        Main_UiManager.instance.UpdateCoinText();
+        if (Main_UiManager.instance != null)
+        {
+            Main_UiManager.instance.UpdateCoinText();
+        }
 
         RefreshView();
     }
