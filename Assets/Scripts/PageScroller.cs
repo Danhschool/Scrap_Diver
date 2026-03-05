@@ -14,7 +14,7 @@ public class PageScroller : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
     [SerializeField] private TMP_Text statusText;
 
     [Header("Dynamic Content")]
-    [SerializeField] private GameObject[] pagePrefabs;
+    //[SerializeField] private GameObject[] pagePrefabs;
 
     [Header("Scroll Settings")]
     [SerializeField] private float smoothTime = 0.2f;
@@ -73,7 +73,6 @@ public class PageScroller : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
 
         UpdateLevelStatusUI();
 
-        // Ngắt âm thanh lập tức nếu UI đóng lại
         if (isScrollingSoundPlaying)
         {
             AudioManager.instance.StopScrollSFX();
@@ -96,13 +95,15 @@ public class PageScroller : MonoBehaviour, IBeginDragHandler, IDragHandler, IEnd
 
         pages.Clear();
 
-        if (pagePrefabs == null || pagePrefabs.Length == 0) return;
+        if (MainMenuManager.instance == null || MainMenuManager.instance.MapList == null) return;
 
-        for (int i = 0; i < pagePrefabs.Length; i++)
+        var mapList = MainMenuManager.instance.MapList;
+
+        for (int i = 0; i < mapList.Length; i++)
         {
-            if (pagePrefabs[i] != null)
+            if (mapList[i].pagePrefab != null)
             {
-                GameObject newPage = Instantiate(pagePrefabs[i], contentPanel);
+                GameObject newPage = Instantiate(mapList[i].pagePrefab, contentPanel);
 
                 RectTransform rt = newPage.GetComponent<RectTransform>();
                 if (rt != null)

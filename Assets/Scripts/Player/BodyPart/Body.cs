@@ -15,7 +15,7 @@ public class Body : BodyPartSensor
         base.OnHit();
 
         if (isSpine) return;
-        player.health.OnDie();
+        //player.health.OnDie();
     }
 
     protected override void Start()

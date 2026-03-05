@@ -50,6 +50,11 @@ public class Main_UiManager : MonoBehaviour
     [Header("Trans")]
     [SerializeField] private Image trans;
 
+    [Header("Exclamation Badges")]
+    [SerializeField] private GameObject robotBadge;
+    [SerializeField] private GameObject mapBadge;
+    [SerializeField] private GameObject challengeBadge;
+
     private bool isDown = false;
     private Coroutine activeMoveCoroutine;
     private Coroutine startGame;
@@ -67,6 +72,17 @@ public class Main_UiManager : MonoBehaviour
         if (coinIconAnimator == null)
         {
             coinIconAnimator = GetComponentInChildren<Animator>();
+        }
+    }
+    private void Start()
+    {
+        UpdateAllBadges();
+    }
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            UpdateAllBadges();
         }
     }
     private void OnEnable()
@@ -145,6 +161,13 @@ public class Main_UiManager : MonoBehaviour
 
     public void OnRobotShopClick(Image img)
     {
+        int maxAffordable = GetMaxAffordableRobotIndex();
+        if (maxAffordable > DataManager.NotifiedRobotIndex)
+        {
+            DataManager.NotifiedRobotIndex = maxAffordable;
+        }
+        UpdateAllBadges();
+
         Ui_Effect.OnClickExit(img, this,ref isDown);
 
         GameObject robotShop_Panel = panels.Find(x => x.name == ("ShopRobot_Panel"));
@@ -160,6 +183,13 @@ public class Main_UiManager : MonoBehaviour
     }
     public void OnMapClick(Image img)
     {
+        int maxAffordable = GetMaxAffordableMapIndex();
+        if (maxAffordable > DataManager.NotifiedMapIndex)
+        {
+            DataManager.NotifiedMapIndex = maxAffordable;
+        }
+        UpdateAllBadges();
+
         Ui_Effect.OnClickExit(img, this,ref isDown);
 
         GameObject map_Panel = panels.Find(x => x.name == ("Map_Panel"));
@@ -394,7 +424,11 @@ public class Main_UiManager : MonoBehaviour
     public void UpdateSelectButtonText(string _value) => selectButtonText.text = _value;
 
     /// ///////
-    public void UpdateCoinText() => coinText.text = DataManager.TotalCoin.ToString();
+    public void UpdateCoinText() 
+    { 
+        coinText.text = DataManager.TotalCoin.ToString();
+        UpdateAllBadges();
+    }
     #endregion
     
 
@@ -545,4 +579,80 @@ public class Main_UiManager : MonoBehaviour
             });
         }
     }
+    #region Notification Badges Logic
+
+    public void UpdateAllBadges()
+    {
+        if (robotBadge != null)
+        {
+            bool showRobot = GetMaxAffordableRobotIndex() > DataManager.NotifiedRobotIndex;
+            robotBadge.SetActive(showRobot);
+        }
+
+        if (mapBadge != null)
+        {
+            bool showMap = GetMaxAffordableMapIndex() > DataManager.NotifiedMapIndex;
+            mapBadge.SetActive(showMap);
+        }
+
+        if (challengeBadge != null)
+        {
+            challengeBadge.SetActive(CheckAchievementReady());
+        }
+    }
+
+    private int GetMaxAffordableRobotIndex()
+    {
+        if (MainMenuManager.instance == null || MainMenuManager.instance.RobotList == null) return -1;
+        int maxIndex = -1;
+
+        for (int i = 1; i < MainMenuManager.instance.RobotList.Length; i++)
+        {
+            string robotName = MainMenuManager.instance.RobotList[i].robotName;
+            if (!DataManager.GetCharacterUnlockState(robotName))
+            {
+                int price = MainMenuManager.instance.RobotList[i].price;
+                if (price > 0 && DataManager.TotalCoin >= price)
+                {
+                    maxIndex = Mathf.Max(maxIndex, i);
+                }
+            }
+        }
+        return maxIndex;
+    }
+
+    private int GetMaxAffordableMapIndex()
+    {
+        int totalLevels = DataManager.TotalDefinedLevels;
+        int maxIndex = -1;
+        for (int i = 1; i < totalLevels; i++)
+        {
+            if (!DataManager.CanPlayLevel(i+1))
+            {
+                int price = DataManager.GetLevelPrice(i);
+                if (price > 0 && DataManager.TotalCoin >= price)
+                {
+                    maxIndex = Mathf.Max(maxIndex, i);
+                }
+            }
+        }
+        return maxIndex;
+    }
+
+    private bool CheckAchievementReady()
+    {
+        if (AchievementManager.instance == null) return false;
+
+        List<AchievementData> listData = AchievementManager.instance.AllAchievements;
+        foreach (var data in listData)
+        {
+            if (DataManager.IsRewardReady(data.id))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    #endregion
 }

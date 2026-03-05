@@ -48,6 +48,16 @@ public class BodyPartSensor : MonoBehaviour
 
     }
 
+    //private void Update()
+    //{
+    //    if(Input.GetKeyDown(KeyCode.Space))
+    //    {
+    //        OnHit();
+    //        player.limb.GetHit(isLimb, mesh, skel);
+
+    //    }
+    //}
+
     protected virtual void OnTriggerEnter(Collider other)
     {
         if (!other.CompareTag("Obstacle")) return;
@@ -77,6 +87,7 @@ public class BodyPartSensor : MonoBehaviour
         instanceMaterial.SetColor("_Emission", hitColor);
 
         CameraManager.instance.Shake();
+        AudioManager.instance.PlayThudSFX();
 
         yield return new WaitForSeconds(hitTime);
 
@@ -84,8 +95,6 @@ public class BodyPartSensor : MonoBehaviour
 
         currentCoroutine = null;
     }
-
-
     public void RotateArm( float _startAngle)
     {
         if (player == null) return;

@@ -675,8 +675,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   obstacleData:
-  - {fileID: 11400000, guid: 607e344ad712f634eaa7fc9a8b3290b3, type: 2}
-  - {fileID: 11400000, guid: bb36e192ad7387c4983359ee1640a7d7, type: 2}
+  - {fileID: 11400000, guid: fcd34e25525d4414c985979784cee241, type: 2}
   port: {fileID: 11400000, guid: bfec8ff2fa40414489155be50930e60d, type: 2}
   spawnYPosition: -250
   timeBetweenSpawns: 2
@@ -10061,7 +10060,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 192
+    m_Bits: 448
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0

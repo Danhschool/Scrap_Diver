@@ -20,11 +20,10 @@ public class GameData
     public bool isFirstTime = true;
 
     public List<string> unlockedCharacters = new List<string>();
-    public List<int> robotPrices = new List<int> { 0, 150, 250};
+    public int notifiedRobotIndex = -1;
+    public int notifiedMapIndex = -1;
 
-    public List<float> levelMilestones = new List<float> { 750f, 2000f, 3500f, 5500f, 8000f };
-    public List<bool> unlockedLevels = new List<bool> { true, false, false, false, false, false };
-    public List<int> levelPrices = new List<int> { 0, 100, 200, 200, 200, 200 };
+    public List<bool> unlockedLevels = new List<bool> { true, false, false, false, false };
 
     [System.Serializable]
     public class AchievementSave

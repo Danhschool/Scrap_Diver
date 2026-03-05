@@ -22,6 +22,8 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private AudioClip transition;
     [SerializeField] private AudioClip open_Door;
     [SerializeField] private AudioClip whoosh;
+    [SerializeField] private AudioClip thud;
+    [SerializeField] private AudioClip notification;
 
     [SerializeField] private bool playBgm;
     [SerializeField] private int bgmIndex;
@@ -140,6 +142,9 @@ public class AudioManager : MonoBehaviour
     public void PlayOpenDoorSFX() => PlaySFX(open_Door);
     public void StopOpenDoorSFX() => StopSFX(open_Door);
     public void PlayWhooshSFX() => PlaySFX(whoosh);
+    public void PlayThudSFX() => PlaySFX(thud);
+    public void StopThudSFX() => StopSFX(thud);
+    public void PlayNotificationSFX() => PlaySFX(notification);
 
     private bool BgmIsPlaying()
     {

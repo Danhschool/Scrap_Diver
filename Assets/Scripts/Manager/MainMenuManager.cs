@@ -22,6 +22,16 @@ public class MainMenuManager : MonoBehaviour
         public int price;
         public bool isUnlocked;
     }
+    [System.Serializable]
+    public class MapData
+    {
+        public string mapName;
+        public int price;
+        public float targetMilestone;
+        public GameObject pagePrefab;
+    }
+
+    
 
     public static MainMenuManager instance;
 
@@ -40,6 +50,9 @@ public class MainMenuManager : MonoBehaviour
     public int totalCharacters = 0;
     //[SerializeField] private GameObject select;
 
+    [Header("Map Data")]
+    [SerializeField] private MapData[] mapList;
+
     [Header("Parallax Background")]
     public Transform[] backgroundLayers;
     public float[] parallaxMultipliers;
@@ -48,6 +61,7 @@ public class MainMenuManager : MonoBehaviour
     [SerializeField] private GameObject background;
 
     private bool isFirstTime = true;
+    public MapData[] MapList => mapList;
 
     // Affordable Check
     [SerializeField] public bool HasAffordableRobot { get; private set; }
@@ -216,17 +230,20 @@ public class MainMenuManager : MonoBehaviour
     private void UpdateShopUI(int value)
     {
         var data = robotList[value];
-        int currentPrice = DataManager.GetRobotPrice(value);
 
-        Main_UiManager.instance.UpdateAdvantageText(robotList[value].advantage);
-        Main_UiManager.instance.UpdateDisadvantageText(robotList[value].disadvantage);
-        if (robotList[value].isUnlocked) Main_UiManager.instance.UpdateSelectButtonText("null++");
+        Main_UiManager.instance.UpdateAdvantageText(data.advantage);
+        Main_UiManager.instance.UpdateDisadvantageText(data.disadvantage);
+
+        if (data.isUnlocked)
+        {
+            Main_UiManager.instance.UpdateSelectButtonText("null++");
+        }
         else
         {
-            if (DataManager.TotalCoin >= currentPrice) //data.price)
-                Main_UiManager.instance.UpdateSelectButtonText(currentPrice.ToString());
+            if (DataManager.TotalCoin >= data.price)
+                Main_UiManager.instance.UpdateSelectButtonText(data.price.ToString());
             else
-                Main_UiManager.instance.UpdateSelectButtonText($"<color=red>{currentPrice}</color>");
+                Main_UiManager.instance.UpdateSelectButtonText($"<color=red>{data.price}</color>");
         }
         Main_UiManager.instance.UpdateCoinText();
     }
@@ -245,9 +262,8 @@ public class MainMenuManager : MonoBehaviour
     public bool BuyCharacter(int index)
     {
         var charData = robotList[index];
-        int currentPrice = DataManager.GetRobotPrice(index);
 
-        if (DataManager.TrySpendCoin(currentPrice)) //charData.price))
+        if (DataManager.TrySpendCoin(charData.price))
         {
             DataManager.SetCharacterUnlockState(charData.robotName, true);
             charData.isUnlocked = true;
@@ -256,7 +272,6 @@ public class MainMenuManager : MonoBehaviour
             stats.robotCount = DataManager.GetUnlockedRobotCount();
 
             AchievementManager.instance.CheckAchievementsByType<UnlockRobot>(stats);
-
 
             Debug.Log($"{charData.robotName} : {DataManager.TotalCoin}");
             return true;

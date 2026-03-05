@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DG.Tweening;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.Animations;
@@ -35,15 +36,21 @@ public class PlayeMovement : MonoBehaviour
     [SerializeField] private float speed;
 
     [Header("Limit Bounds")]
-    [SerializeField] private float xLimit = 15f;
-    [SerializeField] private float topLimit = 8f;
-    [SerializeField] private float bottomLimit = 18f;
+    //[SerializeField] private float xLimit = 15f;
+    //[SerializeField] private float topLimit = 8f;
+    //[SerializeField] private float bottomLimit = 18f;
+    [SerializeField] private float edgePadding = 0.05f;
 
     [Header("Smooth Settings")]
     [Range(0f, 0.5f)]
     [SerializeField] private float smoothTime = 0.1f;
     private Vector3 currentDir;
     private Vector3 currentDirVelocity;
+
+    private float baseSmoothTime;
+    private float baseMoveSpeed;
+    private Vector3 baseScale;
+    private float baseHeight;
 
     private bool isDragging = false;
 
@@ -57,7 +64,12 @@ public class PlayeMovement : MonoBehaviour
         player = GetComponent<Player>();
         characterController = GetComponent<CharacterController>();
         mainCamera = Camera.main;
+
+        baseMoveSpeed = moveSpeed;
         speed = moveSpeed;
+        baseSmoothTime = smoothTime;
+        baseScale = transform.localScale;
+        baseHeight = characterController.height;
 
         anim = GetComponentInChildren<Animator>();
         AssignInputEvents();
@@ -87,10 +99,10 @@ public class PlayeMovement : MonoBehaviour
         ApplyPositionClamping();
     }
 
-    private void FixedUpdate()
-    {
+    //private void FixedUpdate()
+    //{
         
-    }
+    //}
     private void ApplyMovement(Vector2 Input)
     {
         Vector3 targetDir = new Vector3(Input.x, 0f, Input.y).normalized;
@@ -138,13 +150,12 @@ public class PlayeMovement : MonoBehaviour
 
     private void ApplyPositionClamping()
     {
-        Vector3 currentPos = transform.position;
+        Vector3 viewPos = mainCamera.WorldToViewportPoint(transform.position);
 
-        currentPos.x = Mathf.Clamp(currentPos.x, -xLimit, xLimit);
+        viewPos.x = Mathf.Clamp(viewPos.x, edgePadding, 1f - edgePadding);
+        viewPos.y = Mathf.Clamp(viewPos.y, edgePadding, 1f - edgePadding);
 
-        currentPos.z = Mathf.Clamp(currentPos.z, -bottomLimit, topLimit);
-
-        transform.position = currentPos;
+        transform.position = mainCamera.ViewportToWorldPoint(viewPos);
     }
 
     private Vector3 GetMouseWorldPosition()
@@ -191,29 +202,14 @@ public class PlayeMovement : MonoBehaviour
 
     private void MoveAnimation()
     {
-        anim.SetBool("idle", false);
-        anim.SetBool("isMove", true);
+        bool isMoving = currentDir.sqrMagnitude > 0.01f;
+        anim.SetBool("isMove", isMoving);
+        anim.SetBool("idle", !isMoving);
 
-        if (currentDir.x < -.2f)
+        if (isMoving)
         {
-            anim.SetFloat("move", 0);
-        }
-        else if (currentDir.x > .2f)
-        {
-            anim.SetFloat("move", 1);
-        }
-        else if(currentDir.z > .2f)
-        {
-            anim.SetFloat("move", 2);
-        }
-        else if(currentDir.z < -.2f)
-        {
-            anim.SetFloat("move", 3);
-        }
-        else
-        {
-            anim.SetBool("isMove", false);
-            anim.SetBool("idle", true) ;
+            anim.SetFloat("DirX", currentDir.x);
+            anim.SetFloat("DirZ", currentDir.z);
         }
     }
 
@@ -225,5 +221,21 @@ public class PlayeMovement : MonoBehaviour
             return Direction.right;
         else
             return Direction.none;
+    }
+    public void ApplyMovementPenalty(float healthRatio)
+    {
+        speed = Mathf.Max(baseMoveSpeed * healthRatio, baseMoveSpeed * 0.3f);
+        smoothTime = baseSmoothTime + (0.4f * (1f - healthRatio));
+    }
+
+    public void ShrinkPlayer(float targetScaleRatio, float duration)
+    {
+        transform.DOScale(baseScale * targetScaleRatio, 0.5f);
+        characterController.height = baseHeight * targetScaleRatio;
+
+        DOVirtual.DelayedCall(duration, () => {
+            transform.DOScale(baseScale, 0.5f);
+            characterController.height = baseHeight;
+        });
     }
 }
