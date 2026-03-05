@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 5360993984887677362}
   - component: {fileID: -5282840027208012764}
   - component: {fileID: 4388163316810094729}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: SM_Diver_Coin
   m_TagString: Coin
   m_Icon: {fileID: 0}

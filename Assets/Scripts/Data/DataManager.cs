@@ -29,10 +29,6 @@ public static class DataManager
 
             Debug.Log($"[DataManager] First-time setup: Unlocked {defaultRobotID} by default.");
         }
-        if (currentData.robotPrices == null || currentData.robotPrices.Count == 0)
-        {
-            currentData.robotPrices = new List<int> { 0, 100, 200 };
-        }
 
         List<string> defaultAchIDs = new List<string> { "coin", "time", "unlock", "stage" };
 
@@ -54,9 +50,15 @@ public static class DataManager
             currentData.unlockedLevels = new List<bool> { true, false, false, false, false, false };
         }
 
-        if (currentData.levelPrices == null || currentData.levelPrices.Count == 0)
+        if (currentData.unlockedLevels == null)
         {
-            currentData.levelPrices = new List<int> { 0, 100, 250, 500, 1000, 2000 };
+            currentData.unlockedLevels = new List<bool>();
+        }
+
+        int totalMaps = TotalDefinedLevels > 0 ? TotalDefinedLevels : 6;
+        while (currentData.unlockedLevels.Count < totalMaps)
+        {
+            currentData.unlockedLevels.Add(currentData.unlockedLevels.Count == 0);
         }
         SaveToDisk();
     }
@@ -145,14 +147,26 @@ public static class DataManager
             SaveToDisk();
         }
     }
-    public static int GetRobotPrice(int index)
+    public static int NotifiedRobotIndex
     {
-        if (currentData.robotPrices == null) return 0;
-        if (index >= 0 && index < currentData.robotPrices.Count)
+        get => currentData.notifiedRobotIndex;
+        set
         {
-            return currentData.robotPrices[index];
+            if (value == currentData.notifiedRobotIndex) return;
+            currentData.notifiedRobotIndex = value;
+            SaveToDisk();
         }
-        return 0;
+    }
+
+    public static int NotifiedMapIndex
+    {
+        get => currentData.notifiedMapIndex;
+        set
+        {
+            if (value == currentData.notifiedMapIndex) return;
+            currentData.notifiedMapIndex = value;
+            SaveToDisk();
+        }
     }
     public static int SelectedLevelIndex
     {
@@ -285,16 +299,16 @@ public static class DataManager
     {
         int actualIndex = levelIndex - 1;
 
-        if (currentData.levelMilestones == null || currentData.levelMilestones.Count == 0)
+        if (MainMenuManager.instance == null || MainMenuManager.instance.MapList == null || MainMenuManager.instance.MapList.Length == 0)
             return levelIndex * 1000f;
 
-        if (actualIndex >= 0 && actualIndex < currentData.levelMilestones.Count)
+        if (actualIndex >= 0 && actualIndex < MainMenuManager.instance.MapList.Length)
         {
-            return currentData.levelMilestones[actualIndex];
+            return MainMenuManager.instance.MapList[actualIndex].targetMilestone;
         }
 
-        float lastMilestone = currentData.levelMilestones[currentData.levelMilestones.Count - 1];
-        int extraLevels = levelIndex - currentData.levelMilestones.Count;
+        float lastMilestone = MainMenuManager.instance.MapList[MainMenuManager.instance.MapList.Length - 1].targetMilestone;
+        int extraLevels = levelIndex - MainMenuManager.instance.MapList.Length;
         return lastMilestone + (extraLevels * 2000f);
     }
 
@@ -304,7 +318,15 @@ public static class DataManager
         return GetTargetDistance(levelIndex - 1);
     }
 
-    public static int TotalDefinedLevels => currentData.levelMilestones.Count;
+    public static int TotalDefinedLevels
+    {
+        get
+        {
+            if (MainMenuManager.instance != null && MainMenuManager.instance.MapList != null)
+                return MainMenuManager.instance.MapList.Length;
+            return 0;
+        }
+    }
 
     public static bool CanPlayLevel(int levelIndex)
     {
@@ -319,13 +341,13 @@ public static class DataManager
 
     public static bool TryBuyLevel(int levelIndex)
     {
-        if (currentData.unlockedLevels == null || currentData.levelPrices == null) return false;
+        if (currentData.unlockedLevels == null) return false;
 
         if (levelIndex < 0 || levelIndex >= currentData.unlockedLevels.Count) return false;
 
-        if (currentData.unlockedLevels[levelIndex]) return false; // Đã được mở
+        if (currentData.unlockedLevels[levelIndex]) return false;
 
-        int price = currentData.levelPrices[levelIndex];
+        int price = GetLevelPrice(levelIndex);
 
         if (currentData.totalCoin >= price)
         {
@@ -354,11 +376,10 @@ public static class DataManager
 
     public static int GetLevelPrice(int levelIndex)
     {
-        if (currentData.levelPrices == null) return 0;
-
-        if (levelIndex >= 0 && levelIndex < currentData.levelPrices.Count)
+        if (MainMenuManager.instance == null || MainMenuManager.instance.MapList == null) return 0;
+        if (levelIndex >= 0 && levelIndex < MainMenuManager.instance.MapList.Length)
         {
-            return currentData.levelPrices[levelIndex];
+            return MainMenuManager.instance.MapList[levelIndex].price;
         }
         return 0;
     }

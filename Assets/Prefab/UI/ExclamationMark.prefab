@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 533737259186713534}
   - component: {fileID: 447199256917811256}
   - component: {fileID: 1328830300783206125}
-  - component: {fileID: 2038813675942594541}
+  - component: {fileID: 7003026717260227930}
   m_Layer: 5
   m_Name: ExclamationMark
   m_TagString: Untagged
@@ -60,7 +60,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0.8841307, g: 1, b: 0, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -76,24 +76,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!95 &2038813675942594541
-Animator:
-  serializedVersion: 5
+--- !u!114 &7003026717260227930
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7844822477571351616}
   m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 998687147f650a247bdb2c5feb24feca, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23295ef4b74f1324fac589ef3f6d12f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 10
+  effectType: 1
+  range: 5
