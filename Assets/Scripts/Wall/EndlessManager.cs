@@ -113,7 +113,7 @@ public class EndlessManager : MonoBehaviour
 
     public void ChangeTheme(int newThemeIndex)
     {
-        newThemeIndex -= 1;
+        //newThemeIndex -= 1;
         if (newThemeIndex >= 0 && newThemeIndex < themes.Length)
         {
             currentThemeIndex = newThemeIndex;

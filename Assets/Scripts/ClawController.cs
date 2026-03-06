@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 
 public class ClawController : MonoBehaviour
@@ -15,7 +16,7 @@ public class ClawController : MonoBehaviour
     [SerializeField] private Transform mainCamera;
     [SerializeField] private HingeJoint hinge;
 
-    private Transform parentTransform;
+    private Transform robotRootTransform;
     private Rigidbody childRb;
 
     private Vector3 localPos;
@@ -31,12 +32,11 @@ public class ClawController : MonoBehaviour
     {
         if (transform.parent != null)
         {
-            parentTransform = transform.parent;
+            robotRootTransform = transform.parent;
         }
         else
         {
-            parentTransform = transform;
-            Debug.LogError("ClawController");
+            robotRootTransform = transform;
         }
 
         childRb = GetComponent<Rigidbody>();
@@ -59,8 +59,8 @@ public class ClawController : MonoBehaviour
             float offsetX = Mathf.Sin(swayTimer) * swayDistance;
             Vector3 targetPos = localPos + new Vector3(offsetX, 0f, 0f);
 
-            if (parentTransform != null)
-                targetPos = parentTransform.TransformPoint(targetPos);
+            if (robotRootTransform != null)
+                targetPos = robotRootTransform.TransformPoint(targetPos);
 
             childRb.MovePosition(targetPos);
 
@@ -75,33 +75,26 @@ public class ClawController : MonoBehaviour
         Destroy(hinge);
     }
 
-    public void ClawPull(Vector3 moveDelta)
+    public void ClawPull(Vector3 targetLocalPos)
     {
-        Vector3 startParentPos = parentTransform.position;
-        Vector3 targetParentPos = moveDelta;
+        Vector3 startLocalPos = robotRootTransform.localPosition;
 
-        // If a previous pull coroutine exists, stop it and ensure its SFX is stopped
         if (coroutine != null)
         {
             StopCoroutine(coroutine);
             coroutine = null;
-            if (AudioManager.instance != null)
-                AudioManager.instance.StopGearSFX();
         }
 
-        coroutine = StartCoroutine(PullSequence(startParentPos, targetParentPos));
+        coroutine = StartCoroutine(PullSequence(startLocalPos, targetLocalPos));
     }
 
     IEnumerator PullSequence(Vector3 startPos, Vector3 endPos)
     {
         isBeingPulled = true;
-
         childRb.interpolation = RigidbodyInterpolation.None;
-
         float elapsed = 0f;
 
-        if (AudioManager.instance != null)
-            AudioManager.instance.PlayGearSFX();
+        AudioManager.instance.PlayGearSFX();
 
         while (elapsed < pullDuration)
         {
@@ -109,20 +102,17 @@ public class ClawController : MonoBehaviour
             float t = elapsed / pullDuration;
             float curveT = pullCurve.Evaluate(t);
 
-            parentTransform.position = Vector3.Lerp(startPos, endPos, curveT);
+            robotRootTransform.localPosition = Vector3.Lerp(startPos, endPos, curveT);
 
             yield return null;
         }
 
-        if (AudioManager.instance != null)
-            AudioManager.instance.StopGearSFX();
+        AudioManager.instance.StopGearSFX();
 
-        parentTransform.position = endPos;
-
+        robotRootTransform.localPosition = endPos;
         swayTimer = 0f;
         childRb.interpolation = RigidbodyInterpolation.Interpolate;
         isBeingPulled = false;
-
         coroutine = null;
     }
 }

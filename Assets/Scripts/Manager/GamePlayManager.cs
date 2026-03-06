@@ -37,9 +37,11 @@ public class GamePlayManager : MonoBehaviour
     [SerializeField] private int indexOfLevel;
     [SerializeField] private float distanceOfLevel;
 
-    [Header("Portal Settings")]
+    //[Header("Portal Settings")]
     private float preSpawnDistance;
     private bool hasSpawnedPortal = false;
+
+    [SerializeField] private RobotPassiveData[] robotPassiveConfigs;
 
     private int startLevelWindow;
     private int targetLevelWindow;
@@ -77,7 +79,10 @@ public class GamePlayManager : MonoBehaviour
 
         InitializeProgressBarLogic();
 
-        EndlessManager.instance.ChangeTheme(DataManager.SelectedLevelIndex + 1);
+        EndlessManager.instance.ChangeTheme(DataManager.SelectedLevelIndex);
+        SpawnController.instance.ChangeObstacleTheme(DataManager.SelectedLevelIndex);
+
+        Debug.Log($"Selected Level: {DataManager.SelectedLevelIndex}, Index of Level: {indexOfLevel}");
 
         AudioManager.instance.PlayRandomBGM();
         AudioManager.instance.PlayWindSFX();
@@ -93,6 +98,18 @@ public class GamePlayManager : MonoBehaviour
         Ingame_UiManager.instance.SetupDynamicProgressBar();
 
         InitializeProgressUI();
+
+        if (DataManager.SelectedPlayerIndex < robotPassiveConfigs.Length)
+        {
+            var config = robotPassiveConfigs[DataManager.SelectedPlayerIndex];
+            if (config != null)
+            {
+                foreach (var module in config.passiveModules)
+                {
+                    if (module != null) module.ApplyPassive(inGamePlayer, this);
+                }
+            }
+        }
 
         //int d = (int)DataManager.GetTargetDistance(DataManager.LevelPassed + 1);
 
@@ -152,11 +169,16 @@ public class GamePlayManager : MonoBehaviour
             inGamePlayer.name = p[DataManager.SelectedPlayerIndex].name;
 
             // Cập nhật UI ngay lập tức
-            Ingame_UiManager.instance.UpdateCoinUI(DataManager.TotalCoin);
+            Ingame_UiManager.instance.UpdateCoinUI(totalCoin);//DataManager.TotalCoin);
             Ingame_UiManager.instance.SetActiveContinue_Panel(false);
 
-            if (coroutine != null) StopCoroutine(coroutine);
-            ResumeGame();
+            PauseGame();    
+            StartCoroutine(Countdown(() =>
+            {
+                if (coroutine != null) StopCoroutine(coroutine);
+                ResumeGame();
+
+            }));
         }
         else
         {
@@ -316,7 +338,8 @@ public class GamePlayManager : MonoBehaviour
         ClearAllObstacles();
         TransitionManager.instance.PlayTransition(() =>
         {
-            EndlessManager.instance.ChangeTheme(indexOfLevel);
+            EndlessManager.instance.ChangeTheme(indexOfLevel - 1);
+            SpawnController.instance.ChangeObstacleTheme(indexOfLevel - 1);
             ResumeGame();
             RunStats stats = new RunStats();
             stats.currentLevelIndex = indexOfLevel;
@@ -439,10 +462,19 @@ public class GamePlayManager : MonoBehaviour
     public void ClearAllObstacles()
     {
         GameObject[] allObstacles = GameObject.FindGameObjectsWithTag("Obstacle");
+        GameObject[] allCoin = GameObject.FindGameObjectsWithTag("Coin");
 
         foreach (GameObject obj in allObstacles)
         {
             Destroy(obj);
         }
+        foreach (GameObject obj in allCoin)
+        {
+            Destroy(obj);
+        }
+    }
+    public void UpdateGameSpeed(float speed)
+    {
+        gameSpeed = speed;
     }
 }

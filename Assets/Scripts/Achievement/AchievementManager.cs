@@ -88,6 +88,19 @@ public class AchievementManager : MonoBehaviour
         return DataManager.GetAchievementLevel(id);
     }
 
+    public bool HasAnyUnclaimedRewards()
+    {
+        foreach (var ach in allAchievements)
+        {
+            // Sử dụng hàm DataManager mà bạn đã dùng trong logic CheckAchievements
+            if (DataManager.GetUnclaimedCount(ach.id) > 0)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
     #region old code
     //public static AchievementManager instance;
     //[SerializeField] private List<AchievementData> allAchievements;

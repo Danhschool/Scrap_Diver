@@ -65,6 +65,8 @@ public class Ingame_UiManager : MonoBehaviour
     [Header("Achievement Notification")]
     [SerializeField] private CanvasGroup challengePopup;
 
+    [SerializeField] private GameObject notification;
+
     Coroutine coroutineAch;
 
 
@@ -214,7 +216,11 @@ public class Ingame_UiManager : MonoBehaviour
         continue_Panel.SetActive(_isActive);
     }
     public void SetActiveStart_Panel(bool _isActive)  => start_Panel.SetActive(_isActive);
-    public void SetActiveGameOver_Panel(bool _isActive) => gameOver_Panel.SetActive(_isActive);
+    public void SetActiveGameOver_Panel(bool _isActive)
+    {
+        gameOver_Panel.SetActive(_isActive);
+        if (_isActive) UpdateNotificationMark();
+    }
 
     #endregion
 
@@ -229,15 +235,19 @@ public class Ingame_UiManager : MonoBehaviour
             if (data.id != "coin" && data.id != "time") continue;
 
             int currentLevel = DataManager.GetAchievementLevel(data.id);
-            int displayIndex = currentLevel >= data.stages.Count ? data.stages.Count - 1 : currentLevel;
-            float targetValue = data.stages[displayIndex].targetValue;
-            bool isComplete = currentLevel >= data.stages.Count;
+            int unclaimedCount = DataManager.GetUnclaimedCount(data.id);
+
+            int displayIndex = (currentLevel + unclaimedCount);
+            bool isMaxLevel = displayIndex >= data.stages.Count;
+
+            int stageIdx = isMaxLevel ? data.stages.Count - 1 : displayIndex;
+            float targetValue = data.stages[stageIdx].targetValue;
 
             string currentValue = "";
             string descKey = "";
             string defaultDesc = "";
-            TMPro.TMP_Text progressTxt = null;
-            TMPro.TMP_Text explainTxt = null;
+            TMP_Text progressTxt = null;
+            TMP_Text explainTxt = null;
 
             if (data.id == "coin")
             {
@@ -256,18 +266,25 @@ public class Ingame_UiManager : MonoBehaviour
                 explainTxt = explain_Time_Txt;
             }
 
-            if (isComplete)
+            bool isGoalReached = unclaimedCount > 0 || isMaxLevel;
+
+            if (isMaxLevel && unclaimedCount == 0)
             {
                 progressTxt.text = LanguageManager.Instance != null ? LanguageManager.Instance.GetText("ach_complete") : "COMPLETE";
+                progressTxt.color = Color.yellow;
             }
             else
             {
                 progressTxt.text = currentValue + "/" + targetValue.ToString();
+                progressTxt.color = isGoalReached ? Color.yellow : Color.white;
             }
 
             string localizedTemplate = LanguageManager.Instance != null ? LanguageManager.Instance.GetText(descKey) : defaultDesc;
             explainTxt.text = string.Format(localizedTemplate, targetValue);
+            explainTxt.color = isGoalReached ? Color.yellow : Color.white;
         }
+
+        UpdateNotificationMark();
     }
     public void UpdateContinueWithCoin(bool _isOK)
     {
@@ -352,6 +369,13 @@ public class Ingame_UiManager : MonoBehaviour
             bestCoin_Endtxt.text = LanguageManager.Instance != null ? LanguageManager.Instance.GetText("ui_new_best") : "New Best!";
             bestCoin_Endtxt.color = Color.yellow;
         }
+    }
+    public void UpdateNotificationMark()
+    {
+        if(notification == null) return;
+        bool hasUnclaimed = AchievementManager.instance != null && AchievementManager.instance.HasAnyUnclaimedRewards();
+
+        notification.SetActive(hasUnclaimed);
     }
 
     public void CreateCup(float _currentValue, float _maxValue)

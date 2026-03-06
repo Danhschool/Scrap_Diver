@@ -74,6 +74,11 @@ public class PlayeMovement : MonoBehaviour
         anim = GetComponentInChildren<Animator>();
         AssignInputEvents();
     }
+    private void OnDestroy()
+    {
+        transform.DOKill();
+        DOTween.Kill(gameObject);
+    }
 
     private void Update()
     {
@@ -230,12 +235,32 @@ public class PlayeMovement : MonoBehaviour
 
     public void ShrinkPlayer(float targetScaleRatio, float duration)
     {
-        transform.DOScale(baseScale * targetScaleRatio, 0.5f);
+        transform.DOKill();
+
+        transform.DOScale(baseScale * targetScaleRatio, 0.5f).SetTarget(gameObject);
         characterController.height = baseHeight * targetScaleRatio;
 
         DOVirtual.DelayedCall(duration, () => {
-            transform.DOScale(baseScale, 0.5f);
+            if (this == null || transform == null) return;
+
+            transform.DOScale(baseScale, 0.5f).SetTarget(gameObject);
             characterController.height = baseHeight;
-        });
+        }).SetTarget(gameObject);
+    }
+    public void SetMovementStats(float speedMulti, float smoothMulti)
+    {
+        moveSpeed *= speedMulti;
+        speed = moveSpeed;
+        smoothTime *= smoothMulti;
+
+        baseMoveSpeed = moveSpeed;
+        baseSmoothTime = smoothTime;
+    }
+
+    public void SetGravityStats(float gMulti)
+    {
+        float scale = GamePlayManager.instance.GameSpeed * gMulti;
+
+        GamePlayManager.instance.UpdateGameSpeed(scale);
     }
 }
