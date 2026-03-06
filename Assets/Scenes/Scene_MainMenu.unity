@@ -15098,6 +15098,10 @@ GameObject:
   - component: {fileID: 1674334571}
   - component: {fileID: 1674334572}
   - component: {fileID: 1674334573}
+  - component: {fileID: 1674334577}
+  - component: {fileID: 1674334576}
+  - component: {fileID: 1674334575}
+  - component: {fileID: 1674334574}
   m_Layer: 0
   m_Name: Player_Container
   m_TagString: Untagged
@@ -15178,11 +15182,6 @@ MonoBehaviour:
     disadvantage: robot_disadv_3
     price: 200
     isUnlocked: 0
-  distanceBetweenChars: 40
-  snapTime: 0.3
-  dragSpeed: 1
-  selectedIndex: 0
-  totalCharacters: 0
   mapList:
   - mapName: Map_1
     price: 0
@@ -15204,6 +15203,65 @@ MonoBehaviour:
     price: 300
     targetMilestone: 8000
     pagePrefab: {fileID: 2466729062342018468, guid: a83abea6f99adb2498192de2142a6709, type: 3}
+  background: {fileID: 1827035188}
+  distanceBetweenChars: 40
+  cameraManager: {fileID: 584837973}
+  scrollController: {fileID: 1674334575}
+  robotSpawner: {fileID: 1674334576}
+  uiTransition: {fileID: 1674334574}
+--- !u!114 &1674334574
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1674334569}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: abe8a6a5f862a46489761ae6da675baa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1674334575
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1674334569}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5702efb282d224044b5a464024245508, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  snapTime: 0.3
+  dragSpeed: 1
+  currentVelocity: 0
+  totalCharacters: 0
+--- !u!114 &1674334576
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1674334569}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9caa2ecb26841014ea0fe6ee4cd42c28, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  silhouetteMaterial: {fileID: 2100000, guid: 6a58e574c5381cc4987f56ef5476f606, type: 2}
+--- !u!114 &1674334577
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1674334569}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6534acb75a462314c887bf3285e76f72, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   backgroundLayers:
   - {fileID: 1557485850}
   - {fileID: 1199097846}
@@ -15212,9 +15270,7 @@ MonoBehaviour:
   - 0.6
   - 0.8
   - 1
-  background: {fileID: 1827035188}
-  cameraManager: {fileID: 584837973}
-  currentVelocity: 0
+  targetToTrack: {fileID: 1674334571}
 --- !u!1 &1681822778
 GameObject:
   m_ObjectHideFlags: 0

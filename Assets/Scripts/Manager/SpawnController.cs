@@ -5,10 +5,13 @@ using UnityEngine;
 public class SpawnController : MonoBehaviour
 {
     public static SpawnController instance;
+    [Header("Theme")]
+    //[SerializeField] private Obstacle_Data[] obstacleData;
+    [SerializeField] private ObstacleTheme[] obstacleThemes;
+    private int currentThemeIndex = 0;
 
     [Header("Data & Settings")]
     //[SerializeField] private SpawnDataSO[] spawnData;
-    [SerializeField] private Obstacle_Data[] obstacleData;
     [SerializeField] private Obstacle_Data port;
     [SerializeField] private float spawnYPosition = -250f;
     //[SerializeField] private float tunnelWidth = 36f; 
@@ -33,7 +36,9 @@ public class SpawnController : MonoBehaviour
         {
             StopCoroutine(spawnCoroutine);
         }
-        spawnCoroutine = StartCoroutine(SpawnRoutine());
+        //ChangeObstacleTheme(DataManager.SelectedLevelIndex);
+        //Debug.Log($"Selected Level Index: {DataManager.SelectedLevelIndex}, Current Theme Index: {currentThemeIndex}");
+        //spawnCoroutine = StartCoroutine(SpawnRoutine());
     }
 
     public float SpawnYPosition => spawnYPosition;
@@ -81,61 +86,28 @@ public class SpawnController : MonoBehaviour
 
         obj.transform.rotation = tunnelRot * Quaternion.Euler(_ob.rotation);
     }
-    private Obstacle_Data GetData()
+    public void ChangeObstacleTheme(int newIndex)
     {
-        int index = Random.Range(0, obstacleData.Length);
-
-        return obstacleData[index];
+        int targetIndex = newIndex;
+        Debug.Log($"Attempting to change theme to index: {targetIndex}");
+        if (targetIndex >= 0 && targetIndex < obstacleThemes.Length)
+        {
+            currentThemeIndex = targetIndex;
+        }
+        if(spawnCoroutine != null)
+        {
+            StopCoroutine(spawnCoroutine);
+        }
+            spawnCoroutine = StartCoroutine(SpawnRoutine());
     }
 
-    //private IEnumerator SpawnRoutine()
-    //{
-    //    while (true)
-    //    {
-    //        SpawnDataSO data = GetData();
+    private Obstacle_Data GetData()
+    {
+        Obstacle_Data[] currentPool = obstacleThemes[currentThemeIndex].obstacles;
 
-    //        for (int i = 0; i < data.items.Length; i++)
-    //        {
-    //            SpawnDataSO.SpawnItem selectedItem = data.items[i];
-    //            Spawn(selectedItem);
+        if (currentPool == null || currentPool.Length == 0) return null;
 
-    //            yield return new WaitForSeconds(selectedItem.timeToNextSpawn);
-    //        }
-
-    //        yield return new WaitForSeconds(timeBetweenSpawns - 0.01f);
-    //    }
-    //}
-
-    //private void Spawn(SpawnDataSO.SpawnItem _item)
-    //{
-
-    //    Vector3 spawnPos = new Vector3(0, spawnYPosition, 0);
-
-    //    Vector3 patternOffset = _item.pattern.GetCalculatedPosition(tunnelWidth);
-
-    //    Vector3 finalPos = spawnPos + new Vector3(patternOffset.x, 0, patternOffset.z);
-
-    //    //GameObject obj = Instantiate(item.prefab, finalPos, Quaternion.identity);
-    //    GameObject obj = ObjectPool.instance.GetObject(_item.prefab);
-
-    //    obj.transform.position = finalPos;
-
-    //    Quaternion patternRot = _item.pattern.GetCalculatedRotation();
-
-    //    Quaternion tunnelRot = Quaternion.Euler(90, 0, 0);
-
-    //    obj.transform.rotation = tunnelRot * patternRot;
-
-    //    //if (obj.GetComponent<ObstacleController>() == null)
-    //    //{
-    //    //    obj.AddComponent<ObstacleController>();
-    //    //}
-    //}
-
-    //private SpawnDataSO GetData()
-    //{
-    //    int index = Random.Range(0, spawnData.Length);
-
-    //    return spawnData[index];
-    //}
+        int index = Random.Range(0, currentPool.Length);
+        return currentPool[index];
+    }
 }

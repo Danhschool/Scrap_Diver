@@ -1,100 +1,43 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using TMPro;
-using UnityEditor.Overlays;
-using UnityEngine;
-using UnityEngine.UIElements;
+﻿using UnityEngine;
 
 public class MainMenuManager : MonoBehaviour
 {
-    [System.Serializable]
-    public class RobotData
-    {
-        public string robotName;
-
-        public GameObject robot;
-
-        [Header("Description")]
-        public string advantage;   
-        public string disadvantage; 
-
-        [Header("Price")]
-        public int price;
-        public bool isUnlocked;
-    }
-    [System.Serializable]
-    public class MapData
-    {
-        public string mapName;
-        public int price;
-        public float targetMilestone;
-        public GameObject pagePrefab;
-    }
-
-    
-
     public static MainMenuManager instance;
 
     [Header("Character Data")]
     [SerializeField] private RobotData[] robotList;
 
-
-    [Header("Setting")]
-    public float distanceBetweenChars = 5f;
-    public float snapTime = 0.3f;
-    public float dragSpeed = 1.0f;
-
-    [Header("Shop")]
-    private bool isShop = false;
-    [SerializeField] private int selectedIndex = 0;
-    public int totalCharacters = 0;
-    //[SerializeField] private GameObject select;
-
     [Header("Map Data")]
     [SerializeField] private MapData[] mapList;
-
-    [Header("Parallax Background")]
-    public Transform[] backgroundLayers;
-    public float[] parallaxMultipliers;
 
     [Header("Background")]
     [SerializeField] private GameObject background;
 
-    private bool isFirstTime = true;
-    public MapData[] MapList => mapList;
+    [Header("Layout Settings")]
+    public float distanceBetweenChars = 40f;
 
-    // Affordable Check
     [SerializeField] public bool HasAffordableRobot { get; private set; }
     [SerializeField] public int MaxAffordableRobotIndex { get; private set; } = -1;
-
     [SerializeField] public bool HasAffordableCheckpoint { get; private set; }
     [SerializeField] public int MaxAffordableCheckpointIndex { get; private set; } = -1;
 
-
-
     [SerializeField] private CameraManager cameraManager;
 
-    [SerializeField] private Dictionary<int, GameObject> claws = new Dictionary<int, GameObject>();
+    [Header("Core Controllers")]
+    [SerializeField] private ShopScrollController scrollController;
+    [SerializeField] private ShopRobotSpawner robotSpawner;
+    [SerializeField] private UITransitionController uiTransition;
 
-    private float duration = 1f;
+    private int selectedIndex = 0;
 
-
-    private Rigidbody rb;
-    private float targetX;
-    public float currentVelocity;
-    private bool isDragging = false;
-    private Vector3 startDragMousePos;
-    private Vector3 startDragContainerPos;
-
-    private float minX, maxX;
-
-    private bool isScrollingSoundPlaying = false;
-
-    Coroutine imgUpAndDown;
+    public ShopScrollController ScrollController => scrollController;
+    public ShopRobotSpawner RobotSpawner => robotSpawner;
+    public UITransitionController UiTransition => uiTransition;
 
     public RobotData[] RobotList => robotList;
     public int SelectedIndex => selectedIndex;
     public GameObject Background => background;
+    public MapData[] MapList => mapList;
 
     private void Awake()
     {
@@ -104,126 +47,53 @@ public class MainMenuManager : MonoBehaviour
 
     void Start()
     {
-        //StartStatus(); 
-        SpawnRobotsInShop();
+        RefreshShopData();
+        robotSpawner.SpawnRobotsInShop(robotList, distanceBetweenChars);
 
         SetState(false);
 
         AudioManager.instance.PlayRandomBGM();
         AudioManager.instance.StopWindSFX();
-
         Main_UiManager.instance.UpdateCoinText();
+
+        scrollController.OnSelectedIndexChanged += UpdateShopUIFromScroll;
+    }
+
+    private void OnDestroy()
+    {
+        if (scrollController != null)
+        {
+            scrollController.OnSelectedIndexChanged -= UpdateShopUIFromScroll;
+        }
     }
 
     public void StartShop()
     {
-        isShop = true;
+        //RefreshShopData();
+
+        //scrollController.SetupScroll(selectedIndex, robotList.Length, distanceBetweenChars);
+
+        //selectedIndex = DataManager.SelectedPlayerIndex;
+        //scrollController.SetupScroll(selectedIndex, robotList.Length, distanceBetweenChars);
+
+        //UpdateShopUI(DataManager.SelectedPlayerIndex);
+        //isShop = true;
         RefreshShopData();
-        //SpawnRobotsInShop();
 
-        rb = GetComponent<Rigidbody>();
-        rb.isKinematic = true;
-        targetX = transform.position.x;
-
-        selectedIndex = DataManager.SelectedPlayerIndex;
-        targetX = selectedIndex * -10f;
-        transform.position = new Vector3(targetX, transform.position.y, transform.position.z);
-
-        totalCharacters = transform.childCount;
-
-        maxX = 0f;
-        minX = -((totalCharacters - 1) * distanceBetweenChars);
+        scrollController.SetupScroll(DataManager.SelectedPlayerIndex, robotList.Length, 10f);
 
         UpdateShopUI(DataManager.SelectedPlayerIndex);
     }
+
     public void StopShop()
     {
-        isShop = false;
-
-        //background.SetActive(true);
-
+        scrollController.StopScroll();
         MoveDownRobot();
-
-        transform.position = new Vector3(0, 0, 0);
-        //SpawnRobot(0);
     }
 
-    void Update()
+    private void UpdateShopUIFromScroll(int newIndex)
     {
-        if (isShop)
-        {
-            HandleInput();
-            MoveParallaxBackground();
-            PlaySound();
-        }
-        //if (Input.GetKey(KeyCode.N)) SetState(true);
-        //if (Input.GetKey(KeyCode.B)) SetState(false);
-    }
-
-    //void FixedUpdate()
-    //{
-        
-    //}
-
-    void HandleInput()
-    {
-        float newX = Mathf.SmoothDamp(transform.position.x, targetX, ref currentVelocity, snapTime);
-        rb.MovePosition(new Vector3(newX, transform.position.y, transform.position.z));
-
-        if (Input.GetMouseButtonDown(0))
-        {
-            isDragging = true;
-            startDragMousePos = Input.mousePosition;
-            startDragContainerPos = transform.position;
-            currentVelocity = 0f;
-        }
-        else if (Input.GetMouseButton(0) && isDragging)
-        {
-            float deltaMouseX = (Input.mousePosition.x - startDragMousePos.x);
-            float moveAmount = (deltaMouseX / Screen.width) * 20f * dragSpeed;
-
-            float potentialTargetX = startDragContainerPos.x + moveAmount;
-
-            targetX = Mathf.Clamp(potentialTargetX, minX - 2f, maxX + 2f);
-        }
-        else if (Input.GetMouseButtonUp(0))
-        {
-            isDragging = false;
-            SnapToNearest();
-
-        }
-
-    }
-
-    private void PlaySound()
-    {
-        bool isMoving = Mathf.Abs(currentVelocity) > 5f;
-
-        if (isMoving && !isScrollingSoundPlaying)
-        {
-            AudioManager.instance.PlayScrollSFX();
-            isScrollingSoundPlaying = true;
-        }
-        else if (!isMoving && isScrollingSoundPlaying)
-        {
-            AudioManager.instance.StopScrollSFX();
-            isScrollingSoundPlaying = false;
-        }
-    }
-
-    void SnapToNearest()
-    {
-        int nearestIndex = Mathf.RoundToInt(targetX / -10);
-
-        nearestIndex = Mathf.Clamp(nearestIndex, 0, totalCharacters - 1);
-
-        targetX = nearestIndex * -10;
-
-        selectedIndex = nearestIndex;
-
-
-        //DataManager.SelectedPlayerIndex = selectedIndex;
-        //Debug.Log(selectedIndex);
+        selectedIndex = newIndex;
         UpdateShopUI(selectedIndex);
     }
 
@@ -268,6 +138,11 @@ public class MainMenuManager : MonoBehaviour
             DataManager.SetCharacterUnlockState(charData.robotName, true);
             charData.isUnlocked = true;
 
+            if (robotSpawner.claws.ContainsKey(index))
+            {
+                robotSpawner.SetRobotSilhouette(robotSpawner.claws[index], false);
+            }
+
             RunStats stats = new RunStats();
             stats.robotCount = DataManager.GetUnlockedRobotCount();
 
@@ -280,144 +155,60 @@ public class MainMenuManager : MonoBehaviour
         Debug.Log("Not enough Money!");
         return false;
     }
-    private void SpawnRobotsInShop()
-    {
-        int childCount = transform.childCount;
-        //for (int i = childCount - 1; i >= 0; i--)
-        //{
-        //    DestroyImmediate(transform.GetChild(i).gameObject); 
-        //}
 
-        for (int i = 0; i < robotList.Length; i++)
-        {
-            SpawnRobot(i);
-        }
-    }
-
-    private void SpawnRobot(int i)
-    {
-        var charData = robotList[i];
-        if (charData.robot != null)
-        {
-            GameObject newRobot = Instantiate(charData.robot, transform);
-            //GameObject newRobot = Instantiate(charData.robot);
-            int a = i - DataManager.SelectedPlayerIndex;
-            newRobot.transform.localPosition = new Vector3(a * distanceBetweenChars, 0, 0); //
-
-            if(!claws.ContainsKey(i)) claws.Add(i, newRobot);
-
-            newRobot.name = robotList[i].robotName;
-        }
-    }
-    void MoveParallaxBackground()
-    {
-        for (int i = 0; i < backgroundLayers.Length; i++)
-        {
-            if (backgroundLayers[i] != null)
-            {
-                float parallaxX = transform.position.x * 5 * parallaxMultipliers[i];
-
-                Vector3 bgPos = backgroundLayers[i].position;
-                bgPos.x = parallaxX;
-                backgroundLayers[i].position = bgPos;
-            }
-        }
-    }
     public void DropRobot()
     {
         int check = DataManager.SelectedPlayerIndex;
-
-        ClawController claw = claws[check].GetComponentInChildren<ClawController>();
-
-        claw.Drop();
+        if (robotSpawner.claws.ContainsKey(check))
+        {
+            ClawController claw = robotSpawner.claws[check].GetComponentInChildren<ClawController>();
+            claw.Drop();
+        }
     }
+
     public void MoveUpRobot()
     {
-        //ClawController[] claws = FindObjectsOfType<ClawController>();
         int check = DataManager.SelectedPlayerIndex;
-
-        //float anchorX = 0f;
-        //if (claws.ContainsKey(check))
-        //{
-        //    anchorX = claws[check].transform.position.x;
-        //}
 
         for (int i = 0; i < robotList.Length; i++)
         {
-            ClawController myClaw = claws[i].GetComponentInChildren<ClawController>();
-            float targetX = (i - check) * 10;
+            if (!robotSpawner.claws.ContainsKey(i)) continue;
 
-            Vector3 moveDir = new Vector3(targetX, 50, 0);
+            // Lấy script Claw của từng robot
+            ClawController myClaw = robotSpawner.claws[i].GetComponentInChildren<ClawController>();
 
-            myClaw.ClawPull(moveDir);
+            // Tính toán tọa độ X và Y đích trong không gian Local của cha (Container)
+            float targetX = (i - check) * 10f;
+            Vector3 targetLocalPos = new Vector3(targetX, 50f, 0f);
+
+            // Ra lệnh cho con robot đó tự bơi về vị trí đích
+            myClaw.ClawPull(targetLocalPos);
         }
-        if (cameraManager != null)
-        {
-            cameraManager.MoveCamera(new Vector3(0, 50, 0));
-            //cameraManager.CameraBasePosition = new Vector3(0, 50, 0);
-        }
+
+        if (cameraManager != null) cameraManager.MoveCamera(new Vector3(0, 50, 0));
     }
+
     public void MoveDownRobot()
     {
-        //ClawController[] claws = FindObjectsOfType<ClawController>();
         int check = DataManager.SelectedPlayerIndex;
+
         for (int i = 0; i < robotList.Length; i++)
         {
-            ClawController myClaw = claws[i].GetComponentInChildren<ClawController>();
+            if (!robotSpawner.claws.ContainsKey(i)) continue;
 
-            float targetX = (i - check) * 40;
+            ClawController myClaw = robotSpawner.claws[i].GetComponentInChildren<ClawController>();
 
-            Vector3 moveDir = new Vector3(targetX, 0, 0);
+            float targetX = (i - check) * 40f;
+            Vector3 targetLocalPos = new Vector3(targetX, 0f, 0f);
 
-            myClaw.ClawPull(moveDir);
-
+            myClaw.ClawPull(targetLocalPos);
         }
-        if (cameraManager != null)
-        {
-            cameraManager.MoveCamera(new Vector3(0, -50, 0));
-        }
+
+        if (cameraManager != null) cameraManager.MoveCamera(new Vector3(0, -50, 0));
     }
 
     public void SetState(bool isDown)
     {
-        float value = Screen.height;
-        Vector2 targetPos = isDown ? new Vector2(0, value) : new Vector2(0, -value);
-
-        if (imgUpAndDown != null)
-        {
-            StopCoroutine(imgUpAndDown);
-        }
-
-        // Bắt đầu coroutine mới
-        imgUpAndDown = StartCoroutine(MoveRoutine(targetPos, Main_UiManager.instance.Img));
+        uiTransition.SetState(isDown, Main_UiManager.instance.Img);
     }
-    private IEnumerator MoveRoutine(Vector2 target, RectTransform targetImage)
-    {
-        float uiWidth = Screen.width;
-        float uiHeight = Screen.height;
-
-        targetImage.sizeDelta = new Vector2(uiWidth, uiHeight);
-
-        Vector2 startPos = targetImage.anchoredPosition;
-        float elapsedTime = 0f;
-
-        if(isFirstTime) isFirstTime = false;
-        else AudioManager.instance.PlayWhooshSFX();
-
-        while (elapsedTime < duration)
-        {
-            elapsedTime += Time.deltaTime;
-            float t = elapsedTime / duration;
-
-            t = Mathf.SmoothStep(0f, 1f, t);
-
-            targetImage.anchoredPosition = Vector2.Lerp(startPos, target, t);
-
-            yield return null; 
-        }
-
-        targetImage.anchoredPosition = target;
-        imgUpAndDown = null;
-    }
-
 }

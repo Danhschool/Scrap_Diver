@@ -6,6 +6,17 @@ public class PlayerVFX : MonoBehaviour
     [SerializeField] private GameObject auraObject;
     [SerializeField] private ParticleSystem auraParticles;
 
+    private Tween auraTimerTween;
+
+    private void OnDestroy()
+    {
+        transform.DOKill();
+
+        if (auraTimerTween != null)
+        {
+            auraTimerTween.Kill();
+        }
+    }
     public void ShowAura(float duration, Color auraColor)
     {
         auraObject.SetActive(true);
@@ -17,15 +28,21 @@ public class PlayerVFX : MonoBehaviour
             auraParticles.Play();
         }
 
-        DOVirtual.DelayedCall(duration, HideAura);
+        if (auraTimerTween != null) auraTimerTween.Kill();
+
+        auraTimerTween = DOVirtual.DelayedCall(duration, HideAura)
+            .SetLink(gameObject);
     }
 
     public void HideAura()
     {
+        if (auraObject != null)
+        {
+            auraObject.SetActive(false);
+        }
         if (auraParticles != null)
         {
             auraParticles.Stop();
         }
-        auraObject.SetActive(false);
     }
 }
