@@ -29,6 +29,10 @@
     { "key": "ach_title_time", "vi": "Thời gian", "en": "time" },
     { "key": "ach_desc_time", "vi": "BAY TRONG {0}s TRONG 1 LẦN", "en": "FLY FOR {0}s IN A SINGLE RUN" },
     { "key": "ach_title_unlock", "vi": "Mở khóa", "en": "unlock" },
-    { "key": "ach_desc_unlock", "vi": "MỞ KHÓA {0} ROBOT", "en": "UNLOCK {0} ROBOTS" }
+    { "key": "ach_desc_unlock", "vi": "MỞ KHÓA {0} ROBOT", "en": "UNLOCK {0} ROBOTS" },
+    { "key": "ach_title_powerup", "vi": "Sức mạnh", "en": "power up" },
+    { "key": "ach_desc_powerup", "vi": "NHẬN {0} VẬT PHẨM TRONG 1 LẦN", "en": "COLLECT {0} POWERUPS IN A SINGLE RUN" },
+    { "key": "ach_title_nodamage", "vi": "Sống sót", "en": "survivor" },
+    { "key": "ach_desc_nodamage", "vi": "BAY {0}s LIÊN TỤC MÀ KHÔNG BỊ THƯƠNG", "en": "FLY FOR {0}s WITHOUT TAKING DAMAGE" }
   ]
 }

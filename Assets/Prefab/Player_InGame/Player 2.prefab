@@ -4902,6 +4902,7 @@ GameObject:
   - component: {fileID: 6679040856641135544}
   - component: {fileID: 5602696749218165996}
   - component: {fileID: 8567202684677335757}
+  - component: {fileID: 3594007883777766047}
   m_Layer: 7
   m_Name: Player 2
   m_TagString: Player
@@ -5050,6 +5051,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   auraObject: {fileID: 6851101299801527693}
   auraParticles: {fileID: 7405997286558162275}
+--- !u!114 &3594007883777766047
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7002243111453762354}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8460c66e27d3fb6458c63c7d1f99250a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  myPassive: {fileID: 11400000, guid: f68d2de9a15cb09459ae81ab745d9ca1, type: 2}
+  powerUpsCollected: 0
+  maxContinuousSafeTime: 0
 --- !u!1 &7298519185079614837
 GameObject:
   m_ObjectHideFlags: 0

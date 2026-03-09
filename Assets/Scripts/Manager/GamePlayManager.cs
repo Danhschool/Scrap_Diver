@@ -41,7 +41,7 @@ public class GamePlayManager : MonoBehaviour
     private float preSpawnDistance;
     private bool hasSpawnedPortal = false;
 
-    [SerializeField] private RobotPassiveData[] robotPassiveConfigs;
+    //[SerializeField] private RobotPassiveData[] robotPassiveConfigs;
 
     private int startLevelWindow;
     private int targetLevelWindow;
@@ -58,6 +58,7 @@ public class GamePlayManager : MonoBehaviour
     public float GameSpeed => gameSpeed;
     public int IndexOfLevel => indexOfLevel;
     public float DistanceOfLevel => distanceOfLevel;
+    public GameObject InGamePlayer => inGamePlayer;
 
 
     private void Awake()
@@ -99,17 +100,17 @@ public class GamePlayManager : MonoBehaviour
 
         InitializeProgressUI();
 
-        if (DataManager.SelectedPlayerIndex < robotPassiveConfigs.Length)
-        {
-            var config = robotPassiveConfigs[DataManager.SelectedPlayerIndex];
-            if (config != null)
-            {
-                foreach (var module in config.passiveModules)
-                {
-                    if (module != null) module.ApplyPassive(inGamePlayer, this);
-                }
-            }
-        }
+        //if (DataManager.SelectedPlayerIndex < robotPassiveConfigs.Length)
+        //{
+        //    var config = robotPassiveConfigs[DataManager.SelectedPlayerIndex];
+        //    if (config != null)
+        //    {
+        //        foreach (var module in config.passiveModules)
+        //        {
+        //            if (module != null) module.ApplyPassive(inGamePlayer, this);
+        //        }
+        //    }
+        //}
 
         //int d = (int)DataManager.GetTargetDistance(DataManager.LevelPassed + 1);
 

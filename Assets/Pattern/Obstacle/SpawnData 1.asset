@@ -16,10 +16,10 @@ MonoBehaviour:
   - name: 
     prefab: {fileID: 5501013297157690676, guid: 0300a2c935f3d2f458e5ef0308d1e234, type: 3}
     position: {x: 0, y: 0, z: 0}
-    rotation: {x: 0, y: 0, z: 0}
-    timeToNextSpawn: 2
+    rotation: {x: 90, y: 0, z: 0}
+    timeToNextSpawn: 0
   - name: 
-    prefab: {fileID: 563847244349023263, guid: 863c2f99c92c1bb4ebb6fe6570299448, type: 3}
-    position: {x: 0, y: 0, z: 0}
+    prefab: {fileID: 2489508783046257780, guid: 3533f090a83ba7c40aab969f133432aa, type: 3}
+    position: {x: 0, y: 0, z: 9}
     rotation: {x: 0, y: 0, z: 0}
-    timeToNextSpawn: 2
+    timeToNextSpawn: 0

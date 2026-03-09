@@ -56,6 +56,11 @@ public class AchievementManager : MonoBehaviour
         {
             if (ach.condition is T)
             {
+                if (ach.isRobotSpecific && ach.robotID != stats.robotID)
+                {
+                    continue;
+                }
+
                 int currentLv = DataManager.GetAchievementLevel(ach.id);
                 int unclaimed = DataManager.GetUnclaimedCount(ach.id);
 

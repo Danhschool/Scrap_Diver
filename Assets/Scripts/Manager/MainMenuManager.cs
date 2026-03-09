@@ -52,6 +52,8 @@ public class MainMenuManager : MonoBehaviour
 
         SetState(false);
 
+        selectedIndex = DataManager.SelectedPlayerIndex;
+
         AudioManager.instance.PlayRandomBGM();
         AudioManager.instance.StopWindSFX();
         Main_UiManager.instance.UpdateCoinText();
@@ -174,14 +176,11 @@ public class MainMenuManager : MonoBehaviour
         {
             if (!robotSpawner.claws.ContainsKey(i)) continue;
 
-            // Lấy script Claw của từng robot
             ClawController myClaw = robotSpawner.claws[i].GetComponentInChildren<ClawController>();
 
-            // Tính toán tọa độ X và Y đích trong không gian Local của cha (Container)
             float targetX = (i - check) * 10f;
             Vector3 targetLocalPos = new Vector3(targetX, 50f, 0f);
 
-            // Ra lệnh cho con robot đó tự bơi về vị trí đích
             myClaw.ClawPull(targetLocalPos);
         }
 
