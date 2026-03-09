@@ -15,6 +15,7 @@ public class Player : MonoBehaviour
     public PlayerHealth health { get; private set; }
     public PlayerArea area { get; private set; }
     public PlayerVFX vfx { get; private set; }
+    public PlayerStatsTracker statsTracker { get; private set; }
 
     private void Awake()
     {
@@ -27,7 +28,7 @@ public class Player : MonoBehaviour
         health = GetComponent<PlayerHealth>();
         area = GetComponentInChildren<PlayerArea>();
         vfx = GetComponentInChildren<PlayerVFX>();
-
+        statsTracker = GetComponent<PlayerStatsTracker>();
     }
 
     private void OnEnable()

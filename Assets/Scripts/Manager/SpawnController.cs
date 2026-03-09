@@ -17,7 +17,7 @@ public class SpawnController : MonoBehaviour
     //[SerializeField] private float tunnelWidth = 36f; 
 
     [Header("(Spawn Rate)")]
-    public float timeBetweenSpawns = 2f;
+    public float timeBetweenSpawns = 5f;
 
 
     Coroutine spawnCoroutine;
@@ -82,9 +82,9 @@ public class SpawnController : MonoBehaviour
 
         obj.transform.position = spawnPos + _ob.position;
 
-        Quaternion tunnelRot = Quaternion.Euler(90, 0, 0);
+        //Quaternion tunnelRot = Quaternion.Euler(0, 0, 0);
 
-        obj.transform.rotation = tunnelRot * Quaternion.Euler(_ob.rotation);
+        obj.transform.rotation = Quaternion.Euler(_ob.rotation);
     }
     public void ChangeObstacleTheme(int newIndex)
     {

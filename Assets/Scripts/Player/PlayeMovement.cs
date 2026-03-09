@@ -83,13 +83,13 @@ public class PlayeMovement : MonoBehaviour
     private void Update()
     {
         if (!GamePlayManager.instance.IsPlaying) return;
+
+        currentMousePos = controls.Character.Mouse.ReadValue<Vector2>();
+
         if (controls.Character.MousePress.WasPressedThisFrame())
         {
-            if (EventSystem.current.IsPointerOverGameObject())
-            {
-                return;
-            }
-                isDragging = true;
+            if (EventSystem.current.IsPointerOverGameObject()) return;
+            isDragging = true;
         }
 
         if (isDragging)
@@ -100,13 +100,19 @@ public class PlayeMovement : MonoBehaviour
         else
             ApplyMovement(moveInput);
 
+        if (controls.Character.MousePress.WasReleasedThisFrame())
+        {
+            isDragging = false;
+            moveInput = Vector2.zero;
+        }
+
         MoveAnimation();
         ApplyPositionClamping();
     }
 
     //private void FixedUpdate()
     //{
-        
+
     //}
     private void ApplyMovement(Vector2 Input)
     {

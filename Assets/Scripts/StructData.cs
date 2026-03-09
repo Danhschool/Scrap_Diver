@@ -6,4 +6,7 @@ public struct RunStats
     public int currentLevelIndex;
     public string robotID;
     public int robotCount;
+
+    public int powerUpsCollected;
+    public float maxContinuousSafeTime;
 }

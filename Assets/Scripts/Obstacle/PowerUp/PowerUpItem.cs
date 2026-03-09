@@ -10,6 +10,7 @@ public abstract class PowerUpItem : Obstacles, IPowerUp
         if (player != null)
         {
             ApplyPowerUp(player);
+            player.statsTracker.AddPowerUp();
             CancelInvoke();
             gameObject.SetActive(false); 
         }

@@ -125,8 +125,30 @@
                 },
                 {
                     "name": "",
+                    "id": "5fc978d2-b56a-4ebc-a8c7-e530891461e0",
+                    "path": "<Touchscreen>/Press",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Mouse Press",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "5c866e70-7d21-4c78-872c-dc2f77287814",
                     "path": "<Mouse>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Mouse",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "35429047-9ce2-4148-a2b9-5ed3181cfe0d",
+                    "path": "<Touchscreen>/position",
                     "interactions": "",
                     "processors": "",
                     "groups": "",

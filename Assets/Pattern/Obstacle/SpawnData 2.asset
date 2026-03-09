@@ -10,36 +10,41 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bf170b99824d0134aba53a101cde9cdb, type: 3}
-  m_Name: SpawnData
+  m_Name: SpawnData 2
   m_EditorClassIdentifier: 
   items:
   - name: 
     prefab: {fileID: 3912198360249641969, guid: d12984a2f1d7d9643966d4053eea21dc, type: 3}
-    position: {x: 3, y: 10, z: -12}
+    position: {x: 0, y: 8, z: 0}
     rotation: {x: 0, y: 0, z: 0}
     timeToNextSpawn: 0
   - name: 
     prefab: {fileID: 3912198360249641969, guid: d12984a2f1d7d9643966d4053eea21dc, type: 3}
-    position: {x: 10, y: 5, z: 0}
+    position: {x: 0, y: 0, z: 0}
     rotation: {x: 0, y: 0, z: 0}
     timeToNextSpawn: 0
   - name: 
     prefab: {fileID: 3912198360249641969, guid: d12984a2f1d7d9643966d4053eea21dc, type: 3}
-    position: {x: 7, y: 0, z: 8}
+    position: {x: 0, y: -8, z: 0}
     rotation: {x: 0, y: 0, z: 0}
     timeToNextSpawn: 0
   - name: 
-    prefab: {fileID: 3912198360249641969, guid: d12984a2f1d7d9643966d4053eea21dc, type: 3}
-    position: {x: -4, y: -5, z: 10}
+    prefab: {fileID: 1237749503794440374, guid: a64727a757e7e224a8776b8ba1ecf257, type: 3}
+    position: {x: 17.5, y: 0, z: 0}
     rotation: {x: 0, y: 0, z: 0}
     timeToNextSpawn: 0
   - name: 
-    prefab: {fileID: 3912198360249641969, guid: d12984a2f1d7d9643966d4053eea21dc, type: 3}
-    position: {x: -12, y: -10, z: 3}
-    rotation: {x: 0, y: 0, z: 0}
+    prefab: {fileID: 1237749503794440374, guid: a64727a757e7e224a8776b8ba1ecf257, type: 3}
+    position: {x: -17.5, y: 0, z: 0}
+    rotation: {x: 0, y: 0, z: 180}
     timeToNextSpawn: 0
   - name: 
-    prefab: {fileID: 3912198360249641969, guid: d12984a2f1d7d9643966d4053eea21dc, type: 3}
-    position: {x: -6, y: -15, z: -7}
-    rotation: {x: 0, y: 0, z: 0}
+    prefab: {fileID: 1237749503794440374, guid: a64727a757e7e224a8776b8ba1ecf257, type: 3}
+    position: {x: 0, y: 0, z: 17.5}
+    rotation: {x: 0, y: 90, z: 180}
+    timeToNextSpawn: 0
+  - name: 
+    prefab: {fileID: 1237749503794440374, guid: a64727a757e7e224a8776b8ba1ecf257, type: 3}
+    position: {x: 0, y: 0, z: -17.5}
+    rotation: {x: 0, y: 90, z: 0}
     timeToNextSpawn: 0
